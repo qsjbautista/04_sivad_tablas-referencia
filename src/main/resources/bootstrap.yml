@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: sivad-tablas-referencia
+    profiles:
+        active: #spring.profiles.active#
+    config:
+        location: classpath:/core-application.yml,classpath:/application.yml

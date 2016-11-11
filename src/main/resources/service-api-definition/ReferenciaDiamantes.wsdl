@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<!--
+(c) Nacional Monte de Piedad
+2016-11-10
+Tablas de Referencia Diamantes
+ -->
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:referencia="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/"
+                  xmlns:datatypes="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <wsdl:types>
+        <s:schema xmlns="http://www.w3.org/2001/XMLSchema"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/"
+                  attributeFormDefault="qualified"
+                  elementFormDefault="qualified">
+            <s:include schemaLocation="referencia_diamantes.xsd"/>
+        </s:schema>
+    </wsdl:types>
+
+    <wsdl:message name="ObtenerValorComercialIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorComercialRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerValorComercialOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorComercialResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerModificadorIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerModificadorRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerModificadorOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerModificadorResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ReferenciaDiamanteService">
+        <wsdl:operation name="obtenerValorComercial">
+            <wsdl:input message="referencia:ObtenerValorComercialIn" />
+            <wsdl:output message="referencia:ObtenerValorComercialOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerModificador">
+            <wsdl:input message="referencia:ObtenerModificadorIn" />
+            <wsdl:output message="referencia:ObtenerModificadorOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ReferenciaDiamanteService" type="referencia:ReferenciaDiamanteService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="obtenerValorComercial">
+            <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerValorComercial" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerModificador">
+            <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerModificador" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ReferenciaDiamante">
+        <wsdl:port name="ReferenciaDiamanteService" binding="referencia:ReferenciaDiamanteService">
+            <soap:address location="http://localhost:8080/soap-api/ReferenciaDiamanteService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

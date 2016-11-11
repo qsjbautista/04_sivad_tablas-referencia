@@ -1,0 +1,50 @@
+<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema"
+          xmlns="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/"
+          targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/"
+          elementFormDefault="qualified"
+          version="1.0">
+
+    <s:element name="obtenerValorComercialRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="corte" type="s:string"/>
+                <s:element name="color" type="s:string"/>
+                <s:element name="claridad" type="s:string"/>
+                <s:element name="quilates_ct" type="s:decimal"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="obtenerValorComercialResponse">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="valorComercial" type="ValorComercial"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="obtenerModificadorRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="certificadoDiamante" type="s:string"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="obtenerModificadorResponse">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="factor" type="s:decimal"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:complexType name="ValorComercial">
+        <s:sequence>
+            <s:element name="valorMinimo" type="s:decimal"/>
+            <s:element name="valorMedio" type="s:decimal"/>
+            <s:element name="valorMaximo" type="s:decimal"/>
+        </s:sequence>
+    </s:complexType>
+
+</s:schema>

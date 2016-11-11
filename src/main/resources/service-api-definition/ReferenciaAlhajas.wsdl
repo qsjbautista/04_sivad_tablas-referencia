@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<!--
+(c) Nacional Monte de Piedad
+2016-11-10
+Tablas de Referencia Alhajas
+ -->
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:referencia="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/"
+                  xmlns:datatypes="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+    <wsdl:types>
+        <s:schema xmlns="http://www.w3.org/2001/XMLSchema"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/"
+                  attributeFormDefault="qualified"
+                  elementFormDefault="qualified">
+            <s:include schemaLocation="referencia_alhajas.xsd"/>
+        </s:schema>
+    </wsdl:types>
+
+    <wsdl:message name="ObtenerValorGramoOroIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorGramoOroRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerValorGramoOroOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorGramoOroResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerValorGramoMetalIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorGramoMetalRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerValorGramoMetalOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerValorGramoMetalResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerDesplazamientoIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerDesplazamientoRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerDesplazamientoOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerDesplazamientoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerFactorIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerFactorRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerFactorOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerFactorResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerLimitesIncrementoIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerLimitesIncrementoRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerLimitesIncrementoOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerLimitesIncrementoResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ReferenciaAlhajaService">
+        <wsdl:operation name="obtenerValorGramoOro">
+            <wsdl:input message="referencia:ObtenerValorGramoOroIn" />
+            <wsdl:output message="referencia:ObtenerValorGramoOroOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerValorGramoMetal">
+            <wsdl:input message="referencia:ObtenerValorGramoMetalIn" />
+            <wsdl:output message="referencia:ObtenerValorGramoMetalOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerDesplazamiento">
+            <wsdl:input message="referencia:ObtenerDesplazamientoIn" />
+            <wsdl:output message="referencia:ObtenerDesplazamientoOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerFactor">
+            <wsdl:input message="referencia:ObtenerFactorIn" />
+            <wsdl:output message="referencia:ObtenerFactorOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerLimitesIncremento">
+            <wsdl:input message="referencia:ObtenerLimitesIncrementoIn" />
+            <wsdl:output message="referencia:ObtenerLimitesIncrementoOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ReferenciaAlhajaService" type="referencia:ReferenciaAlhajaService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="obtenerValorGramoOro">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoOro" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerValorGramoMetal">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoMetal" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerDesplazamiento">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerDesplazamiento" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerFactor">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerFactor" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerLimitesIncremento">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ReferenciaAlhaja">
+        <wsdl:port name="ReferenciaAlhajaService" binding="referencia:ReferenciaAlhajaService">
+            <soap:address location="http://localhost:8080/soap-api/ReferenciaAlhajaService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

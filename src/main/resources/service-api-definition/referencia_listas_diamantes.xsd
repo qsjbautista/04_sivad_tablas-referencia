@@ -1,0 +1,66 @@
+<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema"
+          xmlns="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/"
+          targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/"
+          elementFormDefault="qualified"
+          version="1.0">
+
+    <s:element name="actualizarListaValorComercialRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="listado" type="PreciosDiamante"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="actualizarListaValorComercialResponse" type="Void">
+    </s:element>
+
+    <s:element name="actualizarListaFactorRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="factorDiamante" type="FactorDiamante"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="actualizarListaFactorResponse" type="Void">
+    </s:element>
+
+    <s:complexType name="PreciosDiamante">
+        <s:sequence>
+            <s:element name="fecha" type="s:date"/>
+            <s:element name="preciosCorte" type="PrecioCorte" minOccurs="1" maxOccurs="unbounded" />
+        </s:sequence>
+    </s:complexType>
+
+    <s:complexType name="PrecioCorte">
+        <s:sequence>
+            <s:element name="corte" type="s:string"/>
+            <s:element name="precioCorte" type="PrecioCorteDetalle" minOccurs="1" maxOccurs="unbounded" />
+        </s:sequence>
+    </s:complexType>
+
+    <s:complexType name="PrecioCorteDetalle">
+        <s:sequence>
+            <s:element name="color" type="s:string"/>
+            <s:element name="claridad" type="s:string"/>
+            <s:element name="tamanioInferior" type="s:decimal"/>
+            <s:element name="tamanioSuperior" type="s:decimal"/>
+            <s:element name="precio" type="s:decimal"/>
+        </s:sequence>
+    </s:complexType>
+
+    <s:complexType name="FactorDiamante">
+        <s:sequence>
+            <s:element name="factorMinimo" type="s:decimal"/>
+            <s:element name="factorMedio" type="s:decimal"/>
+            <s:element name="factorMaximo" type="s:decimal"/>
+        </s:sequence>
+    </s:complexType>
+
+    <s:complexType name="Void">
+        <s:sequence>
+        </s:sequence>
+    </s:complexType>
+
+</s:schema>
