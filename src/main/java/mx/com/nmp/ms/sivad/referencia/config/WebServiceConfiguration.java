@@ -16,34 +16,68 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.xml.ws.Endpoint;
 
+/**
+ * Configuración de web services.
+ * La configuración actual hace que estén accesibles en http://servidor:puerto/soap-api/*
+ */
 @Configuration
 public class WebServiceConfiguration {
 
+    /**
+     * Configura la ruta en la que serán expuestos los web services
+     *
+     * @return servlet de web services
+     */
     @Bean
     public ServletRegistrationBean cxfServlet() {
         return new ServletRegistrationBean(new CXFServlet(), "/soap-api/*");
     }
 
+    /**
+     * Bus CXF
+     *
+     * @return
+     */
     @Bean(name = Bus.DEFAULT_BUS_ID)
     public SpringBus springBus() {
         return new SpringBus();
     }
 
+    /**
+     * Bean con endpoint de alhajas
+     *
+     * @return bean
+     */
     @Bean
     public ReferenciaAlhajaService referenciaAlhajaService() {
-    	return new ReferenciaAlhajaServiceEndpoint();
+        return new ReferenciaAlhajaServiceEndpoint();
     }
 
+    /**
+     * Bean con endpoint de diamantes
+     *
+     * @return bean
+     */
     @Bean
     public ReferenciaDiamanteService referenciaDiamanteService() {
         return new ReferenciaDiamantesServiceEndpoint();
     }
 
+    /**
+     * Bean con endpoint de listas de diamantes
+     *
+     * @return bean
+     */
     @Bean
     public ReferenciaListasDiamanteService referenciaListasDiamanteService() {
         return new ReferenciaListasDiamantesServiceEndpoint();
     }
 
+    /**
+     * Configuración del WS de Alhajas
+     *
+     * @return endpoint de alhajas
+     */
     @Bean
     public Endpoint endpointReferenciaAlhaja() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), referenciaAlhajaService());
@@ -52,6 +86,11 @@ public class WebServiceConfiguration {
         return endpoint;
     }
 
+    /**
+     * Configuración del WS de Diamantes
+     *
+     * @return endpoint de diamantes
+     */
     @Bean
     public Endpoint endpointReferenciaDiamante() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), referenciaDiamanteService());
@@ -60,6 +99,11 @@ public class WebServiceConfiguration {
         return endpoint;
     }
 
+    /**
+     * Configuración del WS de Listas de Diamantes
+     *
+     * @return endpoint de listas de diamantes
+     */
     @Bean
     public Endpoint endpointReferenciaListasDiamante() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), referenciaListasDiamanteService());
