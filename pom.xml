@@ -36,6 +36,7 @@
 		<nmp.arquetipo.version>0.8.11-SNAPSHOT</nmp.arquetipo.version>
 
         <!-- ordenar alfabéticamente -->
+        <cxf.version>3.1.6</cxf.version>
         <!-- Spring Boot 1.4.x es la última versión que soporta Hibernate 4.3.X;
            para usar Hibernate 5 hay que borrar la siguiente línea -->
         <hibernate.version>4.3.11.Final</hibernate.version>
@@ -116,6 +117,18 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
+        </dependency>
+
+        <!-- Apache CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
         </dependency>
 
         <!-- Seguridad -->
@@ -281,6 +294,90 @@
                         <format>html</format>
                     </formats>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- Generate Java-Classes inkl. JAXB-Bindings from WSDL & imported XSD -->
+            <!-- See Doku at http://www.mojohaus.org/jaxws-maven-plugin/usage.html -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <id>wsdl-referencia-alhajas</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <!-- See http://www.mojohaus.org/jaxws-maven-plugin/wsimport-mojo.html -->
+                            <wsdlUrls>
+                                <wsdlUrl>src/main/resources/service-api-definition/ReferenciaAlhajas.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <sourceDestDir>target/generated-sources/wsdlimport/ReferenciaAlhajas</sourceDestDir>
+                            <!-- For accessing the imported schema, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570 -->
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsdl-referencia-diamantes</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <!-- See http://www.mojohaus.org/jaxws-maven-plugin/wsimport-mojo.html -->
+                            <wsdlUrls>
+                                <wsdlUrl>src/main/resources/service-api-definition/ReferenciaDiamantes.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <sourceDestDir>target/generated-sources/wsdlimport/ReferenciaDiamantes</sourceDestDir>
+                            <!-- For accessing the imported schema, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570 -->
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wsdl-referencia-listas-diamantes</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <!-- See http://www.mojohaus.org/jaxws-maven-plugin/wsimport-mojo.html -->
+                            <wsdlUrls>
+                                <wsdlUrl>src/main/resources/service-api-definition/ReferenciaListasDiamantes.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <sourceDestDir>target/generated-sources/wsdlimport/ReferenciaListasDiamantes</sourceDestDir>
+                            <!-- For accessing the imported schema, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570 -->
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources/wsdlimport/ReferenciaAlhajas</source>
+                                <source>target/generated-sources/wsdlimport/ReferenciaDiamantes</source>
+                                <source>target/generated-sources/wsdlimport/ReferenciaListasDiamantes</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 		</plugins>
 	</build>
