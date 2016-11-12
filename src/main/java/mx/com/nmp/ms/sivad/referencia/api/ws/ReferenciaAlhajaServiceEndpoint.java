@@ -25,7 +25,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
         }
 
         ObtenerValorGramoOroResponse response = new ObtenerValorGramoOroResponse();
-        response.setPrecioPorGramo(new BigDecimal(10.5));
+        response.setPrecioPorGramo(BigDecimal.TEN);
         LOGGER.info("<< {}", response.getPrecioPorGramo());
         return response;
     }
