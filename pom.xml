@@ -295,10 +295,6 @@
                     </formats>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <!-- Generate Java-Classes inkl. JAXB-Bindings from WSDL & imported XSD -->
             <!-- See Doku at http://www.mojohaus.org/jaxws-maven-plugin/usage.html -->
             <plugin>
@@ -383,6 +379,17 @@
 	</build>
 
     <profiles>
+        <!-- Desactivar evaluación estricta del plugin Javadoc -->
+        <profile>
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
+
         <!-- Perfil de metrics -->
         <profile>
             <id>metrics</id>
