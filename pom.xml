@@ -33,7 +33,7 @@
 		<java.version>1.7</java.version>
 		<!-- IMPORTANTE: Se debe definir como propiedad para que pueda ser inyectada
             en configuración de Spring y ser utilizada para su publicación -->
-		<nmp.arquetipo.version>0.8.11-SNAPSHOT</nmp.arquetipo.version>
+		<nmp.arquetipo.version>0.8.12-SNAPSHOT</nmp.arquetipo.version>
 
         <!-- ordenar alfabéticamente -->
         <cxf.version>3.1.6</cxf.version>
@@ -379,7 +379,7 @@
 	</build>
 
     <profiles>
-        <!-- Desactivar evaluación estricta del plugin Javadoc -->
+        <!-- Desactivar evaluación estricta del plugin Javadoc en Java 1.8 -->
         <profile>
             <id>disable-java8-doclint</id>
             <activation>
