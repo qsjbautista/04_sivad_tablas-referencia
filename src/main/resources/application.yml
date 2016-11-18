@@ -2,11 +2,25 @@
 # Propiedades especificas de la aplicacion (microservicio)
 # ===================================================================
 info:
-    arquetipo:
-        version: #nmp.arquetipo.version#
-    microservicio:
-        nombre: #name#
-        version: #version#
-        descripcion: #description#
-    spring-boot:
-        version: #parent.version#
+  arquetipo:
+    version: #nmp.arquetipo.version#
+  microservicio:
+    nombre: #name#
+    version: #version#
+    descripcion: #description#
+  spring-boot:
+    version: #parent.version#
+
+microservicio:
+  cache: # Hibernate 2nd level cache, used by CacheConfiguration
+    timeToLiveSeconds: 3600
+    hazelcast:
+      backupCount: 1
+
+spring:
+  jackson:
+    serialization:
+      WRAP_ROOT_VALUE: true
+
+cxf:
+  path: /soap-api

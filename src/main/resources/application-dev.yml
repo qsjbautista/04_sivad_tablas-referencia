@@ -1,0 +1,34 @@
+# ===================================================================
+# Configuración Spring Boot
+#
+# Configuración para el profile de Spring "dev".
+# Aquí puedes establecer la configuración necesaria para el perfil de
+# desarrollo.
+# ===================================================================
+
+# ===================================================================
+# Propiedades estandar de Spring.
+# Referencia completa en:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+    datasource:
+        initialize: true
+        schema: classpath:/schema-h2.sql
+        data: classpath:/data-h2.sql
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:file:./target/h2db/db/sivad_tablas_referencia;DB_CLOSE_DELAY=-1
+        name:
+        username: sivad
+        password:
+    h2:
+        console:
+            enabled: true
+    jpa:
+        database-platform: mx.com.nmp.ms.arquetipo.db.h2.FixedH2Dialect
+        database: H2
+        show-sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: none
