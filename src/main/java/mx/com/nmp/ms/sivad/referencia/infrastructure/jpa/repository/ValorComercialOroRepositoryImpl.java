@@ -14,6 +14,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValor
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialOroJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -104,19 +105,13 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
                 (fechaVigencia != null) ? fechaVigencia.toString() : "NULL");
         }
 
-        Date fechaInicioVigencia = new Date(
-            fechaVigencia.getYear(),
-            fechaVigencia.getMonth(),
-            fechaVigencia.getDate(), 0, 0, 0);
-        Date fechaFinVigencia = new Date(
-            fechaVigencia.getYear(),
-            fechaVigencia.getMonth(),
-            fechaVigencia.getDate(), 23, 59, 59);
+        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia);
+        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia);
 
         List<ListadoValorComercialOroJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadoPorFechaVigencia(fechaInicioVigencia, fechaFinVigencia);
+            listadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
         List<HistListadoValorComercialOroJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaInicioVigencia, fechaFinVigencia);
+            histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
             // TODO Excepción
