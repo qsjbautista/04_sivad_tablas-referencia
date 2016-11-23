@@ -51,6 +51,19 @@ public class Oro {
     /**
      * Constructor.
      *
+     * @param color El color del oro.
+     * @param calidad La calidad del oro.
+     * @param precio Precio en pesos del oro por gramo.
+     */
+    Oro(String color, Integer calidad, BigDecimal precio) {
+        this.color = color;
+        this.calidad = calidad;
+        this.precio = precio;
+    }
+
+    /**
+     * Constructor.
+     *
      * @param id Identificador del registro.
      * @param color El color del oro.
      * @param calidad La calidad del oro.

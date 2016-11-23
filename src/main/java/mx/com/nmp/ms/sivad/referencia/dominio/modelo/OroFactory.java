@@ -27,6 +27,18 @@ public class OroFactory {
     /**
      * Permite crear una entidad de tipo Oro con base en los argumentos recibidos.
      *
+     * @param color El color del oro.
+     * @param calidad La calidad del oro.
+     * @param precio Precio en pesos del oro por gramo.
+     * @return La entidad creada.
+     */
+    public static Oro create(String color, Integer calidad, BigDecimal precio) {
+        return new Oro(color, calidad, precio);
+    }
+
+    /**
+     * Permite crear una entidad de tipo Oro con base en los argumentos recibidos.
+     *
      * @param id Identificador del registro.
      * @param color El color del oro.
      * @param calidad La calidad del oro.
