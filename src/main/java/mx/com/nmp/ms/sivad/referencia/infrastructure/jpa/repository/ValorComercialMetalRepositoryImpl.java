@@ -15,9 +15,9 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComerci
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -28,7 +28,6 @@ import java.util.*;
  *
  * @author ngonzalez
  */
-@Repository
 public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRepository {
 
     /**
@@ -39,19 +38,19 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
     /**
      * Referencia al repositorio de HistListadoValorComercialMetalJPARepository.
      */
-    //@Inject
+    @Inject
     private HistListadoValorComercialMetalJPARepository histListadoJpaRepository;
 
     /**
      * Referencia al repositorio de ListadoValorComercialMetalJPARepository.
      */
-    //@Inject
+    @Inject
     private ListadoValorComercialMetalJPARepository listadoJpaRepository;
 
     /**
      * Referencia al repositorio de ValorComercialMetalJPARepository.
      */
-    //@Inject
+    @Inject
     private ValorComercialMetalJPARepository valorComercialMetalJPARepository;
 
 
@@ -63,8 +62,10 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      */
     @Override
     public Metal consultarMetalVigente(@NotNull Metal metal) {
+        LOGGER.info(">> consultarMetalVigente({})", metal);
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(">> consultarVigente - metal: [{}], calidad: [{}]", metal.getMetal(), metal.getCalidad());
+            LOGGER.info("'metal: [{}]', 'calidad: [{}]'", metal.getMetal(), metal.getCalidad());
         }
 
         ValorComercialMetalJPA valorComercialMetalJPA =
@@ -83,7 +84,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      */
     @Override
     public ListadoValorComercialMetal consultarListadoVigente() {
-        LOGGER.info(">> consultarListadoVigente");
+        LOGGER.info(">> consultarListadoVigente()");
 
         ListadoValorComercialMetalJPA listadoValorComercialMetalJPA =
             listadoJpaRepository.obtenerListadoVigente();
@@ -99,14 +100,15 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      * {@inheritDoc}
      */
     @Override
-    public List<ListadoValorComercialMetal> consultarListadoPorFechaVigencia(@NotNull Date fechaVigencia) {
+    public List<ListadoValorComercialMetal> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
+        LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(">> consultarListadoPorFechaVigencia: [{}]",
-                (fechaVigencia != null) ? fechaVigencia.toString() : "NULL");
+            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
         }
 
-        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia);
-        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia);
+        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
+        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
         List<ListadoValorComercialMetalJPA> listaVigentes =
             listadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
@@ -138,7 +140,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      */
     @Override
     public void actualizarListado(ListadoValorComercialMetal listado) {
-        LOGGER.info(">> actualizarListado");
+        LOGGER.info(">> actualizarListado({})", listado);
 
         ListadoValorComercialMetalJPA listadoValorComercialMetalJPA =
             listadoJpaRepository.obtenerListadoVigente();

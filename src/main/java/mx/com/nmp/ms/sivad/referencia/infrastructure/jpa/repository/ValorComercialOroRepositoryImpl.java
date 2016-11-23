@@ -15,9 +15,9 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComerci
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -28,7 +28,6 @@ import java.util.*;
  *
  * @author ngonzalez
  */
-@Repository
 public class ValorComercialOroRepositoryImpl implements ValorComercialOroRepository {
 
     /**
@@ -39,19 +38,19 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
     /**
      * Referencia al repositorio de HistListadoValorComercialOroJPARepository.
      */
-    //@Inject
+    @Inject
     private HistListadoValorComercialOroJPARepository histListadoJpaRepository;
 
     /**
      * Referencia al repositorio de ListadoValorComercialOroJPARepository.
      */
-    //@Inject
+    @Inject
     private ListadoValorComercialOroJPARepository listadoJpaRepository;
 
     /**
      * Referencia al repositorio de ValorComercialOroJPARepository.
      */
-    //@Inject
+    @Inject
     private ValorComercialOroJPARepository valorComercialOroJPARepository;
 
 
@@ -63,8 +62,10 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      */
     @Override
     public Oro consultarOroVigente(@NotNull Oro oro) {
+        LOGGER.info(">> consultarOroVigente({})", oro);
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(">> consultarVigente - color: [{}], calidad: [{}]", oro.getColor(), oro.getCalidad());
+            LOGGER.info("'color: [{}]', 'calidad: [{}]'", oro.getColor(), oro.getCalidad());
         }
 
         ValorComercialOroJPA valorComercialOroJPA =
@@ -83,7 +84,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      */
     @Override
     public ListadoValorComercialOro consultarListadoVigente() {
-        LOGGER.info(">> consultarListadoVigente");
+        LOGGER.info(">> consultarListadoVigente()");
 
         ListadoValorComercialOroJPA listadoValorComercialOroJPA =
             listadoJpaRepository.obtenerListadoVigente();
@@ -99,14 +100,15 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      * {@inheritDoc}
      */
     @Override
-    public List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(@NotNull Date fechaVigencia) {
+    public List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
+        LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
+
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(">> consultarListadoPorFechaVigencia: [{}]",
-                (fechaVigencia != null) ? fechaVigencia.toString() : "NULL");
+            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
         }
 
-        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia);
-        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia);
+        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
+        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
         List<ListadoValorComercialOroJPA> listaVigentes =
             listadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
@@ -138,7 +140,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      */
     @Override
     public void actualizarListado(ListadoValorComercialOro listado) {
-        LOGGER.info(">> actualizarListado");
+        LOGGER.info(">> actualizarListado({})", listado);
 
         ListadoValorComercialOroJPA listadoValorComercialOroJPA =
             listadoJpaRepository.obtenerListadoVigente();

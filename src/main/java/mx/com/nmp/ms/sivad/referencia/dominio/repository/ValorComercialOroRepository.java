@@ -6,8 +6,9 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
+import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @author ngonzalez
  */
+@Component
 public interface ValorComercialOroRepository {
 
     /**
@@ -39,7 +41,7 @@ public interface ValorComercialOroRepository {
      * @param fechaVigencia La fecha de vigencia.
      * @return La lista de entidades obtenidas.
      */
-    List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(Date fechaVigencia);
+    List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(LocalDate fechaVigencia);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.
