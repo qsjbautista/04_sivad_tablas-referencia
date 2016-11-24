@@ -163,8 +163,10 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoValorComercialOroJPA)) {
-            HistListadoValorComercialOroJPA histListadoValorComercialOroJPA =
-                new HistListadoValorComercialOroJPA(listadoValorComercialOroJPA.getValoresComerciales());
+//            HistListadoValorComercialOroJPA histListadoValorComercialOroJPA =
+//                new HistListadoValorComercialOroJPA(listadoValorComercialOroJPA.getValoresComerciales());
+            // TODO
+            HistListadoValorComercialOroJPA histListadoValorComercialOroJPA = new HistListadoValorComercialOroJPA();
             histListadoValorComercialOroJPA.setUltimaActualizacion(listadoValorComercialOroJPA.getUltimaActualizacion());
             histListadoJpaRepository.save(histListadoValorComercialOroJPA);
 

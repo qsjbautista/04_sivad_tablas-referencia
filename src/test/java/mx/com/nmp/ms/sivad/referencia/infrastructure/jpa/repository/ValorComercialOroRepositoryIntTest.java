@@ -48,10 +48,9 @@ public class ValorComercialOroRepositoryIntTest {
 
     private static final Integer CALIDAD_ORO_EXISTE = 14;
     private static final Integer CALIDAD_ORO_NO_EXISTE = 2;
-
     private static final String COLOR_ORO_EXISTE = "Amarillo";
     private static final String COLOR_ORO_NO_EXISTE = "Verde";
-    private static final String FECHA_VIGENCIA = "2016-11-23";
+    private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
     private static final BigDecimal PRECIO_ORO_EXISTE = new BigDecimal(150.25);
@@ -135,6 +134,7 @@ public class ValorComercialOroRepositoryIntTest {
         assertNotNull(result.getUltimaActualizacion());
         assertNotNull(result.getValoresComerciales());
         assertFalse(result.getValoresComerciales().isEmpty());
+        assertTrue(result.getValoresComerciales().size() == 4);
     }
 
     /**
@@ -164,30 +164,30 @@ public class ValorComercialOroRepositoryIntTest {
         valorComercialOroRepository.consultarListadoPorFechaVigencia(fecha);
     }
 
-//    /**
-//     * Utilizado para consultar los listados de valores comerciales del oro de la fecha de vigencia indicada
-//     * (fecha de vigencia anterior a fecha actual y con datos).
-//     */
-//    @Test
-//    @Transactional
-//    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
-//    public void consultarListadoPorFechaVigenciaTest03() {
-//        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
-//        Calendar calendar = Calendar.getInstance();
-//
-//        try {
-//            calendar.setTime(sdf.parse(FECHA_VIGENCIA));
-//        } catch (ParseException e) {
-//            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
-//            fail();
-//        }
-//
-//        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
-//        List<ListadoValorComercialOro> result =
-//            valorComercialOroRepository.consultarListadoPorFechaVigencia(fechaVigencia);
-//
-//        assertNotNull(result);
-//        assertTrue(result.size() > 1);
-//    }
+    /**
+     * Utilizado para consultar los listados de valores comerciales del oro de la fecha de vigencia indicada
+     * (fecha de vigencia anterior a fecha actual y con datos).
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
+    public void consultarListadoPorFechaVigenciaTest03() {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
+        Calendar calendar = Calendar.getInstance();
+
+        try {
+            calendar.setTime(sdf.parse(FECHA_VIGENCIA));
+        } catch (ParseException e) {
+            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
+            fail();
+        }
+
+        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
+        List<ListadoValorComercialOro> result =
+            valorComercialOroRepository.consultarListadoPorFechaVigencia(fechaVigencia);
+
+        assertNotNull(result);
+        assertTrue(result.size() == 2);
+    }
 
 }

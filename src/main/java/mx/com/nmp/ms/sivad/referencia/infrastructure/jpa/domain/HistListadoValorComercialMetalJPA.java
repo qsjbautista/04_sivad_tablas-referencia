@@ -5,7 +5,6 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -23,23 +22,6 @@ public class HistListadoValorComercialMetalJPA extends AbstractListadoValorComer
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "listado")
     private Set<HistValorComercialMetalJPA> valoresComerciales;
-
-
-    // METODOS
-
-    /**
-     * Constructor.
-     *
-     * @param valoresComerciales Lista de valores comerciales.
-     */
-    public HistListadoValorComercialMetalJPA(Set<ValorComercialMetalJPA> valoresComerciales) {
-        Set<HistValorComercialMetalJPA> listaValoresComerciales = new HashSet<>();
-        for (ValorComercialMetalJPA valorComercialMetalJPA : valoresComerciales) {
-            listaValoresComerciales.add(new HistValorComercialMetalJPA(valorComercialMetalJPA));
-        }
-
-        this.valoresComerciales = listaValoresComerciales;
-    }
 
 
 

@@ -27,6 +27,7 @@ public abstract class AbstractListadoValorComercialJPA {
      * Fecha en que se realiza la última actualización.
      */
     @Column(name = "ultima_actualizacion", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date ultimaActualizacion;
 
 

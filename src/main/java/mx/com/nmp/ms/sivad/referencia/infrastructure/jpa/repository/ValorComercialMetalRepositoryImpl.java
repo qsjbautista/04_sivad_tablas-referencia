@@ -163,8 +163,10 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoValorComercialMetalJPA)) {
-            HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA =
-                new HistListadoValorComercialMetalJPA(listadoValorComercialMetalJPA.getValoresComerciales());
+            // TODO
+//            HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA =
+//                new HistListadoValorComercialMetalJPA(listadoValorComercialMetalJPA.getValoresComerciales());
+            HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA = new HistListadoValorComercialMetalJPA();
             histListadoValorComercialMetalJPA.setUltimaActualizacion(new Date());
             histListadoJpaRepository.save(histListadoValorComercialMetalJPA);
 

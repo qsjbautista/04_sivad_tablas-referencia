@@ -27,21 +27,6 @@ public class HistValorComercialMetalJPA extends AbstractValorComercialMetalJPA {
 
 
 
-    // METODOS
-
-    /**
-     * Constructor.
-     *
-     * @param valorComercialMetalJPA Valor comercial del metal.
-     */
-    public HistValorComercialMetalJPA(ValorComercialMetalJPA valorComercialMetalJPA) {
-        this.metal = valorComercialMetalJPA.getMetal();
-        this.calidad = valorComercialMetalJPA.getCalidad();
-        this.precio = valorComercialMetalJPA.getPrecio();
-    }
-
-
-
     // GETTERS Y SETTERS
 
     public HistListadoValorComercialMetalJPA getListado() {

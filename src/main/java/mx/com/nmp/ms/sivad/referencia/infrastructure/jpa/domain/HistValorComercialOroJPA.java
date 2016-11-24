@@ -27,21 +27,6 @@ public class HistValorComercialOroJPA extends AbstractValorComercialOroJPA {
 
 
 
-    // METODOS
-
-    /**
-     * Constructor.
-     *
-     * @param valorComercialOroJPA Valor comercial del oro.
-     */
-    public HistValorComercialOroJPA(ValorComercialOroJPA valorComercialOroJPA) {
-        this.color = valorComercialOroJPA.getColor();
-        this.calidad = valorComercialOroJPA.getCalidad();
-        this.precio = valorComercialOroJPA.getPrecio();
-    }
-
-
-
     // GETTERS Y SETTERS
 
     public HistListadoValorComercialOroJPA getListado() {
