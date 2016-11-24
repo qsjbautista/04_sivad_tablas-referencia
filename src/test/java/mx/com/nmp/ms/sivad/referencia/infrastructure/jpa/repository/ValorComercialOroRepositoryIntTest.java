@@ -9,9 +9,12 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaExcep
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialOroJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +29,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -48,18 +49,37 @@ public class ValorComercialOroRepositoryIntTest {
 
     private static final Integer CALIDAD_ORO_EXISTE = 14;
     private static final Integer CALIDAD_ORO_NO_EXISTE = 2;
+    private static final Integer CALIDAD_ORO_NUEVO_1 = 11;
+    private static final Integer CALIDAD_ORO_NUEVO_2 = 13;
+    private static final Integer CALIDAD_ORO_NUEVO_3 = 15;
     private static final String COLOR_ORO_EXISTE = "Amarillo";
     private static final String COLOR_ORO_NO_EXISTE = "Verde";
+    private static final String COLOR_ORO_NUEVO = "Morado";
     private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
     private static final BigDecimal PRECIO_ORO_EXISTE = new BigDecimal(150.25);
+    private static final BigDecimal PRECIO_ORO_NUEVO_1 = new BigDecimal(50.25);
+    private static final BigDecimal PRECIO_ORO_NUEVO_2 = new BigDecimal(60.25);
+    private static final BigDecimal PRECIO_ORO_NUEVO_3 = new BigDecimal(70.25);
 
     /**
      * Referencia al repositorio de ValorComercialOroRepository.
      */
     @Inject
     private ValorComercialOroRepository valorComercialOroRepository;
+
+    /**
+     * Referencia al repositorio de ValorComercialOroJPARepository.
+     */
+    @Inject
+    private ListadoValorComercialOroJPARepository jpaRepository;
+
+    /**
+     * Referencia al repositorio de HistListadoValorComercialOroJPARepository.
+     */
+    @Inject
+    private HistListadoValorComercialOroJPARepository histJPARepository;
 
 
 
@@ -188,6 +208,113 @@ public class ValorComercialOroRepositoryIntTest {
 
         assertNotNull(result);
         assertTrue(result.size() == 2);
+    }
+
+    /**
+     * Utilizado para actualizar el listado de valores comerciales del oro (sin datos iniciales).
+     */
+    @Test
+    @Transactional
+    public void actualizarListadoTest01() {
+        List<ListadoValorComercialOroJPA> listadoInicialIda = jpaRepository.findAll();
+        assertNotNull(listadoInicialIda);
+        assertTrue(listadoInicialIda.size() == 0);
+
+        List<HistListadoValorComercialOroJPA> histListadoInicialIda = histJPARepository.findAll();
+        assertNotNull(histListadoInicialIda);
+        assertTrue(histListadoInicialIda.size() == 0);
+
+        Set<Oro> valoresComerciales = new HashSet<>();
+        Oro oro1 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_1, PRECIO_ORO_NUEVO_1);
+        Oro oro2 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_2, PRECIO_ORO_NUEVO_2);
+        Oro oro3 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3, PRECIO_ORO_NUEVO_3);
+        valoresComerciales.add(oro1);
+        valoresComerciales.add(oro2);
+        valoresComerciales.add(oro3);
+
+        ListadoValorComercialOro listado = ListadoValorComercialOroFactory.create(valoresComerciales);
+        valorComercialOroRepository.actualizarListado(listado);
+
+        ListadoValorComercialOro resultListadoVigente = valorComercialOroRepository.consultarListadoVigente();
+
+        assertNotNull(resultListadoVigente);
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
+        assertNotNull(resultListadoVigente.getValoresComerciales());
+        assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
+        assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
+
+        Oro oroVigente = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
+        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigente);
+
+        assertNotNull(resultOroVigente);
+        assertEquals(COLOR_ORO_NUEVO, resultOroVigente.getColor());
+        assertEquals(CALIDAD_ORO_NUEVO_3, resultOroVigente.getCalidad());
+        assertNotNull(resultOroVigente.obtenerValorGramo());
+        assertEquals(PRECIO_ORO_NUEVO_3, resultOroVigente.obtenerValorGramo());
+
+        List<ListadoValorComercialOroJPA> listadoInicialVuelta = jpaRepository.findAll();
+        assertNotNull(listadoInicialVuelta);
+        assertTrue(listadoInicialVuelta.size() > 0);
+        assertEquals(1, listadoInicialVuelta.size());
+
+        List<HistListadoValorComercialOroJPA> histListadoInicialVuelta = histJPARepository.findAll();
+        assertNotNull(histListadoInicialVuelta);
+        assertTrue(histListadoInicialVuelta.size() == 0);
+    }
+
+    /**
+     * Utilizado para actualizar el listado de valores comerciales del oro (con datos iniciales).
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
+    public void actualizarListadoTest02() {
+        List<ListadoValorComercialOroJPA> listadoInicialIda = jpaRepository.findAll();
+        assertNotNull(listadoInicialIda);
+        assertTrue(listadoInicialIda.size() > 0);
+
+        List<HistListadoValorComercialOroJPA> histListadoInicialIda = histJPARepository.findAll();
+        assertNotNull(histListadoInicialIda);
+        assertTrue(histListadoInicialIda.size() > 0);
+        int tamanioHistListadoInicial = histListadoInicialIda.size();
+
+        Set<Oro> valoresComerciales = new HashSet<>();
+        Oro oro1 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_1, PRECIO_ORO_NUEVO_1);
+        Oro oro2 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_2, PRECIO_ORO_NUEVO_2);
+        Oro oro3 = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3, PRECIO_ORO_NUEVO_3);
+        valoresComerciales.add(oro1);
+        valoresComerciales.add(oro2);
+        valoresComerciales.add(oro3);
+
+        ListadoValorComercialOro listado = ListadoValorComercialOroFactory.create(valoresComerciales);
+        valorComercialOroRepository.actualizarListado(listado);
+
+        ListadoValorComercialOro resultListadoVigente = valorComercialOroRepository.consultarListadoVigente();
+
+        assertNotNull(resultListadoVigente);
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
+        assertNotNull(resultListadoVigente.getValoresComerciales());
+        assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
+        assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
+
+        Oro oroVigente = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
+        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigente);
+
+        assertNotNull(resultOroVigente);
+        assertEquals(COLOR_ORO_NUEVO, resultOroVigente.getColor());
+        assertEquals(CALIDAD_ORO_NUEVO_3, resultOroVigente.getCalidad());
+        assertNotNull(resultOroVigente.obtenerValorGramo());
+        assertEquals(PRECIO_ORO_NUEVO_3, resultOroVigente.obtenerValorGramo());
+
+        List<ListadoValorComercialOroJPA> listadoInicialVuelta = jpaRepository.findAll();
+        assertNotNull(listadoInicialVuelta);
+        assertTrue(listadoInicialVuelta.size() > 0);
+        assertEquals(1, listadoInicialVuelta.size());
+
+        List<HistListadoValorComercialOroJPA> histListadoInicialVuelta = histJPARepository.findAll();
+        assertNotNull(histListadoInicialVuelta);
+        assertTrue(histListadoInicialVuelta.size() > 0);
+        assertEquals(tamanioHistListadoInicial + 1, histListadoInicialVuelta.size());
     }
 
 }

@@ -9,7 +9,6 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaExcep
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
@@ -18,6 +17,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComerci
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +102,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialOroJPA.class);
         }
 
-        return convertirAListadoValorComercialOro(listadoValorComercialOroJPA);
+        return ValorComercialUtil.convertToListadoValorComercialOro(listadoValorComercialOroJPA);
     }
 
     /**
@@ -139,13 +139,13 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
         List<ListadoValorComercialOro> result = new ArrayList<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialOroJPA listadoValorComercialOroJPA : listaVigentes) {
-                result.add(convertirAListadoValorComercialOro(listadoValorComercialOroJPA));
+                result.add(ValorComercialUtil.convertToListadoValorComercialOro(listadoValorComercialOroJPA));
             }
         }
 
         if (!ObjectUtils.isEmpty(listaHistoricos)) {
             for (HistListadoValorComercialOroJPA histListadoValorComercialOroJPA : listaHistoricos) {
-                result.add(convertirAListadoValorComercialOro(histListadoValorComercialOroJPA));
+                result.add(ValorComercialUtil.convertToListadoValorComercialOro(histListadoValorComercialOroJPA));
             }
         }
 
@@ -163,10 +163,21 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoValorComercialOroJPA)) {
-//            HistListadoValorComercialOroJPA histListadoValorComercialOroJPA =
-//                new HistListadoValorComercialOroJPA(listadoValorComercialOroJPA.getValoresComerciales());
-            // TODO
             HistListadoValorComercialOroJPA histListadoValorComercialOroJPA = new HistListadoValorComercialOroJPA();
+            Set<HistValorComercialOroJPA> histValoresComerciales = new HashSet<>();
+            if (!ObjectUtils.isEmpty(listadoValorComercialOroJPA.getValoresComerciales())) {
+                for (ValorComercialOroJPA valorComercialOroJPA : listadoValorComercialOroJPA.getValoresComerciales()) {
+                    HistValorComercialOroJPA histValorComercialOroJPA = new HistValorComercialOroJPA();
+                    histValorComercialOroJPA.setColor(valorComercialOroJPA.getColor());
+                    histValorComercialOroJPA.setCalidad(valorComercialOroJPA.getCalidad());
+                    histValorComercialOroJPA.setPrecio(valorComercialOroJPA.getPrecio());
+                    histValorComercialOroJPA.setListado(histListadoValorComercialOroJPA);
+
+                    histValoresComerciales.add(histValorComercialOroJPA);
+                }
+            }
+
+            histListadoValorComercialOroJPA.setValoresComerciales(histValoresComerciales);
             histListadoValorComercialOroJPA.setUltimaActualizacion(listadoValorComercialOroJPA.getUltimaActualizacion());
             histListadoJpaRepository.save(histListadoValorComercialOroJPA);
 
@@ -190,44 +201,6 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
         listadoNuevo.setValoresComerciales(valoresComerciales);
         listadoNuevo.setUltimaActualizacion(new Date());
         listadoJpaRepository.save(listadoNuevo);
-    }
-
-    /**
-     * Metodo auxiliar para convertir el listado de valores comerciales del oro JPA en entidad listado de dominio.
-     *
-     * @param listado El listado a convertir.
-     * @return El listado convertido en entidad de dominio.
-     */
-    private ListadoValorComercialOro convertirAListadoValorComercialOro(ListadoValorComercialOroJPA listado) {
-        Set<Oro> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (ValorComercialOroJPA vco : listado.getValoresComerciales()) {
-                valoresComerciales.add(
-                    OroFactory.create(vco.getId(), vco.getColor(), vco.getCalidad(), vco.getPrecio()));
-            }
-        }
-
-        return ListadoValorComercialOroFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
-    }
-
-    /**
-     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del oro JPA en entidad listado de dominio.
-     *
-     * @param listado El listado a convertir.
-     * @return El listado convertido en entidad de dominio.
-     */
-    private ListadoValorComercialOro convertirAListadoValorComercialOro(HistListadoValorComercialOroJPA listado) {
-        Set<Oro> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (HistValorComercialOroJPA vco : listado.getValoresComerciales()) {
-                valoresComerciales.add(
-                    OroFactory.create(vco.getId(), vco.getColor(), vco.getCalidad(), vco.getPrecio()));
-            }
-        }
-
-        return ListadoValorComercialOroFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
     }
 
 }

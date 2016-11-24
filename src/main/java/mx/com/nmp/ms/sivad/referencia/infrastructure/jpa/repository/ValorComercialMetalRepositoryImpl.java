@@ -9,7 +9,6 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaExcep
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
@@ -18,6 +17,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComerci
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +102,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialMetalJPA.class);
         }
 
-        return convertirAListadoValorComercialMetal(listadoValorComercialMetalJPA);
+        return ValorComercialUtil.convertToListadoValorComercialMetal(listadoValorComercialMetalJPA);
     }
 
     /**
@@ -139,13 +139,13 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
         List<ListadoValorComercialMetal> result = new ArrayList<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialMetalJPA listadoValorComercialMetalJPA : listaVigentes) {
-                result.add(convertirAListadoValorComercialMetal(listadoValorComercialMetalJPA));
+                result.add(ValorComercialUtil.convertToListadoValorComercialMetal(listadoValorComercialMetalJPA));
             }
         }
 
         if (!ObjectUtils.isEmpty(listaHistoricos)) {
             for (HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA : listaHistoricos) {
-                result.add(convertirAListadoValorComercialMetal(histListadoValorComercialMetalJPA));
+                result.add(ValorComercialUtil.convertToListadoValorComercialMetal(histListadoValorComercialMetalJPA));
             }
         }
 
@@ -163,11 +163,22 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoValorComercialMetalJPA)) {
-            // TODO
-//            HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA =
-//                new HistListadoValorComercialMetalJPA(listadoValorComercialMetalJPA.getValoresComerciales());
             HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA = new HistListadoValorComercialMetalJPA();
-            histListadoValorComercialMetalJPA.setUltimaActualizacion(new Date());
+            Set<HistValorComercialMetalJPA> histValoresComerciales = new HashSet<>();
+            if (!ObjectUtils.isEmpty(listadoValorComercialMetalJPA.getValoresComerciales())) {
+                for (ValorComercialMetalJPA valorComercialMetalJPA : listadoValorComercialMetalJPA.getValoresComerciales()) {
+                    HistValorComercialMetalJPA histValorComercialMetalJPA = new HistValorComercialMetalJPA();
+                    histValorComercialMetalJPA.setMetal(valorComercialMetalJPA.getMetal());
+                    histValorComercialMetalJPA.setCalidad(valorComercialMetalJPA.getCalidad());
+                    histValorComercialMetalJPA.setPrecio(valorComercialMetalJPA.getPrecio());
+                    histValorComercialMetalJPA.setListado(histListadoValorComercialMetalJPA);
+
+                    histValoresComerciales.add(histValorComercialMetalJPA);
+                }
+            }
+
+            histListadoValorComercialMetalJPA.setValoresComerciales(histValoresComerciales);
+            histListadoValorComercialMetalJPA.setUltimaActualizacion(listadoValorComercialMetalJPA.getUltimaActualizacion());
             histListadoJpaRepository.save(histListadoValorComercialMetalJPA);
 
             listadoJpaRepository.delete(listadoValorComercialMetalJPA.getId());
@@ -190,44 +201,6 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
         listadoNuevo.setValoresComerciales(valoresComerciales);
         listadoNuevo.setUltimaActualizacion(new Date());
         listadoJpaRepository.save(listadoNuevo);
-    }
-
-    /**
-     * Metodo auxiliar para convertir el listado de valores comerciales del metal JPA en entidad listado de dominio.
-     *
-     * @param listado El listado a convertir.
-     * @return El listado convertido en entidad de dominio.
-     */
-    private ListadoValorComercialMetal convertirAListadoValorComercialMetal(ListadoValorComercialMetalJPA listado) {
-        Set<Metal> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (ValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
-                valoresComerciales.add(
-                    MetalFactory.create(vcm.getId(), vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
-            }
-        }
-
-        return ListadoValorComercialMetalFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
-    }
-
-    /**
-     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del metal JPA en entidad listado de dominio.
-     *
-     * @param listado El listado a convertir.
-     * @return El listado convertido en entidad de dominio.
-     */
-    private ListadoValorComercialMetal convertirAListadoValorComercialMetal(HistListadoValorComercialMetalJPA listado) {
-        Set<Metal> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (HistValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
-                valoresComerciales.add(
-                    MetalFactory.create(vcm.getId(), vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
-            }
-        }
-
-        return ListadoValorComercialMetalFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
     }
 
 }
