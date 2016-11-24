@@ -24,7 +24,7 @@ public class Certificado {
     private String certificado;
 
     /**
-     * Factor del ceritifcado del diamante
+     * Factor del certifcado del diamante
      */
     private BigDecimal factor;
 
