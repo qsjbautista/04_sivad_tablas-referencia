@@ -14,26 +14,30 @@ public interface ModificadorValorDiamanteFactory {
     /**
      * Crea una entidad a partir del valor de los argumentos.
      *
-     * @param fechaCarga Fecha en la que se almacena la entidad.
-     * @param fechaListado Fecha de vigencia de la lista de factores.
+     * @param fechaCarga Fecha de vigencia de la lista de factores.
+     * @param fechaListado Fecha de origen de la información.
      * @param factor Factores de valor de diamantes.
      *
      * @return La entidad creada.
+     *
+     * @throws IllegalArgumentException Cuando algún argumento sea nulo.
      */
-    ModificadorValorDiamante createWith(DateTime fechaCarga, LocalDate fechaListado, FactorValorDiamante factor);
+    ModificadorValorDiamante crearCon(DateTime fechaCarga, LocalDate fechaListado, FactorValorDiamante factor);
 
     /**
      * Crea una entidad a partir del valor de los argumentos. a esta entidad le será inyectado
      * el repositorio de entidades para que se pueda persistir.
      *
-     * @param fechaCarga Fecha en la que se almacena la entidad.
-     * @param fechaListado Fecha de vigencia de la lista de factores.
+     * @param fechaCarga Fecha de vigencia de la lista de factores.
+     * @param fechaListado Fecha de origen de la información.
      * @param factor Factores de valor de diamantes.
      *
      * @return La entidad creada.
+     *
+     * @throws IllegalArgumentException Cuando algún argumento sea nulo.
      */
-    ModificadorValorDiamante createPersistentWith(DateTime fechaCarga, LocalDate fechaListado,
-                                                  FactorValorDiamante factor);
+    ModificadorValorDiamante crearPersistibleCon(DateTime fechaCarga, LocalDate fechaListado,
+                                                 FactorValorDiamante factor);
 
     /**
      * Crea una entidad a partir de un objeto constructor.
@@ -41,8 +45,10 @@ public interface ModificadorValorDiamanteFactory {
      * @param builder Referencia al objeto constructor.
      *
      * @return La entidad creada.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link ModificadorValorDiamante.Builder} es incorrecto.
      */
-    ModificadorValorDiamante createFrom(ModificadorValorDiamante.Builder builder);
+    ModificadorValorDiamante crearDesde(ModificadorValorDiamante.Builder builder);
 
     /**
      * Crea una entidad a partir de un objeto constructor. a esta entidad le será inyectado
@@ -51,6 +57,8 @@ public interface ModificadorValorDiamanteFactory {
      * @param builder Referencia al constructor.
      *
      * @return La entidad creada.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link ModificadorValorDiamante.Builder} es incorrecto.
      */
-    ModificadorValorDiamante createPersistentFrom(ModificadorValorDiamante.Builder builder);
+    ModificadorValorDiamante crearPersistibleDesde(ModificadorValorDiamante.Builder builder);
 }

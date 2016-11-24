@@ -33,6 +33,9 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.hbm2ddl.auto: create-drop
+    properties:
+        jadira.usertype.databaseZone: jvm
+        jadira.usertype.javaZone: jvm
     mvc:
         favicon:
             enabled: false

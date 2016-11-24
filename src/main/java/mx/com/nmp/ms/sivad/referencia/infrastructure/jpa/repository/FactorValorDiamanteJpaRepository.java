@@ -8,7 +8,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorValorDiamanteJpa;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -24,14 +24,15 @@ public interface FactorValorDiamanteJpaRepository extends JpaRepository<FactorVa
      *
      * @return Lista de factores de valor de diamante.
      */
-    FactorValorDiamanteJpa findFirstByOrderByFechaListadoDescIdDesc();
+    FactorValorDiamanteJpa findFirstByOrderByFechaCargaDesc();
 
     /**
      * PRecupera el listado de factores de valor de diamante con base en una fecha de vigencia.
      *
-     * @param fecha Fecha de vigencia.
+     * @param fechaInicial Fecha de vigencia inicial (ej. 2016-11-24T00:00:00.000).
+     * @param fechaFinal Fecha de vigencia final. (ej. 2016-11-24T23:59:59.999)
      *
      * @return Listado de factores de valor de diamante
      */
-    List<FactorValorDiamanteJpa> findByFechaListado(LocalDate fecha);
+    List<FactorValorDiamanteJpa> findByFechaCargaBetween(DateTime fechaInicial, DateTime fechaFinal);
 }

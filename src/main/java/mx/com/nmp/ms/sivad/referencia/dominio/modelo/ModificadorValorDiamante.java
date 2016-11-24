@@ -11,10 +11,6 @@ import java.util.Objects;
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 public class ModificadorValorDiamante {
-    /**
-     * Identificador de la entidad.
-     */
-    private Long id;
 
     /**
      * Factores de valor de diamantes.
@@ -22,12 +18,12 @@ public class ModificadorValorDiamante {
     private FactorValorDiamante factor;
 
     /**
-     * Fecha en la que se almacena la entidad.
+     * Fecha de vigencia de la lista de factores.
      */
     private DateTime fechaCarga;
 
     /**
-     * Fecha de vigencia de la lista de factores.
+     * Fecha de origen de la información.
      */
     private LocalDate fechaListado;
 
@@ -41,13 +37,6 @@ public class ModificadorValorDiamante {
      */
     public interface Builder {
         /**
-         * Recupera el identificador de la entidad.
-         *
-         * @return Identificador de la entidad.
-         */
-        Long getId();
-
-        /**
          * Recupera el valor de {@link FactorValorDiamante}
          *
          * @return {@link FactorValorDiamante}
@@ -55,16 +44,16 @@ public class ModificadorValorDiamante {
         FactorValorDiamante getFactor();
 
         /**
-         * Recupera la fecha en la que se almacena la entidad.
+         * Recupera la fecha de vigencia de la lista de factores.
          *
-         * @return Fecha en la que se almacena la entidad.
+         * @return Fecha de vigencia de la lista de factores.
          */
         DateTime getFechaCarga();
 
         /**
-         * Recupera la fecha de vigencia de la lista de factores.
+         * Recupera la fecha de origen de la información.
          *
-         * @return Fecha de vigencia de la lista de factores.
+         * @return Fecha de origen de la información.
          */
         LocalDate getFechaListado();
     }
@@ -78,7 +67,6 @@ public class ModificadorValorDiamante {
     private ModificadorValorDiamante(Builder builder, ModificadorValorDiamanteRepository repositorio) {
         super();
 
-        id = builder.getId();
         factor = builder.getFactor();
         fechaCarga = builder.getFechaCarga();
         fechaListado = builder.getFechaListado();
@@ -103,18 +91,18 @@ public class ModificadorValorDiamante {
     }
 
     /**
-     * Regresa la fecha en la que se almacena la entidad.
+     * Regresa la fecha de vigencia de la lista de factores.
      *
-     * @return Fecha en la que se almacena la entidad.
+     * @return Fecha de vigencia de la lista de factores.
      */
     public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
     /**
-     * Regresa la fecha de vigencia de la lista de factores.
+     * Regresa la fecha de origen de la información.
      *
-     * @return Fecha de vigencia de la lista de factores.
+     * @return Fecha de origen de la información.
      */
     public LocalDate getFechaListado() {
         return fechaListado;
@@ -135,7 +123,7 @@ public class ModificadorValorDiamante {
 
         ModificadorValorDiamante that = (ModificadorValorDiamante) o;
 
-        return Objects.equals(id, that.id);
+        return Objects.equals(fechaCarga, that.fechaCarga);
     }
 
     /**
@@ -143,6 +131,11 @@ public class ModificadorValorDiamante {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(fechaCarga);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s{fechaCarga=%s, factor=%s}", getClass().getSimpleName(), fechaCarga, factor);
     }
 }

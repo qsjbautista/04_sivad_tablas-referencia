@@ -18,8 +18,11 @@ public interface FactorValorDiamanteFactory {
      * @param maximo Factor valor Máximo.
      *
      * @return El Value Object creado.
+     *
+     * @throws IllegalArgumentException Cuando algun argumento, {@code minimo}, {@code medio},
+     * {@code maximo} sea nulo o menor o igaul a cero.
      */
-    FactorValorDiamante createWith(BigDecimal minimo, BigDecimal medio, BigDecimal maximo);
+    FactorValorDiamante crearCon(BigDecimal minimo, BigDecimal medio, BigDecimal maximo);
 
     /**
      * Crea una Value Object a partir de un objeto constructor.
@@ -27,6 +30,8 @@ public interface FactorValorDiamanteFactory {
      * @param builder Referencia al objeto constructor.
      *
      * @return El Value Object creado.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link FactorValorDiamante.Builder} es incorrecto.
      */
-    FactorValorDiamante createFrom(FactorValorDiamante.Builder builder);
+    FactorValorDiamante crearDesde(FactorValorDiamante.Builder builder);
 }

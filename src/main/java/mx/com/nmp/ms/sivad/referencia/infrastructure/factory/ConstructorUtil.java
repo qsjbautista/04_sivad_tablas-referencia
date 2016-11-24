@@ -2,9 +2,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Clase de utilería para recuperar el constructores y crear instancias.
@@ -50,7 +48,7 @@ public final class ConstructorUtil {
      *
      * @return Instancia del objeto creada.
      */
-    static <T> T getInstancia(Constructor<T> constructor, Object... argumentos) {
+    static <T> T getInstancia(final Constructor<T> constructor, final Object... argumentos) {
         T instancia = null;
         boolean isAccessible = constructor.isAccessible();
 
@@ -58,7 +56,7 @@ public final class ConstructorUtil {
             setAccessible(constructor, true);
 
             instancia = constructor.newInstance(argumentos);
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+        } catch (Exception e) {
             LOGGER.error("Ocurrio un error inesperado al crear la instancia de la entidad.", e);
         } finally {
             setAccessible(constructor, isAccessible);

@@ -10,6 +10,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -26,14 +27,17 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import static org.hibernate.annotations.CacheConcurrencyStrategy.NONSTRICT_READ_WRITE;
+
 /**
  * Entidad JPA que permite mapear los factores de diamante a una tabla de unidades persistentes.
  *
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 @Entity
+@Cache(usage = NONSTRICT_READ_WRITE)
 @Table(name = "cfg_diamante_factor",
-    indexes = {@Index(name = "70704_349371", columnList = "id", unique = true)})
+    indexes = {@Index(name = "idx_cfg_diamante_factor_id", columnList = "id", unique = true)})
 public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
         FactorValorDiamante.Builder, Serializable {
     private static final long serialVersionUID = -4561884219797438224L;
@@ -64,14 +68,14 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
     private BigDecimal maximo;
 
     /**
-     * Instante en el que se persiste la entidad.
+     * Fecha de vigencia de la lista de factores.
      */
     @Column(name = "fecha_carga", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime fechaCarga;
 
     /**
-     * Fecha de vigencia de la lista de factores.
+     * Fecha de origen de la información.
      */
     @Column(name = "fecha_listado", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -95,7 +99,6 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
      *
      * @return Identificador.
      */
-    @Override
     public Long getId() {
         return id;
     }
@@ -167,9 +170,9 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
     }
 
     /**
-     * Regresa el instante en el que se persiste la entidad.
+     * Regresa fecha de vigencia de la lista de factores.
      *
-     * @return Instante en el que se persiste la entidad.
+     * @return Fecha de vigencia de la lista de factores.
      */
     @Override
     public DateTime getFechaCarga() {
@@ -177,18 +180,18 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
     }
 
     /**
-     * Establece el instante en el que se persiste la entidad.
+     * Establece la fecha de vigencia de la lista de factores.
      *
-     * @param fechaCarga Instante en el que se persiste la entidad.
+     * @param fechaCarga Fecha de vigencia de la lista de factores.
      */
     public void setFechaCarga(DateTime fechaCarga) {
         this.fechaCarga = fechaCarga;
     }
 
     /**
-     * Regresa el día en el que se guarda la lista.
+     * Regresa la fecha de origen de la información.
      *
-     * @return Día en el que se guarda la lista.
+     * @return Fecha de origen de la información.
      */
     @Override
     public LocalDate getFechaListado() {
@@ -196,9 +199,9 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
     }
 
     /**
-     * Establece el día en el que se guarda la lista.
+     * Establece la fecha de origen de la información.
      *
-     * @param fechaListado Día en el que se guarda la lista.
+     * @param fechaListado Fecha de origen de la información.
      */
     public void setFechaListado(LocalDate fechaListado) {
         this.fechaListado = fechaListado;
@@ -221,7 +224,7 @@ public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
         if (ObjectUtils.isEmpty(fabrica)) {
             return null;
         } else {
-            return fabrica.createFrom(this);
+            return fabrica.crearDesde(this);
         }
     }
 }

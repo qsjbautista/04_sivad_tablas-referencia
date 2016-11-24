@@ -47,35 +47,35 @@ public class ModificadorValorDiamanteFactoryImpl implements ModificadorValorDiam
      * {@inheritDoc}
      */
     @Override
-    public ModificadorValorDiamante createWith(final DateTime fechaCarga, final LocalDate fechaListado,
+    public ModificadorValorDiamante crearCon(final DateTime fechaCarga, final LocalDate fechaListado,
             final FactorValorDiamante factor) {
         final ModificadorValorDiamante.Builder builder = getBuilder(fechaCarga, fechaListado, factor);
 
-        return create(builder, null);
+        return crearDesde(builder);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ModificadorValorDiamante createPersistentWith(final DateTime fechaCarga, final LocalDate fechaListado,
+    public ModificadorValorDiamante crearPersistibleCon(final DateTime fechaCarga, final LocalDate fechaListado,
             final FactorValorDiamante factor) {
         final ModificadorValorDiamante.Builder builder = getBuilder(fechaCarga, fechaListado, factor);
 
-        return create(builder, getRepositorio());
+        return crearPersistibleDesde(builder);
     }
 
     @Override
-    public ModificadorValorDiamante createFrom(final ModificadorValorDiamante.Builder builder) {
-        return create(builder, null);
+    public ModificadorValorDiamante crearDesde(final ModificadorValorDiamante.Builder builder) {
+        return crear(builder, null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public ModificadorValorDiamante createPersistentFrom(final ModificadorValorDiamante.Builder builder) {
-        return create(builder, getRepositorio());
+    public ModificadorValorDiamante crearPersistibleDesde(final ModificadorValorDiamante.Builder builder) {
+        return crear(builder, getRepositorio());
     }
 
     /**
@@ -85,8 +85,10 @@ public class ModificadorValorDiamanteFactoryImpl implements ModificadorValorDiam
      * @param repositorio Referencia al repositorio de la entidad.
      *
      * @return Entidad creada.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link ModificadorValorDiamante.Builder} es incorrecto.
      */
-    private ModificadorValorDiamante create(final ModificadorValorDiamante.Builder builder,
+    private ModificadorValorDiamante crear(final ModificadorValorDiamante.Builder builder,
             ModificadorValorDiamanteRepository repositorio) {
         validarBuilder(builder);
 
@@ -109,8 +111,8 @@ public class ModificadorValorDiamanteFactoryImpl implements ModificadorValorDiam
     /**
      * Crea un objeto constructor a partir del valor de los argumentos.
      *
-     * @param fechaCarga Fecha en la que se almacena la entidad.
-     * @param fechaListado Fecha de vigencia de la lista de factores.
+     * @param fechaCarga Fecha de vigencia de la lista de factores.
+     * @param fechaListado Fecha de origen de la información.
      * @param factor Factores de valor de diamantes.
      *
      * @return Objeto constructor creado.
@@ -118,11 +120,6 @@ public class ModificadorValorDiamanteFactoryImpl implements ModificadorValorDiam
     private static ModificadorValorDiamante.Builder getBuilder(final DateTime fechaCarga, final LocalDate fechaListado,
             final FactorValorDiamante factor) {
         return new ModificadorValorDiamante.Builder() {
-            @Override
-            public Long getId() {
-                return null;
-            }
-
             @Override
             public FactorValorDiamante getFactor() {
                 return factor;
@@ -144,8 +141,12 @@ public class ModificadorValorDiamanteFactoryImpl implements ModificadorValorDiam
      * Valida que los datos con los que va a ser creada la entidad sean correctos.
      *
      * @param builder Objeto constructor de la entidad.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link ModificadorValorDiamante.Builder} es incorrecto.
      */
     private static void validarBuilder(final ModificadorValorDiamante.Builder builder) {
+        Assert.notNull(builder, "El objeto constructor no debe ser nulo.");
+
         Assert.notNull(builder.getFactor(), "Factores no debe ser nulo");
         Assert.notNull(builder.getFechaCarga(), "Fecha carga no debe ser nula");
         Assert.notNull(builder.getFechaListado(), "Fecha listado no debe ser nula");

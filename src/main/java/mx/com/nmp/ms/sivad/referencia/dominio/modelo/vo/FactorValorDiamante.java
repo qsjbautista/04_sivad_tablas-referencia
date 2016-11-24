@@ -8,6 +8,7 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Value Object que contiene los factores aplicables sobre el valor del Diamante (factor valor Mínimo,
@@ -95,5 +96,41 @@ public class FactorValorDiamante {
      */
     public BigDecimal getMaximo() {
         return maximo;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FactorValorDiamante that = (FactorValorDiamante) o;
+
+        return Objects.equals(minimo, that.minimo) &&
+            Objects.equals(medio, that.medio) &&
+            Objects.equals(maximo, that.maximo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(minimo, medio, maximo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format("{minimo=%s, medio=%s, maximo=%s}", minimo, medio, maximo);
     }
 }

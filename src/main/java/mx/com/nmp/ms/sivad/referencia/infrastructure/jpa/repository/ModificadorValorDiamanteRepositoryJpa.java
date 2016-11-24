@@ -7,15 +7,20 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNotFoundException;
+import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ModificadorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorValorDiamanteJpa;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -31,6 +36,8 @@ import java.util.List;
 @Repository
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDiamanteRepository {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModificadorValorDiamanteRepositoryJpa.class);
+
     /**
      * Referencia al repositorio JPA.
      */
@@ -60,7 +67,9 @@ public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDi
      * {@inheritDoc}
      */
     @Override
-    public ModificadorValorDiamante actualizar(ModificadorValorDiamante entidad) {
+    public ModificadorValorDiamante actualizar(@NotNull ModificadorValorDiamante entidad) {
+        LOGGER.info(">> actualizar({})", entidad);
+
         FactorValorDiamante vo = entidad.getFactor();
         FactorValorDiamanteJpa factor = new FactorValorDiamanteJpa();
 
@@ -74,7 +83,9 @@ public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDi
 
         repositorio.saveAndFlush(factor);
 
-        return fabricaEntidad.createFrom(factor);
+        LOGGER.debug("creando entidad {} desde {}", getClass().getSimpleName(), factor);
+
+        return fabricaEntidad.crearDesde(factor);
     }
 
     /**
@@ -82,27 +93,37 @@ public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDi
      */
     @Override
     public ModificadorValorDiamante consultar() {
-        FactorValorDiamanteJpa factor = repositorio.findFirstByOrderByFechaListadoDescIdDesc();
+        LOGGER.info(">> consultar()");
+
+        FactorValorDiamanteJpa factor = repositorio.findFirstByOrderByFechaCargaDesc();
 
         if (ObjectUtils.isEmpty(factor)) {
-            throw new ValorComercialNotFoundException(
+            throw new ValorComercialNoEncontradoException(
                 FactorValorDiamante.class, "No hay factores de valor de diamante vigentes");
         }
 
         factor.setFabrica(fabricaVO);
 
-        return fabricaEntidad.createFrom(factor);
+        LOGGER.debug("creando entidad {} desde {}", getClass().getSimpleName(), factor);
+
+        return fabricaEntidad.crearDesde(factor);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<ModificadorValorDiamante> consultar(LocalDate fecha) {
-        List<FactorValorDiamanteJpa> factores = repositorio.findByFechaListado(fecha);
+    public List<ModificadorValorDiamante> consultar(@NotNull DateTime fecha) {
+        validarFechaFutura(fecha);
+
+        LOGGER.info(">> consultar({})", fecha);
+
+        DateTime fechaFinal = fecha.millisOfDay().withMaximumValue();
+
+        List<FactorValorDiamanteJpa> factores = repositorio.findByFechaCargaBetween(fecha, fechaFinal);
 
         if (ObjectUtils.isEmpty(factores)) {
-            throw new ValorComercialNotFoundException(
+            throw new ValorComercialNoEncontradoException(
                 FactorValorDiamante.class, "No hay factores de valor de diamante en la fecha especificada");
         }
 
@@ -110,9 +131,24 @@ public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDi
 
         for (FactorValorDiamanteJpa factor : factores) {
             factor.setFabrica(fabricaVO);
-            resultado.add(fabricaEntidad.createFrom(factor));
+            resultado.add(fabricaEntidad.crearDesde(factor));
         }
 
+        LOGGER.debug("creando lista de entidades tipo {}, {}", getClass().getSimpleName(), resultado);
+
         return resultado;
+    }
+
+
+    /**
+     * Verifica que la fecha no sea del futuro.
+     *
+     * @param fecha Fecha a validar.
+     */
+    private void validarFechaFutura(DateTime fecha) {
+        if (fecha.isAfterNow()) {
+            throw new FechaVigenciaFuturaException("La fecha de vigencia no puede ser una fecha futura",
+                ModificadorValorDiamante.class);
+        }
     }
 }

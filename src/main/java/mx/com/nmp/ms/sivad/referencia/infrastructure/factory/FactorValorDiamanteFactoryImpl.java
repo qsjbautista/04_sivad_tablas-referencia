@@ -4,6 +4,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorNumero;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
@@ -36,17 +37,17 @@ public class FactorValorDiamanteFactoryImpl implements FactorValorDiamanteFactor
      * {@inheritDoc}
      */
     @Override
-    public FactorValorDiamante createWith(final BigDecimal minimo, final BigDecimal medio, final BigDecimal maximo) {
+    public FactorValorDiamante crearCon(final BigDecimal minimo, final BigDecimal medio, final BigDecimal maximo) {
         final FactorValorDiamante.Builder builder = getBuilder(minimo, medio, maximo);
 
-        return createFrom(builder);
+        return crearDesde(builder);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public FactorValorDiamante createFrom(FactorValorDiamante.Builder builder) {
+    public FactorValorDiamante crearDesde(FactorValorDiamante.Builder builder) {
         validarBuilder(builder);
 
         return getInstancia(constructor, builder);
@@ -86,10 +87,14 @@ public class FactorValorDiamanteFactoryImpl implements FactorValorDiamanteFactor
      * Valida que los datos con los que va a ser creado el Value Object sean correctos.
      *
      * @param builder Objeto constructor del Value Object.
+     *
+     * @throws IllegalArgumentException Cuando algún valor del {@link FactorValorDiamante.Builder} es incorrecto.
      */
     private static void validarBuilder(final FactorValorDiamante.Builder builder) {
-        ValidadorNumero.validar(builder.getMinimo());
-        ValidadorNumero.validar(builder.getMedio());
-        ValidadorNumero.validar(builder.getMaximo());
+        Assert.notNull(builder, "El objeto constructor no debe ser nulo.");
+
+        ValidadorNumero.validarPositivo(builder.getMinimo());
+        ValidadorNumero.validarPositivo(builder.getMedio());
+        ValidadorNumero.validarPositivo(builder.getMaximo());
     }
 }

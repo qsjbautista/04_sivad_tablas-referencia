@@ -12,7 +12,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.exception;
  *
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
-public class ValorComercialNotFoundException extends RuntimeException {
+public class ValorComercialNoEncontradoException extends RuntimeException {
     private static final long serialVersionUID = 3700389437127693545L;
 
     /**
@@ -26,7 +26,7 @@ public class ValorComercialNotFoundException extends RuntimeException {
      * @param valorComercial Clase del valor comercial que genero la excepción
      * @param mensaje Mensaje que describe la excepción.
      */
-    public ValorComercialNotFoundException(Class<?> valorComercial, String mensaje) {
+    public ValorComercialNoEncontradoException(Class<?> valorComercial, String mensaje) {
         super(mensaje);
         this.valorComercial = valorComercial;
     }
