@@ -5,6 +5,9 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
@@ -18,6 +21,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -28,6 +32,7 @@ import java.util.*;
  *
  * @author ngonzalez
  */
+@Component
 public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRepository {
 
     /**
@@ -72,7 +77,9 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             valorComercialMetalJPARepository.findByMetalAndCalidad(metal.getMetal(), metal.getCalidad());
 
         if (ObjectUtils.isEmpty(valorComercialMetalJPA)) {
-            // TODO Excepción
+            String msg = "No existe un valor gramo para las características de metal solicitadas.";
+            LOGGER.warn(msg);
+            throw new ValorGramoNoEncontradoException(msg, ValorComercialMetalJPA.class);
         }
 
         return MetalFactory.create(valorComercialMetalJPA.getId(), valorComercialMetalJPA.getMetal(),
@@ -90,7 +97,9 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             listadoJpaRepository.obtenerListadoVigente();
 
         if (ObjectUtils.isEmpty(listadoValorComercialMetalJPA)) {
-            // TODO Excepción
+            String msg = "No existe un listado de valor gramo metal vigente.";
+            LOGGER.warn(msg);
+            throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialMetalJPA.class);
         }
 
         return convertirAListadoValorComercialMetal(listadoValorComercialMetalJPA);
@@ -107,6 +116,12 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
         }
 
+        if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
+            String msg = "La fecha de vigencia solicitada no puede ser una fecha futura.";
+            LOGGER.error(msg);
+            throw new FechaVigenciaFuturaException(msg, ListadoValorComercialMetalJPA.class);
+        }
+
         Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
         Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
@@ -116,7 +131,9 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
-            // TODO Excepción
+            String msg = "Fecha de vigencia solicitada no existe.";
+            LOGGER.warn(msg);
+            throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialMetalJPA.class);
         }
 
         List<ListadoValorComercialMetal> result = new ArrayList<>();

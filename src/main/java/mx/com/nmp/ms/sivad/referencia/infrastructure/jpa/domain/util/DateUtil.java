@@ -59,4 +59,18 @@ public final class DateUtil {
         return calendar.getTime();
     }
 
+    /**
+     * Permite validar si la fecha que se recibe como parámetro es posterior a la fecha actual o no.
+     *
+     * @param fecha La fecha a procesar.
+     * @return TRUE si es posterior y FALSE en caso contrario.
+     */
+    public static boolean isGreaterThanNow(Date fecha) {
+        if (fecha.compareTo(new Date()) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

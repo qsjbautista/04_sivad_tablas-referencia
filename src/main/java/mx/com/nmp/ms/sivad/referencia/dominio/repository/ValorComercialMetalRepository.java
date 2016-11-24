@@ -7,7 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
 import org.joda.time.LocalDate;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  *
  * @author ngonzalez
  */
-@Component
 public interface ValorComercialMetalRepository {
 
     /**
