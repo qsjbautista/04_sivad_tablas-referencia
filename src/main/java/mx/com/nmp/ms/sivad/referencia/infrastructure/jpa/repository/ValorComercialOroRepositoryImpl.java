@@ -7,6 +7,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
@@ -156,8 +157,14 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      * {@inheritDoc}
      */
     @Override
-    public void actualizarListado(ListadoValorComercialOro listado) {
+    public void actualizarListado(@NotNull ListadoValorComercialOro listado) {
         LOGGER.info(">> actualizarListado({})", listado);
+
+        if (ObjectUtils.isEmpty(listado.getValoresComerciales())) {
+            String msg = "El listado con el cual se desea reemplazar la lista vigente no tiene elementos.";
+            LOGGER.error(msg);
+            throw new ListadoValorGramoSinElementosException(msg, ListadoValorComercialOroJPA.class);
+        }
 
         ListadoValorComercialOroJPA listadoValorComercialOroJPA =
             listadoJpaRepository.obtenerListadoVigente();

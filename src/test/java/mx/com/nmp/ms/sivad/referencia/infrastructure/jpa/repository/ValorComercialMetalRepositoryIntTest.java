@@ -7,6 +7,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory;
@@ -211,11 +212,22 @@ public class ValorComercialMetalRepositoryIntTest {
     }
 
     /**
+     * Utilizado para actualizar el listado de valores comerciales del metal (con un listado vacío).
+     */
+    @Test(expected = ListadoValorGramoSinElementosException.class)
+    @Transactional
+    public void actualizarListadoTest01() {
+        Set<Metal> valoresComerciales = new HashSet<>();
+        ListadoValorComercialMetal listado = ListadoValorComercialMetalFactory.create(valoresComerciales);
+        valorComercialMetalRepository.actualizarListado(listado);
+    }
+
+    /**
      * Utilizado para actualizar el listado de valores comerciales del metal (sin datos iniciales).
      */
     @Test
     @Transactional
-    public void actualizarListadoTest01() {
+    public void actualizarListadoTest02() {
         List<ListadoValorComercialMetalJPA> listadoInicialIda = jpaRepository.findAll();
         assertNotNull(listadoInicialIda);
         assertTrue(listadoInicialIda.size() == 0);
@@ -268,7 +280,7 @@ public class ValorComercialMetalRepositoryIntTest {
     @Test
     @Transactional
     @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
-    public void actualizarListadoTest02() {
+    public void actualizarListadoTest03() {
         List<ListadoValorComercialMetalJPA> listadoInicialIda = jpaRepository.findAll();
         assertNotNull(listadoInicialIda);
         assertTrue(listadoInicialIda.size() > 0);
