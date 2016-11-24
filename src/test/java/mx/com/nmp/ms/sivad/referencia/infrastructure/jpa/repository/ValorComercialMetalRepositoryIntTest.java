@@ -8,10 +8,10 @@ import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,103 +33,102 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Clase de prueba para el repositorio ValorComercialOroRepository.
+ * Clase de prueba para el repositorio ValorComercialMetalRepository.
  *
  * @author ngonzalez
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TablasReferenciaApplication.class)
-public class ValorComercialOroRepositoryIntTest {
+public class ValorComercialMetalRepositoryIntTest {
 
     /**
      * Utilizada para manipular los mensajes informativos y de error.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValorComercialOroRepositoryIntTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValorComercialMetalRepositoryIntTest.class);
 
-    private static final Integer CALIDAD_ORO_EXISTE = 14;
-    private static final Integer CALIDAD_ORO_NO_EXISTE = 2;
-
-    private static final String COLOR_ORO_EXISTE = "Amarillo";
-    private static final String COLOR_ORO_NO_EXISTE = "Verde";
+    private static final String CALIDAD_METAL_EXISTE = "0.725";
+    private static final String CALIDAD_METAL_NO_EXISTE = "0.125";
+    private static final String TIPO_METAL_EXISTE = "Plata";
+    private static final String TIPO_METAL_NO_EXISTE = "Cobre";
     private static final String FECHA_VIGENCIA = "2016-11-23";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
-    private static final BigDecimal PRECIO_ORO_EXISTE = new BigDecimal(150.25);
+    private static final BigDecimal PRECIO_METAL_EXISTE = new BigDecimal(150.25);
 
     /**
-     * Referencia al repositorio de ValorComercialOroRepository.
+     * Referencia al repositorio de ValorComercialMetalRepository.
      */
     @Inject
-    private ValorComercialOroRepository valorComercialOroRepository;
+    private ValorComercialMetalRepository valorComercialMetalRepository;
 
 
 
     // METODOS
 
     /**
-     * Utilizado para consultar un valor por gramo de oro, cuyo color y calidad no existen.
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal y calidad no existen.
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
-    public void obtenerValorGramoOroTest01() {
-        Oro oro = OroFactory.create(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_NO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+    public void obtenerValorGramoMetalTest01() {
+        Metal metal = MetalFactory.create(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_NO_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metal);
     }
 
     /**
-     * Utilizado para consultar un valor por gramo de oro, cuyo color no existe.
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal no existe.
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
-    public void obtenerValorGramoOroTest02() {
-        Oro oro = OroFactory.create(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+    public void obtenerValorGramoMetalTest02() {
+        Metal metal = MetalFactory.create(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metal);
     }
 
     /**
-     * Utilizado para consultar un valor por gramo de oro, cuya calidad no existe.
+     * Utilizado para consultar un valor por gramo de metal, cuya calidad no existe.
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
-    public void obtenerValorGramoOroTest03() {
-        Oro oro = OroFactory.create(COLOR_ORO_EXISTE, CALIDAD_ORO_NO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+    public void obtenerValorGramoMetalTest03() {
+        Metal metal = MetalFactory.create(TIPO_METAL_EXISTE, CALIDAD_METAL_NO_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metal);
     }
 
     /**
-     * Utilizado para consultar un valor por gramo de oro, cuyo color y calidad existen.
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal y calidad existen.
      */
     @Test
     @Transactional
-    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
-    public void obtenerValorGramoOroTest04() {
-        Oro oro = OroFactory.create(COLOR_ORO_EXISTE, CALIDAD_ORO_EXISTE);
-        Oro result = valorComercialOroRepository.consultarOroVigente(oro);
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
+    public void obtenerValorGramoMetalTest04() {
+        Metal metal = MetalFactory.create(TIPO_METAL_EXISTE, CALIDAD_METAL_EXISTE);
+        Metal result = valorComercialMetalRepository.consultarMetalVigente(metal);
 
         assertNotNull(result);
-        assertEquals(COLOR_ORO_EXISTE, result.getColor());
-        assertEquals(CALIDAD_ORO_EXISTE, result.getCalidad());
+        assertEquals(TIPO_METAL_EXISTE, result.getMetal());
+        assertEquals(CALIDAD_METAL_EXISTE, result.getCalidad());
         assertNotNull(result.obtenerValorGramo());
-        assertEquals(PRECIO_ORO_EXISTE, result.obtenerValorGramo());
+        assertEquals(PRECIO_METAL_EXISTE, result.obtenerValorGramo());
     }
 
     /**
-     * Utilizado para consultar el listado de valores comerciales del oro vigente (sin datos).
+     * Utilizado para consultar el listado de valores comerciales del metal vigente (sin datos).
      */
     @Test(expected = ListadoValorGramoNoEncontradoException.class)
     @Transactional
     public void consultarListadoVigenteTest01() {
-        valorComercialOroRepository.consultarListadoVigente();
+        valorComercialMetalRepository.consultarListadoVigente();
     }
 
     /**
-     * Utilizado para consultar el listado de valores comerciales del oro vigente (con datos).
+     * Utilizado para consultar el listado de valores comerciales del metal vigente (con datos).
      */
     @Test
     @Transactional
-    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
     public void consultarListadoVigenteTest02() {
-        ListadoValorComercialOro result = valorComercialOroRepository.consultarListadoVigente();
+        ListadoValorComercialMetal result = valorComercialMetalRepository.consultarListadoVigente();
 
         assertNotNull(result);
         assertNotNull(result.getUltimaActualizacion());
@@ -138,7 +137,7 @@ public class ValorComercialOroRepositoryIntTest {
     }
 
     /**
-     * Utilizado para consultar los listados de valores comerciales del oro de la fecha de vigencia indicada
+     * Utilizado para consultar los listados de valores comerciales del metal de la fecha de vigencia indicada
      * (fecha de vigencia posterior a fecha actual).
      */
     @Test(expected = FechaVigenciaFuturaException.class)
@@ -150,27 +149,27 @@ public class ValorComercialOroRepositoryIntTest {
         calendar.add(Calendar.DATE, 1);
         LocalDate fechaFutura = LocalDate.fromDateFields(calendar.getTime());
 
-        valorComercialOroRepository.consultarListadoPorFechaVigencia(fechaFutura);
+        valorComercialMetalRepository.consultarListadoPorFechaVigencia(fechaFutura);
     }
 
     /**
-     * Utilizado para consultar los listados de valores comerciales del oro de la fecha de vigencia indicada
+     * Utilizado para consultar los listados de valores comerciales del metal de la fecha de vigencia indicada
      * (fecha de vigencia anterior a fecha actual y sin datos).
      */
     @Test(expected = ListadoValorGramoNoEncontradoException.class)
     @Transactional
     public void consultarListadoPorFechaVigenciaTest02() {
         LocalDate fecha = new LocalDate();
-        valorComercialOroRepository.consultarListadoPorFechaVigencia(fecha);
+        valorComercialMetalRepository.consultarListadoPorFechaVigencia(fecha);
     }
 
 //    /**
-//     * Utilizado para consultar los listados de valores comerciales del oro de la fecha de vigencia indicada
+//     * Utilizado para consultar los listados de valores comerciales del metal de la fecha de vigencia indicada
 //     * (fecha de vigencia anterior a fecha actual y con datos).
 //     */
 //    @Test
 //    @Transactional
-//    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
+//    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
 //    public void consultarListadoPorFechaVigenciaTest03() {
 //        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
 //        Calendar calendar = Calendar.getInstance();
@@ -183,11 +182,12 @@ public class ValorComercialOroRepositoryIntTest {
 //        }
 //
 //        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
-//        List<ListadoValorComercialOro> result =
-//            valorComercialOroRepository.consultarListadoPorFechaVigencia(fechaVigencia);
+//        List<ListadoValorComercialMetal> result =
+//            valorComercialMetalRepository.consultarListadoPorFechaVigencia(fechaVigencia);
 //
 //        assertNotNull(result);
 //        assertTrue(result.size() > 1);
 //    }
 
 }
+
