@@ -3,6 +3,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.model.vo;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.factory.FactorValorDiamanteFactoryImpl;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorValorDiamanteJpa;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -123,7 +125,7 @@ public class FactorValorDiamanteUTest {
      * @see FactorValorDiamante#equals(Object)
      */
     @Test
-    public void crearWithEqualsTest(){
+    public void crearWithEqualsTrueTest(){
         FactorValorDiamante test = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
         FactorValorDiamante test2 = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
 
@@ -131,6 +133,42 @@ public class FactorValorDiamanteUTest {
         assertFalse(test.equals(null));
         assertFalse(test.equals(new Object()));
         assertEquals(test, test2);
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FactorValorDiamante#equals(Object)
+     */
+    @Test
+    public void crearWithEqualsFalseMinimoTest(){
+        FactorValorDiamante test = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
+        FactorValorDiamante test2 = fabrica.crearCon(BigDecimal.valueOf(2), BigDecimal.TEN, BigDecimal.TEN);
+
+        assertFalse(test.equals(test2));
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FactorValorDiamante#equals(Object)
+     */
+    @Test
+    public void crearWithEqualsFalseMedioTest(){
+        FactorValorDiamante test = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
+        FactorValorDiamante test2 = fabrica.crearCon(BigDecimal.ONE, BigDecimal.valueOf(2), BigDecimal.TEN);
+
+        assertFalse(test.equals(test2));
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FactorValorDiamante#equals(Object)
+     */
+    @Test
+    public void crearWithEqualsFalseMaximoTest(){
+        FactorValorDiamante test = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
+        FactorValorDiamante test2 = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.valueOf(2));
+
+        assertFalse(test.equals(test2));
     }
 
     /**
@@ -153,5 +191,29 @@ public class FactorValorDiamanteUTest {
         FactorValorDiamante test = fabrica.crearCon(BigDecimal.ONE, BigDecimal.TEN, BigDecimal.TEN);
 
         assertTrue(test.toString().contains(BigDecimal.TEN.toString()));
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FactorValorDiamanteJpa#setId(Long)
+     */
+    @Test
+    public void crearSetIdTest(){
+        FactorValorDiamanteJpa test = new FactorValorDiamanteJpa();
+        test.setId(1L);
+
+        assertNotNull(test.getId());
+        assertTrue(test.getId().equals(1L));
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FactorValorDiamanteJpa#setId(Long)
+     */
+    @Test
+    public void creargetFactorTest(){
+        FactorValorDiamanteJpa test = new FactorValorDiamanteJpa();
+
+        assertNull(test.getFactor());
     }
 }

@@ -120,4 +120,19 @@ public class ConstructorUtilUTest {
         assertNotNull(constructor);
         assertNotNull(instancia);
     }
+
+    /**
+     * (non-Javadoc)
+     * @see ConstructorUtil#getConstructor(Class, Class...)
+     * @see ConstructorUtil#getInstancia(Constructor, Object...)
+     */
+    @Test
+    public void getConstructorFactorValorDiamanteFactoryTest() {
+        Constructor<FactorValorDiamanteFactoryImpl> constructor =
+            ConstructorUtil.getConstructor(FactorValorDiamanteFactoryImpl.class);
+        FactorValorDiamanteFactoryImpl instancia = ConstructorUtil.getInstancia(constructor);
+
+        assertNotNull(constructor);
+        assertNotNull(instancia);
+    }
 }
