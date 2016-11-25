@@ -10,7 +10,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
-import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -27,15 +26,12 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import static org.hibernate.annotations.CacheConcurrencyStrategy.NONSTRICT_READ_WRITE;
-
 /**
  * Entidad JPA que permite mapear los factores de diamante a una tabla de unidades persistentes.
  *
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 @Entity
-@Cache(usage = NONSTRICT_READ_WRITE)
 @Table(name = "cfg_diamante_factor",
     indexes = {@Index(name = "idx_cfg_diamante_factor_id", columnList = "id", unique = true)})
 public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
