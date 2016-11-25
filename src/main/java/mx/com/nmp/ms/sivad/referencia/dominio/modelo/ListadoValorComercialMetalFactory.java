@@ -27,13 +27,12 @@ public class ListadoValorComercialMetalFactory {
     /**
      * Permite crear una entidad de tipo ListadoValorComercialMetal con base en los argumentos recibidos.
      *
-     * @param id Identificador del registro.
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales de metales.
      * @return La entidad creada.
      */
-    public static ListadoValorComercialMetal create(Long id, Date ultimaActualizacion, Set<Metal> valoresComerciales) {
-        return new ListadoValorComercialMetal(id, ultimaActualizacion, valoresComerciales);
+    public static ListadoValorComercialMetal create(Date ultimaActualizacion, Set<Metal> valoresComerciales) {
+        return new ListadoValorComercialMetal(ultimaActualizacion, valoresComerciales);
     }
 
 }

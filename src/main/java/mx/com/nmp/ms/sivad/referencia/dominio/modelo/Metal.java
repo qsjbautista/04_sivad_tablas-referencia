@@ -62,21 +62,6 @@ public class Metal {
     }
 
     /**
-     * Constructor.
-     *
-     * @param id Identificador del registro.
-     * @param metal El tipo del metal.
-     * @param calidad Valor aplicable a la calidad del metal (Ejemplo: 0.925).
-     * @param precio Precio en pesos del metal por gramo.
-     */
-    Metal(Long id, String metal, String calidad, BigDecimal precio) {
-        this.id = id;
-        this.metal = metal;
-        this.calidad = calidad;
-        this.precio = precio;
-    }
-
-    /**
      * Permite obtener el valor por gramo del metal correspondiente a sus características.
      *
      * @return El precio por gramo correspondiente al metal y calidad solicitado.

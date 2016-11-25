@@ -41,12 +41,12 @@ public final class ValorComercialUtil {
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (ValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    MetalFactory.create(vcm.getId(), vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
+                    MetalFactory.create(vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
             }
         }
 
         return ListadoValorComercialMetalFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
+            listado.getUltimaActualizacion(), valoresComerciales);
     }
 
     /**
@@ -60,12 +60,12 @@ public final class ValorComercialUtil {
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (HistValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    MetalFactory.create(vcm.getId(), vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
+                    MetalFactory.create(vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
             }
         }
 
         return ListadoValorComercialMetalFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
+            listado.getUltimaActualizacion(), valoresComerciales);
     }
 
     /**
@@ -79,12 +79,12 @@ public final class ValorComercialUtil {
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (ValorComercialOroJPA vco : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    OroFactory.create(vco.getId(), vco.getColor(), vco.getCalidad(), vco.getPrecio()));
+                    OroFactory.create(vco.getColor(), vco.getCalidad(), vco.getPrecio()));
             }
         }
 
         return ListadoValorComercialOroFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
+            listado.getUltimaActualizacion(), valoresComerciales);
     }
 
     /**
@@ -98,12 +98,12 @@ public final class ValorComercialUtil {
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (HistValorComercialOroJPA vco : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    OroFactory.create(vco.getId(), vco.getColor(), vco.getCalidad(), vco.getPrecio()));
+                    OroFactory.create(vco.getColor(), vco.getCalidad(), vco.getPrecio()));
             }
         }
 
         return ListadoValorComercialOroFactory.create(
-            listado.getId(), listado.getUltimaActualizacion(), valoresComerciales);
+            listado.getUltimaActualizacion(), valoresComerciales);
     }
 
 }

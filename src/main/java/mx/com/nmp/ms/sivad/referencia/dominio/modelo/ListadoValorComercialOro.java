@@ -54,12 +54,10 @@ public class ListadoValorComercialOro {
     /**
      * Constructor.
      *
-     * @param id Identificador del registro.
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales del oro.
      */
-    ListadoValorComercialOro(Long id, Date ultimaActualizacion, Set<Oro> valoresComerciales) {
-        this.id = id;
+    ListadoValorComercialOro(Date ultimaActualizacion, Set<Oro> valoresComerciales) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
     }

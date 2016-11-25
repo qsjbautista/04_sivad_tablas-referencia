@@ -27,13 +27,12 @@ public class ListadoValorComercialOroFactory {
     /**
      * Permite crear una entidad de tipo ListadoValorComercialOro con base en los argumentos recibidos.
      *
-     * @param id Identificador del registro.
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales del oro.
      * @return La entidad creada.
      */
-    public static ListadoValorComercialOro create(Long id, Date ultimaActualizacion, Set<Oro> valoresComerciales) {
-        return new ListadoValorComercialOro(id, ultimaActualizacion, valoresComerciales);
+    public static ListadoValorComercialOro create(Date ultimaActualizacion, Set<Oro> valoresComerciales) {
+        return new ListadoValorComercialOro(ultimaActualizacion, valoresComerciales);
     }
 
 }

@@ -54,12 +54,10 @@ public class ListadoValorComercialMetal {
     /**
      * Constructor.
      *
-     * @param id Identificador del registro.
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales de metales.
      */
-    ListadoValorComercialMetal(Long id, Date ultimaActualizacion, Set<Metal> valoresComerciales) {
-        this.id = id;
+    ListadoValorComercialMetal(Date ultimaActualizacion, Set<Metal> valoresComerciales) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
     }

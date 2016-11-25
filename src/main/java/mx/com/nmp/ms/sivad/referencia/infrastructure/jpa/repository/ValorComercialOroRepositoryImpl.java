@@ -23,6 +23,7 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -83,7 +84,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             throw new ValorGramoNoEncontradoException(msg, ValorComercialOroJPA.class);
         }
 
-        return OroFactory.create(valorComercialOroJPA.getId(), valorComercialOroJPA.getColor(),
+        return OroFactory.create(valorComercialOroJPA.getColor(),
             valorComercialOroJPA.getCalidad(), valorComercialOroJPA.getPrecio());
     }
 
@@ -157,6 +158,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void actualizarListado(@NotNull ListadoValorComercialOro listado) {
         LOGGER.info(">> actualizarListado({})", listado);
 

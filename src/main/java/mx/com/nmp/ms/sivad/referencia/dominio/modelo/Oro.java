@@ -62,21 +62,6 @@ public class Oro {
     }
 
     /**
-     * Constructor.
-     *
-     * @param id Identificador del registro.
-     * @param color El color del oro.
-     * @param calidad La calidad del oro.
-     * @param precio Precio en pesos del oro por gramo.
-     */
-    Oro(Long id, String color, Integer calidad, BigDecimal precio) {
-        this.id = id;
-        this.color = color;
-        this.calidad = calidad;
-        this.precio = precio;
-    }
-
-    /**
      * Permite obtener el valor por gramo de oro correspondiente a las características del metal.
      *
      * @return El precio por gramo correspondiente al metal y calidad solicitado.
