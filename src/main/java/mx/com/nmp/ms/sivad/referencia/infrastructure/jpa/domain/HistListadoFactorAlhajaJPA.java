@@ -21,23 +21,14 @@ public class HistListadoFactorAlhajaJPA extends AbstractListadoModificadorJPA {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "listado")
-    private Set<FactorAlhajaJPA> factoresAlhaja;
+    private Set<HistFactorAlhajaJPA> factoresAlhaja;
 
-    /**
-     * Constructor.
-     *
-     */
-    public HistListadoFactorAlhajaJPA(DateTime fechaCarga, LocalDate fechaListado,Set<FactorAlhajaJPA> factoresAlhaja) {
-        super.setFechaCarga(fechaCarga);
-        super.setFechaListado(fechaListado);
-        this.setFactoresAlhaja(factoresAlhaja);
-    }
 
-    public Set<FactorAlhajaJPA> getFactoresAlhaja() {
+    public Set<HistFactorAlhajaJPA> getFactoresAlhaja() {
         return factoresAlhaja;
     }
 
-    public void setFactoresAlhaja(Set<FactorAlhajaJPA> factoresAlhaja) {
+    public void setFactoresAlhaja(Set<HistFactorAlhajaJPA> factoresAlhaja) {
         this.factoresAlhaja = factoresAlhaja;
     }
 }

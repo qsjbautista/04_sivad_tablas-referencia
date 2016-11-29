@@ -12,9 +12,11 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhajaFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorAlhajaJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistFactorAlhajaJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoFactorAlhajaJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoFactorAlhajaJPA;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -76,14 +78,14 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
                 factorAlhaja.getCalidad(), factorAlhaja.getRango());
         }
         FactorAlhajaJPA factorAlhajaJPA;
-        if(factorAlhaja.getCalidad().isEmpty()) {
+        if(factorAlhaja.getCalidad()==null) {
             factorAlhajaJPA =
                 factorAlhajaRepositoryJPA.findByMetalAndRango(factorAlhaja.getMetal(),
                     factorAlhaja.getRango());
         } else {
             factorAlhajaJPA =
-                factorAlhajaRepositoryJPA.findByMetalAndCalidadAndRango(factorAlhaja.getMetal(), factorAlhaja.getCalidad(),
-                    factorAlhaja.getRango());
+                factorAlhajaRepositoryJPA.findByMetalAndCalidadAndRango(factorAlhaja.getMetal(),
+                    factorAlhaja.getCalidad(), factorAlhaja.getRango());
         }
         if (ObjectUtils.isEmpty(factorAlhajaJPA)) {
             String msg = "No existe un Factor con las caracteristicas de busqueda.";
@@ -165,37 +167,58 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoFactorAlhajaJPA)) {
-            HistListadoFactorAlhajaJPA histlistado =
-                new HistListadoFactorAlhajaJPA(listadoFactorAlhajaJPA.getFechaCarga(), listadoFactorAlhajaJPA.getFechaListado(),
-                    listadoFactorAlhajaJPA.getFactoresAlhaja());
-            histListadoJpaRepository.save(histlistado);
+            HistListadoFactorAlhajaJPA histListadoFactorAlhajaJPA = new HistListadoFactorAlhajaJPA();
+            Set<HistFactorAlhajaJPA> histListadoFactoresAlhajaJPA = new HashSet<>();
+            if (!ObjectUtils.isEmpty(listadoFactorAlhajaJPA.getFactoresAlhaja())) {
+                for (FactorAlhajaJPA factorAlhajaJPA : listadoFactorAlhajaJPA.getFactoresAlhaja()) {
+                    HistFactorAlhajaJPA histFactorAlhajaJPA = new HistFactorAlhajaJPA();
+                    histFactorAlhajaJPA.setMetal(factorAlhajaJPA.getMetal());
+                    histFactorAlhajaJPA.setCalidad(factorAlhajaJPA.getCalidad());
+                    histFactorAlhajaJPA.setRango(factorAlhajaJPA.getRango());
+                    histFactorAlhajaJPA.setFactor(factorAlhajaJPA.getFactor());
+                    histFactorAlhajaJPA.setDesplazamiento(factorAlhajaJPA.getDesplazamiento());
+                    histFactorAlhajaJPA.setLimiteInferior(factorAlhajaJPA.getLimiteInferior());
+                    histFactorAlhajaJPA.setLimiteSuperior(factorAlhajaJPA.getLimiteSuperior());
+                    histFactorAlhajaJPA.setUltimaActualizacion(factorAlhajaJPA.getUltimaActualizacion());
+
+                    histFactorAlhajaJPA.setListado(histListadoFactorAlhajaJPA);
+
+                    histListadoFactoresAlhajaJPA.add(histFactorAlhajaJPA);
+                }
+            }
+
+            histListadoFactorAlhajaJPA.setFactoresAlhaja(histListadoFactoresAlhajaJPA);
+            histListadoFactorAlhajaJPA.setFechaCarga(listadoFactorAlhajaJPA.getFechaCarga());
+            histListadoFactorAlhajaJPA.setFechaListado(listadoFactorAlhajaJPA.getFechaListado());
+            histListadoJpaRepository.save(histListadoFactorAlhajaJPA);
 
             listadoJpaRepository.delete(listadoFactorAlhajaJPA.getId());
         }
 
         ListadoFactorAlhajaJPA listadoNuevo = new ListadoFactorAlhajaJPA();
-        Set<FactorAlhajaJPA> factoresAlhajaJPA = new HashSet<>();
+        Set<FactorAlhajaJPA> factoresAlhaja = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getFactorAlhajas())) {
             for (FactorAlhaja factorAlhaja : listado.getFactorAlhajas()) {
                 FactorAlhajaJPA factorAlhajaJPA = new FactorAlhajaJPA();
-                factorAlhajaJPA.setFactor(factorAlhaja.getFactor());
-                factorAlhajaJPA.setRango(factorAlhaja.getRango());
-                factorAlhajaJPA.setCalidad(factorAlhaja.getCalidad());
                 factorAlhajaJPA.setMetal(factorAlhaja.getMetal());
+                factorAlhajaJPA.setCalidad(factorAlhaja.getCalidad());
+                factorAlhajaJPA.setRango(factorAlhaja.getRango());
+                factorAlhajaJPA.setFactor(factorAlhaja.getFactor());
                 factorAlhajaJPA.setDesplazamiento(factorAlhaja.getDesplazamiento());
                 factorAlhajaJPA.setLimiteInferior(factorAlhaja.getLimiteInferior());
                 factorAlhajaJPA.setLimiteSuperior(factorAlhaja.getLimiteSuperior());
-                factorAlhajaJPA.setUltimaActualizacion(factorAlhaja.getUltimaActualizacion());
+                factorAlhajaJPA.setUltimaActualizacion(DateTime.now());
+
                 factorAlhajaJPA.setListado(listadoNuevo);
 
-                factoresAlhajaJPA.add(factorAlhajaJPA);
+                factoresAlhaja.add(factorAlhajaJPA);
             }
         }
 
-        listadoNuevo.setFactoresAlhaja(factoresAlhajaJPA);
+        listadoNuevo.setFactoresAlhaja(factoresAlhaja);
         listadoNuevo.setFechaCarga(DateTime.now());
-        listadoJpaRepository.save(listadoNuevo);
-        return null;
+        listadoNuevo.setFechaListado(LocalDate.now());
+        return convertirAListadoRango(listadoJpaRepository.save(listadoNuevo));
     }
 
     /**
@@ -227,7 +250,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
     private ListadoRango convertirAListadoRango(HistListadoFactorAlhajaJPA listado) {
         Set<FactorAlhaja> factoresAlhaja = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getFactoresAlhaja())) {
-            for (FactorAlhajaJPA factorAlhajaJPA : listado.getFactoresAlhaja()) {
+            for (HistFactorAlhajaJPA factorAlhajaJPA : listado.getFactoresAlhaja()) {
                 factoresAlhaja.add(
                     FactorAlhajaFactory.crear(factorAlhajaJPA.getMetal(), factorAlhajaJPA.getCalidad(), factorAlhajaJPA.getRango(),
                         factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento(), factorAlhajaJPA.getLimiteInferior(),
