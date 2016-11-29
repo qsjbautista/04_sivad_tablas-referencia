@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author ngonzalez
  */
-public class ListadoValorComercialMetalFactory {
+public final class ListadoValorComercialMetalFactory {
 
     /**
      * Permite crear una entidad de tipo ListadoValorComercialMetal con base en los argumentos recibidos.

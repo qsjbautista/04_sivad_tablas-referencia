@@ -14,11 +14,6 @@ import java.math.BigDecimal;
 public class Oro {
 
     /**
-     * Identificador del registro.
-     */
-    private Long id;
-
-    /**
      * El color del oro (amarillo o blanco).
      */
     private String color;
@@ -73,10 +68,6 @@ public class Oro {
 
 
     // GETTERS
-
-    public Long getId() {
-        return id;
-    }
 
     public String getColor() {
         return color;

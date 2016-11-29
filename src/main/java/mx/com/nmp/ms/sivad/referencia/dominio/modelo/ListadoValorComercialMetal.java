@@ -18,11 +18,6 @@ import java.util.Set;
 public class ListadoValorComercialMetal {
 
     /**
-     * Identificador del registro.
-     */
-    private Long id;
-
-    /**
      * Fecha en que se realiza la última actualización.
      */
     private Date ultimaActualizacion;
@@ -74,10 +69,6 @@ public class ListadoValorComercialMetal {
 
 
     // GETTERS
-
-    public Long getId() {
-        return id;
-    }
 
     public Date getUltimaActualizacion() {
         return ultimaActualizacion;

@@ -14,11 +14,6 @@ import java.math.BigDecimal;
 public class Metal {
 
     /**
-     * Identificador del registro.
-     */
-    private Long id;
-
-    /**
      * El tipo del metal (Ejemplo: Plata).
      */
     private String metal;
@@ -73,10 +68,6 @@ public class Metal {
 
 
     // GETTERS
-
-    public Long getId() {
-        return id;
-    }
 
     public String getMetal() {
         return metal;

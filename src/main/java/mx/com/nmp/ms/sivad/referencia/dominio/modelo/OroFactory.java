@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  *
  * @author ngonzalez
  */
-public class OroFactory {
+public final class OroFactory {
 
     /**
      * Permite crear una entidad de tipo Oro con base en los argumentos recibidos.
