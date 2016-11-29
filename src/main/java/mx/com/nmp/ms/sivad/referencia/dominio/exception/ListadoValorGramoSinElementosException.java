@@ -9,11 +9,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.exception;
  *
  * @author ngonzalez
  */
-public class ListadoValorGramoSinElementosException extends RuntimeException {
-
-    private static final long serialVersionUID = 827992683199784193L;
-
-    private Class<?> entidad;
+public class ListadoValorGramoSinElementosException extends AbstractException {
 
 
 
@@ -26,17 +22,7 @@ public class ListadoValorGramoSinElementosException extends RuntimeException {
      * @param entidad Entidad objetivo.
      */
     public ListadoValorGramoSinElementosException(String msg, Class<?> entidad) {
-        super(msg);
-        this.entidad = entidad;
-    }
-
-    /**
-     * Obtiene el valor de entidad.
-     *
-     * @return Valor de entidad.
-     */
-    public Class<?> getEntidad() {
-        return entidad;
+        super(msg, entidad);
     }
 
 }

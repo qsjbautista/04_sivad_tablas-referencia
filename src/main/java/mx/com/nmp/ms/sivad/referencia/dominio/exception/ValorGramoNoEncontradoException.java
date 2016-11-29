@@ -9,11 +9,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.exception;
  *
  * @author ngonzalez
  */
-public class ValorGramoNoEncontradoException extends RuntimeException {
-
-    private static final long serialVersionUID = 827992683168782193L;
-
-    private Class<?> entidad;
+public class ValorGramoNoEncontradoException extends AbstractException {
 
 
 
@@ -26,17 +22,7 @@ public class ValorGramoNoEncontradoException extends RuntimeException {
      * @param entidad Entidad objetivo.
      */
     public ValorGramoNoEncontradoException(String msg, Class<?> entidad) {
-        super(msg);
-        this.entidad = entidad;
-    }
-
-    /**
-     * Obtiene el valor de entidad.
-     *
-     * @return Valor de entidad.
-     */
-    public Class<?> getEntidad() {
-        return entidad;
+        super(msg, entidad);
     }
 
 }
