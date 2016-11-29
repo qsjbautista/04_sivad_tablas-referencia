@@ -15,11 +15,10 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialMetalJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialMetalUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Implementación de ValorComercialMetalRepository.
@@ -105,7 +106,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialMetalJPA.class);
         }
 
-        return ValorComercialUtil.convertToListadoValorComercialMetal(listadoValorComercialMetalJPA);
+        return ValorComercialMetalUtil.convertToListadoDeDominio(listadoValorComercialMetalJPA);
     }
 
     /**
@@ -142,13 +143,13 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
         List<ListadoValorComercialMetal> result = new ArrayList<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialMetalJPA listadoValorComercialMetalJPA : listaVigentes) {
-                result.add(ValorComercialUtil.convertToListadoValorComercialMetal(listadoValorComercialMetalJPA));
+                result.add(ValorComercialMetalUtil.convertToListadoDeDominio(listadoValorComercialMetalJPA));
             }
         }
 
         if (!ObjectUtils.isEmpty(listaHistoricos)) {
             for (HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA : listaHistoricos) {
-                result.add(ValorComercialUtil.convertToListadoValorComercialMetal(histListadoValorComercialMetalJPA));
+                result.add(ValorComercialMetalUtil.convertToListadoDeDominio(histListadoValorComercialMetalJPA));
             }
         }
 
@@ -169,46 +170,21 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             throw new ListadoValorGramoSinElementosException(msg, ListadoValorComercialMetalJPA.class);
         }
 
-        ListadoValorComercialMetalJPA listadoValorComercialMetalJPA =
-            listadoJpaRepository.obtenerListadoVigente();
+        ListadoValorComercialMetalJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 
-        if (!ObjectUtils.isEmpty(listadoValorComercialMetalJPA)) {
-            HistListadoValorComercialMetalJPA histListadoValorComercialMetalJPA = new HistListadoValorComercialMetalJPA();
-            Set<HistValorComercialMetalJPA> histValoresComerciales = new HashSet<>();
-            if (!ObjectUtils.isEmpty(listadoValorComercialMetalJPA.getValoresComerciales())) {
-                for (ValorComercialMetalJPA valorComercialMetalJPA : listadoValorComercialMetalJPA.getValoresComerciales()) {
-                    HistValorComercialMetalJPA histValorComercialMetalJPA = new HistValorComercialMetalJPA();
-                    histValorComercialMetalJPA.setMetal(valorComercialMetalJPA.getMetal());
-                    histValorComercialMetalJPA.setCalidad(valorComercialMetalJPA.getCalidad());
-                    histValorComercialMetalJPA.setPrecio(valorComercialMetalJPA.getPrecio());
-                    histValorComercialMetalJPA.setListado(histListadoValorComercialMetalJPA);
+        if (!ObjectUtils.isEmpty(listadoVigente)) {
 
-                    histValoresComerciales.add(histValorComercialMetalJPA);
-                }
-            }
+            // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
+            HistListadoValorComercialMetalJPA listadoHistorico =
+                ValorComercialMetalUtil.convertToListadoHistoricoJPA(listadoVigente);
+            histListadoJpaRepository.save(listadoHistorico);
 
-            histListadoValorComercialMetalJPA.setValoresComerciales(histValoresComerciales);
-            histListadoValorComercialMetalJPA.setUltimaActualizacion(listadoValorComercialMetalJPA.getUltimaActualizacion());
-            histListadoJpaRepository.save(histListadoValorComercialMetalJPA);
-
-            listadoJpaRepository.delete(listadoValorComercialMetalJPA.getId());
+            // SE ELIMINA EL LISTADO VIGENTE.
+            listadoJpaRepository.delete(listadoVigente.getId());
         }
 
-        ListadoValorComercialMetalJPA listadoNuevo = new ListadoValorComercialMetalJPA();
-        Set<ValorComercialMetalJPA> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (Metal metal : listado.getValoresComerciales()) {
-                ValorComercialMetalJPA valorComercialMetalJPA = new ValorComercialMetalJPA();
-                valorComercialMetalJPA.setMetal(metal.getMetal());
-                valorComercialMetalJPA.setCalidad(metal.getCalidad());
-                valorComercialMetalJPA.setPrecio(metal.obtenerValorGramo());
-                valorComercialMetalJPA.setListado(listadoNuevo);
-
-                valoresComerciales.add(valorComercialMetalJPA);
-            }
-        }
-
-        listadoNuevo.setValoresComerciales(valoresComerciales);
+        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
+        ListadoValorComercialMetalJPA listadoNuevo = ValorComercialMetalUtil.convertToListadoVigenteJPA(listado);
         listadoNuevo.setUltimaActualizacion(new Date());
         listadoJpaRepository.save(listadoNuevo);
     }

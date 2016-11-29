@@ -15,11 +15,10 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialOroJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialOroUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Implementación de ValorComercialOroRepository.
@@ -105,7 +106,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialOroJPA.class);
         }
 
-        return ValorComercialUtil.convertToListadoValorComercialOro(listadoValorComercialOroJPA);
+        return ValorComercialOroUtil.convertToListadoDeDominio(listadoValorComercialOroJPA);
     }
 
     /**
@@ -142,13 +143,13 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
         List<ListadoValorComercialOro> result = new ArrayList<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialOroJPA listadoValorComercialOroJPA : listaVigentes) {
-                result.add(ValorComercialUtil.convertToListadoValorComercialOro(listadoValorComercialOroJPA));
+                result.add(ValorComercialOroUtil.convertToListadoDeDominio(listadoValorComercialOroJPA));
             }
         }
 
         if (!ObjectUtils.isEmpty(listaHistoricos)) {
             for (HistListadoValorComercialOroJPA histListadoValorComercialOroJPA : listaHistoricos) {
-                result.add(ValorComercialUtil.convertToListadoValorComercialOro(histListadoValorComercialOroJPA));
+                result.add(ValorComercialOroUtil.convertToListadoDeDominio(histListadoValorComercialOroJPA));
             }
         }
 
@@ -169,46 +170,21 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             throw new ListadoValorGramoSinElementosException(msg, ListadoValorComercialOroJPA.class);
         }
 
-        ListadoValorComercialOroJPA listadoValorComercialOroJPA =
-            listadoJpaRepository.obtenerListadoVigente();
+        ListadoValorComercialOroJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 
-        if (!ObjectUtils.isEmpty(listadoValorComercialOroJPA)) {
-            HistListadoValorComercialOroJPA histListadoValorComercialOroJPA = new HistListadoValorComercialOroJPA();
-            Set<HistValorComercialOroJPA> histValoresComerciales = new HashSet<>();
-            if (!ObjectUtils.isEmpty(listadoValorComercialOroJPA.getValoresComerciales())) {
-                for (ValorComercialOroJPA valorComercialOroJPA : listadoValorComercialOroJPA.getValoresComerciales()) {
-                    HistValorComercialOroJPA histValorComercialOroJPA = new HistValorComercialOroJPA();
-                    histValorComercialOroJPA.setColor(valorComercialOroJPA.getColor());
-                    histValorComercialOroJPA.setCalidad(valorComercialOroJPA.getCalidad());
-                    histValorComercialOroJPA.setPrecio(valorComercialOroJPA.getPrecio());
-                    histValorComercialOroJPA.setListado(histListadoValorComercialOroJPA);
+        if (!ObjectUtils.isEmpty(listadoVigente)) {
 
-                    histValoresComerciales.add(histValorComercialOroJPA);
-                }
-            }
+            // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
+            HistListadoValorComercialOroJPA listadoHistorico =
+                ValorComercialOroUtil.convertToListadoHistoricoJPA(listadoVigente);
+            histListadoJpaRepository.save(listadoHistorico);
 
-            histListadoValorComercialOroJPA.setValoresComerciales(histValoresComerciales);
-            histListadoValorComercialOroJPA.setUltimaActualizacion(listadoValorComercialOroJPA.getUltimaActualizacion());
-            histListadoJpaRepository.save(histListadoValorComercialOroJPA);
-
-            listadoJpaRepository.delete(listadoValorComercialOroJPA.getId());
+            // SE ELIMINA EL LISTADO VIGENTE.
+            listadoJpaRepository.delete(listadoVigente.getId());
         }
 
-        ListadoValorComercialOroJPA listadoNuevo = new ListadoValorComercialOroJPA();
-        Set<ValorComercialOroJPA> valoresComerciales = new HashSet<>();
-        if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (Oro oro : listado.getValoresComerciales()) {
-                ValorComercialOroJPA valorComercialOroJPA = new ValorComercialOroJPA();
-                valorComercialOroJPA.setColor(oro.getColor());
-                valorComercialOroJPA.setCalidad(oro.getCalidad());
-                valorComercialOroJPA.setPrecio(oro.obtenerValorGramo());
-                valorComercialOroJPA.setListado(listadoNuevo);
-
-                valoresComerciales.add(valorComercialOroJPA);
-            }
-        }
-
-        listadoNuevo.setValoresComerciales(valoresComerciales);
+        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
+        ListadoValorComercialOroJPA listadoNuevo = ValorComercialOroUtil.convertToListadoVigenteJPA(listado);
         listadoNuevo.setUltimaActualizacion(new Date());
         listadoJpaRepository.save(listadoNuevo);
     }
