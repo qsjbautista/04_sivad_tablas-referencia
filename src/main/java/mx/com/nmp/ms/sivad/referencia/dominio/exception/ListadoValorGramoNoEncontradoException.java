@@ -5,7 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.exception;
 
 /**
- * Excepción que será lanzada cuando el listado de valor gramo o el listado de valor metal no existan.
+ * Excepción que será lanzada cuando el listado de valor gramo oro o el listado de valor gramo metal no existan.
  *
  * @author ngonzalez
  */

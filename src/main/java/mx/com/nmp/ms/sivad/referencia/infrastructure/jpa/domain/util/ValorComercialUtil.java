@@ -31,12 +31,15 @@ public final class ValorComercialUtil {
     }
 
     /**
-     * Metodo auxiliar para convertir el listado de valores comerciales del metal JPA en entidad listado de dominio.
+     * Metodo auxiliar para convertir el listado de valores comerciales del metal JPA en entidad listado
+     * de dominio.
      *
      * @param listado El listado a convertir.
      * @return El listado convertido en entidad de dominio.
      */
-    public static ListadoValorComercialMetal convertToListadoValorComercialMetal(ListadoValorComercialMetalJPA listado) {
+    public static ListadoValorComercialMetal convertToListadoValorComercialMetal(
+        ListadoValorComercialMetalJPA listado) {
+
         Set<Metal> valoresComerciales = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (ValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
@@ -50,17 +53,20 @@ public final class ValorComercialUtil {
     }
 
     /**
-     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del metal JPA en entidad listado de dominio.
+     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del metal JPA en
+     * entidad listado de dominio.
      *
      * @param listado El listado a convertir.
      * @return El listado convertido en entidad de dominio.
      */
-    public static ListadoValorComercialMetal convertToListadoValorComercialMetal(HistListadoValorComercialMetalJPA listado) {
+    public static ListadoValorComercialMetal convertToListadoValorComercialMetal(
+        HistListadoValorComercialMetalJPA listado) {
+
         Set<Metal> valoresComerciales = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (HistValorComercialMetalJPA vcm : listado.getValoresComerciales()) {
+            for (HistValorComercialMetalJPA hvcm : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    MetalFactory.create(vcm.getMetal(), vcm.getCalidad(), vcm.getPrecio()));
+                    MetalFactory.create(hvcm.getMetal(), hvcm.getCalidad(), hvcm.getPrecio()));
             }
         }
 
@@ -69,12 +75,15 @@ public final class ValorComercialUtil {
     }
 
     /**
-     * Metodo auxiliar para convertir el listado de valores comerciales del oro JPA en entidad listado de dominio.
+     * Metodo auxiliar para convertir el listado de valores comerciales del oro JPA en entidad listado
+     * de dominio.
      *
      * @param listado El listado a convertir.
      * @return El listado convertido en entidad de dominio.
      */
-    public static ListadoValorComercialOro convertToListadoValorComercialOro(ListadoValorComercialOroJPA listado) {
+    public static ListadoValorComercialOro convertToListadoValorComercialOro(
+        ListadoValorComercialOroJPA listado) {
+
         Set<Oro> valoresComerciales = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
             for (ValorComercialOroJPA vco : listado.getValoresComerciales()) {
@@ -88,17 +97,20 @@ public final class ValorComercialUtil {
     }
 
     /**
-     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del oro JPA en entidad listado de dominio.
+     * Metodo auxiliar para convertir el histórico de listado de valores comerciales del oro JPA en
+     * entidad listado de dominio.
      *
      * @param listado El listado a convertir.
      * @return El listado convertido en entidad de dominio.
      */
-    public static ListadoValorComercialOro convertToListadoValorComercialOro(HistListadoValorComercialOroJPA listado) {
+    public static ListadoValorComercialOro convertToListadoValorComercialOro(
+        HistListadoValorComercialOroJPA listado) {
+
         Set<Oro> valoresComerciales = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            for (HistValorComercialOroJPA vco : listado.getValoresComerciales()) {
+            for (HistValorComercialOroJPA hvco : listado.getValoresComerciales()) {
                 valoresComerciales.add(
-                    OroFactory.create(vco.getColor(), vco.getCalidad(), vco.getPrecio()));
+                    OroFactory.create(hvco.getColor(), hvco.getCalidad(), hvco.getPrecio()));
             }
         }
 
