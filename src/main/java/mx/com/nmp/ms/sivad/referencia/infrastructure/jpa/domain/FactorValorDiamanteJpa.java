@@ -15,14 +15,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.util.ObjectUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -32,8 +25,8 @@ import java.math.BigDecimal;
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 @Entity
-@Table(name = "cfg_diamante_factor",
-    indexes = {@Index(name = "idx_cfg_diamante_factor_id", columnList = "id", unique = true)})
+@Table(name = "cfg_diamante_factor")
+    //indexes = {@Index(name = "idx_cfg_diamante_factor_id", columnList = "id", unique = true)})
 public class FactorValorDiamanteJpa implements ModificadorValorDiamante.Builder,
         FactorValorDiamante.Builder, Serializable {
     private static final long serialVersionUID = -4561884219797438224L;

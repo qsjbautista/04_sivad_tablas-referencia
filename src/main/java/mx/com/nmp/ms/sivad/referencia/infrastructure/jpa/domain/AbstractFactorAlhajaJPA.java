@@ -4,9 +4,11 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los factores alhaja.
@@ -33,8 +35,8 @@ public abstract class AbstractFactorAlhajaJPA {
     @Column(name = "factor", nullable = false)
     private BigDecimal factor;
 
-    @Column(name = "factor_comercial", nullable = false)
-    private BigDecimal factorComercial;
+    @Column(name = "desplazamiento", nullable = false)
+    private BigDecimal desplazamiento;
 
     @Column(name = "limite_inferior", nullable = false)
     private BigDecimal limiteInferior;
@@ -43,11 +45,8 @@ public abstract class AbstractFactorAlhajaJPA {
     private BigDecimal limiteSuperior;
 
     @Column(name = "ultima_actualizacion", nullable = false)
-    protected Date ultimaActualizacion;
-
-    @ManyToOne
-    @JoinColumn(name = "listado")
-    private ListadoFactorAlhajaJPA listado;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    protected DateTime ultimaActualizacion;
 
     public Long getId() {
         return id;
@@ -89,12 +88,12 @@ public abstract class AbstractFactorAlhajaJPA {
         this.factor = factor;
     }
 
-    public BigDecimal getFactorComercial() {
-        return factorComercial;
+    public BigDecimal getDesplazamiento() {
+        return desplazamiento;
     }
 
-    public void setFactorComercial(BigDecimal factorComercial) {
-        this.factorComercial = factorComercial;
+    public void setDesplazamiento(BigDecimal desplazamiento) {
+        this.desplazamiento = desplazamiento;
     }
 
     public BigDecimal getLimiteInferior() {
@@ -113,19 +112,12 @@ public abstract class AbstractFactorAlhajaJPA {
         this.limiteSuperior = limiteSuperior;
     }
 
-    public Date getUltimaActualizacion() {
+    public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
     }
 
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
+    public void setUltimaActualizacion(DateTime ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
     }
 
-    public ListadoFactorAlhajaJPA getListado() {
-        return listado;
-    }
-
-    public void setListado(ListadoFactorAlhajaJPA listado) {
-        this.listado = listado;
-    }
 }

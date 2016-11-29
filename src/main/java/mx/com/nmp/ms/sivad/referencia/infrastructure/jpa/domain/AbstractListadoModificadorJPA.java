@@ -4,17 +4,19 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
 
 /**
- * Clase abstracta que factoriza los atributos comunes de los listados de factores alhaja.
+ * Clase abstracta que factoriza los atributos comunes de los listados de modificadores certificado.
  *
  * @author mmarquez
  */
 @MappedSuperclass
-public abstract class AbstractListadoFactorAlhajaJPA {
+public abstract class AbstractListadoModificadorJPA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +24,12 @@ public abstract class AbstractListadoFactorAlhajaJPA {
     private Long id;
 
     @Column(name = "fecha_carga", nullable = false)
-    private Date fechaCarga;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime fechaCarga;
 
     @Column(name = "fecha_listado", nullable = false)
-    private Date fechaListado;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "listado")
-    private Set<FactorAlhajaJPA> factoresAlhaja;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    private LocalDate fechaListado;
 
     public Long getId() {
         return id;
@@ -39,27 +39,20 @@ public abstract class AbstractListadoFactorAlhajaJPA {
         this.id = id;
     }
 
-    public Date getFechaCarga() {
+    public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
-    public void setFechaCarga(Date fechaCarga) {
+    public void setFechaCarga(DateTime fechaCarga) {
         this.fechaCarga = fechaCarga;
     }
 
-    public Date getFechaListado() {
+    public LocalDate getFechaListado() {
         return fechaListado;
     }
 
-    public void setFechaListado(Date fechaListado) {
+    public void setFechaListado(LocalDate fechaListado) {
         this.fechaListado = fechaListado;
     }
 
-    public Set<FactorAlhajaJPA> getFactoresAlhaja() {
-        return factoresAlhaja;
-    }
-
-    public void setFactoresAlhaja(Set<FactorAlhajaJPA> factoresAlhaja) {
-        this.factoresAlhaja = factoresAlhaja;
-    }
 }

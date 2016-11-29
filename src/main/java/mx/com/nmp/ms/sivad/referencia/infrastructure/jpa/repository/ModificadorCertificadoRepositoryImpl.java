@@ -5,16 +5,26 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.*;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertificadoFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.CertificadoFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.*;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoModificadorCertificadoJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistModificadorCertificadoJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoModificadorCertificadoJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ModificadorCertificadoJPA;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementación de ModificadorCertificadoRepository.
@@ -22,6 +32,7 @@ import java.util.*;
  * @author mmarquez
  */
 @Repository
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ModificadorCertificadoRepositoryImpl implements ModificadorCertificadoRepository {
 
     /**
@@ -32,20 +43,26 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
     /**
      * Referencia al repositorio de HistListadoModificadorCertificadoJPARepository.
      */
-    //@Inject
+    @Inject
     private HistListadoModificadorCertificadoJPARepository histListadoJpaRepository;
 
     /**
      * Referencia al repositorio de ListadoModificadorCertificadoRepositoryJPA.
      */
-    //@Inject
+    @Inject
     private ListadoModificadorCertificadoRepositoryJPA listadoJpaRepository;
 
     /**
      * Referencia al repositorio de ModificadorCertificadoRepositoryJPA.
      */
-    //@Inject
+    @Inject
     private ModificadorCertificadoRepositoryJPA modificadorCertificadoRepositoryJPA;
+
+    /**
+     * Referencia a la fabrica de entidades.
+     */
+    @Inject
+    private ListadoModificadorCertificadoFactory fabricaEntidad;
 
 
 
@@ -64,10 +81,12 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
             modificadorCertificadoRepositoryJPA.findByCertificado(certificado.getCertificado());
 
         if (ObjectUtils.isEmpty(modificadorCertificadoJPA)) {
-            // TODO Excepción
+            String msg = "No existe un certificado para las características solicitadas.";
+            LOGGER.warn(msg);
+            throw new CertificadoNoEncontradoException(msg, ModificadorCertificadoJPA.class);
         }
 
-        return CertificadoFactory.create(modificadorCertificadoJPA.getId(), modificadorCertificadoJPA.getCertificado(),
+        return CertificadoFactory.crear(modificadorCertificadoJPA.getCertificado(),
             modificadorCertificadoJPA.getFactor());
     }
 
@@ -82,7 +101,9 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
             listadoJpaRepository.obtenerListadoVigente();
 
         if (ObjectUtils.isEmpty(listadoJPA)) {
-            // TODO Excepción
+            String msg = "No existe un ListadoModificadorCertificado vigente.";
+            LOGGER.warn(msg);
+            throw new CertificadoNoEncontradoException(msg, ListadoModificadorCertificadoJPA.class);
         }
 
         return convertirAListadoModificadorCertificado(listadoJPA);
@@ -92,25 +113,25 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
      * {@inheritDoc}
      */
     @Override
-    public List<ListadoModificadorCertificado> consultarListadoPorFechaCarga(@NotNull Date fechaCarga) {
+    public Set<ListadoModificadorCertificado> consultarListadoPorFechaCarga(@NotNull DateTime fechaCarga) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(">> consultarListadoPorFechaCarga: [{}]",
                 (fechaCarga != null) ? fechaCarga.toString() : "NULL");
         }
 
-        Date fechaCargaInicio = DateUtil.getStartOfDay(fechaCarga);
-        Date fechaCargaFin = DateUtil.getEndOfDay(fechaCarga);
+        DateTime fechaCargaFin = fechaCarga.millisOfDay().withMaximumValue();
 
-        List<ListadoModificadorCertificadoJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadoPorFechaCarga(fechaCargaInicio, fechaCargaFin);
-        List<HistListadoModificadorCertificadoJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadoPorFechaCarga(fechaCargaInicio, fechaCargaFin);
-
+        Set<ListadoModificadorCertificadoJPA> listaVigentes =
+            listadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
+        Set<HistListadoModificadorCertificadoJPA> listaHistoricos =
+            histListadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
-            // TODO Excepción
+            String msg = "No existe un ListadoModificadorCertificado para la fecha solicitada.";
+            LOGGER.warn(msg);
+            throw new CertificadoNoEncontradoException(msg, ListadoModificadorCertificadoJPA.class);
         }
-
-        List<ListadoModificadorCertificado> result = new ArrayList<>();
+        LOGGER.info(">> listaHistoricos ::" +listaHistoricos.size());
+        Set<ListadoModificadorCertificado> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoModificadorCertificadoJPA listadoModificadorCertificadoJPA : listaVigentes) {
                 result.add(convertirAListadoModificadorCertificado(listadoModificadorCertificadoJPA));
@@ -130,22 +151,36 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
      * {@inheritDoc}
      */
     @Override
-    public void actualizarListado(ListadoModificadorCertificado listado) {
-        LOGGER.info(">> actualizarListado");
+    public ListadoModificadorCertificado actualizarListado(@NotNull ListadoModificadorCertificado listado) {
+        LOGGER.info(">> actualizarListado"+ listado.toString());
 
         ListadoModificadorCertificadoJPA listadoModificadorCertificadoJPA =
             listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoModificadorCertificadoJPA)) {
-            HistListadoModificadorCertificadoJPA histlistado =
-                new HistListadoModificadorCertificadoJPA(listadoModificadorCertificadoJPA.getModificadoresCertificado());
-            histListadoJpaRepository.save(histlistado);
+            HistListadoModificadorCertificadoJPA histListadoModificadorCertificadoJPA = new HistListadoModificadorCertificadoJPA();
+            Set<HistModificadorCertificadoJPA> histModificadoresCertificadoJPA = new HashSet<>();
+            if (!ObjectUtils.isEmpty(listadoModificadorCertificadoJPA.getModificadoresCertificado())) {
+                for (ModificadorCertificadoJPA modificadorCertificadoJPA : listadoModificadorCertificadoJPA.getModificadoresCertificado()) {
+                    HistModificadorCertificadoJPA histModificadorCertificadoJPA = new HistModificadorCertificadoJPA();
+                    histModificadorCertificadoJPA.setCertificado(modificadorCertificadoJPA.getCertificado());
+                    histModificadorCertificadoJPA.setFactor(modificadorCertificadoJPA.getFactor());
+                    histModificadorCertificadoJPA.setListado(histListadoModificadorCertificadoJPA);
+
+                    histModificadoresCertificadoJPA.add(histModificadorCertificadoJPA);
+                }
+            }
+
+            histListadoModificadorCertificadoJPA.setModificadoresCertificado(histModificadoresCertificadoJPA);
+            histListadoModificadorCertificadoJPA.setFechaCarga(listadoModificadorCertificadoJPA.getFechaCarga());
+            histListadoModificadorCertificadoJPA.setFechaListado(listadoModificadorCertificadoJPA.getFechaListado());
+            histListadoJpaRepository.save(histListadoModificadorCertificadoJPA);
 
             listadoJpaRepository.delete(listadoModificadorCertificadoJPA.getId());
         }
 
         ListadoModificadorCertificadoJPA listadoNuevo = new ListadoModificadorCertificadoJPA();
-        Set<ModificadorCertificadoJPA> certificados = new HashSet<>();
+        Set<ModificadorCertificadoJPA> modificadoresCertificados = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getCertificados())) {
             for (Certificado certificado : listado.getCertificados()) {
                 ModificadorCertificadoJPA modificadorCertificadoJPA = new ModificadorCertificadoJPA();
@@ -153,13 +188,14 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
                 modificadorCertificadoJPA.setFactor(certificado.getFactor());
                 modificadorCertificadoJPA.setListado(listadoNuevo);
 
-                certificados.add(modificadorCertificadoJPA);
+                modificadoresCertificados.add(modificadorCertificadoJPA);
             }
         }
 
-        listadoNuevo.setModificadoresCertificado(certificados);
-        listadoNuevo.setFechaCarga(new Date());
-        listadoJpaRepository.save(listadoNuevo);
+        listadoNuevo.setModificadoresCertificado(modificadoresCertificados);
+        listadoNuevo.setFechaCarga(DateTime.now());
+        listadoNuevo.setFechaListado(LocalDate.now());
+        return convertirAListadoModificadorCertificado(listadoJpaRepository.save(listadoNuevo));
     }
 
     /**
@@ -168,17 +204,34 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
      * @param listado El listado a convertir.
      * @return El listado convertido en entidad de dominio.
      */
-    private ListadoModificadorCertificado convertirAListadoModificadorCertificado(AbstractListadoModificadorCertificadoJPA listado) {
+    private ListadoModificadorCertificado convertirAListadoModificadorCertificado(ListadoModificadorCertificadoJPA listado) {
         Set<Certificado> certificados = new HashSet<>();
         if (!ObjectUtils.isEmpty(listado.getModificadoresCertificado())) {
             for (ModificadorCertificadoJPA certificado : listado.getModificadoresCertificado()) {
                 certificados.add(
-                    CertificadoFactory.create(certificado.getId(), certificado.getCertificado(), certificado.getFactor()));
+                    CertificadoFactory.crear(certificado.getCertificado(), certificado.getFactor()));
             }
         }
 
-        return ListadoModificadorCertificadoFactory.create(
-            listado.getId(), listado.getFechaCarga(), listado.getFechaListado(), certificados);
+        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), certificados);
+    }
+
+    /**
+     * Metodo auxiliar para convertir el listado de modificadores certificados JPA en entidad listado de dominio.
+     *
+     * @param listado El listado a convertir.
+     * @return El listado convertido en entidad de dominio.
+     */
+    private ListadoModificadorCertificado convertirAListadoModificadorCertificado(HistListadoModificadorCertificadoJPA listado) {
+        Set<Certificado> certificados = new HashSet<>();
+        if (!ObjectUtils.isEmpty(listado.getModificadoresCertificado())) {
+            for (HistModificadorCertificadoJPA certificado : listado.getModificadoresCertificado()) {
+                certificados.add(
+                    CertificadoFactory.crear(certificado.getCertificado(), certificado.getFactor()));
+            }
+        }
+
+        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), certificados);
     }
 
 

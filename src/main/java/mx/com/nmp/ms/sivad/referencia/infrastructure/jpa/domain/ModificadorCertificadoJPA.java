@@ -1,12 +1,9 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
-import mx.com.nmp.ms.arquetipo.annotation.journal.JournalData;
-import mx.com.nmp.ms.arquetipo.journal.listener.JournalEntityListener;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Entidad que representa la tabla ModificadorCertificadoJPA.
@@ -17,5 +14,15 @@ import java.math.BigDecimal;
 @Table(name = "cfg_diamante_valor_certificado")
 public class ModificadorCertificadoJPA extends AbstractModificadorCertificadoJPA {
 
+    @ManyToOne
+    @JoinColumn(name = "listado")
+    private ListadoModificadorCertificadoJPA listado;
 
+    public ListadoModificadorCertificadoJPA getListado() {
+        return listado;
+    }
+
+    public void setListado(ListadoModificadorCertificadoJPA listado) {
+        this.listado = listado;
+    }
 }

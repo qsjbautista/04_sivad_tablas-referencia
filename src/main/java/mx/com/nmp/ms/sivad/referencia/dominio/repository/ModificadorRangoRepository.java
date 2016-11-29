@@ -6,9 +6,9 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango;
+import org.joda.time.DateTime;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Utilizado el acceso a datos de modificadores de factores de alhajas.
@@ -39,13 +39,13 @@ public interface ModificadorRangoRepository {
      * @param fechaCarga La fecha de carga.
      * @return La lista de entidades obtenidas.
      */
-    List<ListadoRango> consultarListadoPorFechaCarga(Date fechaCarga);
+    Set<ListadoRango> consultarListadoPorFechaCarga(DateTime fechaCarga);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.
      *
      * @param listado El nuevo listado.
      */
-    void actualizarListado(ListadoRango listado);
+    ListadoRango actualizarListado(ListadoRango listado);
 
 }

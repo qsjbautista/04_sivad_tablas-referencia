@@ -26,10 +26,6 @@ public abstract class AbstractModificadorCertificadoJPA {
     @Column(name = "factor", nullable = false)
     private BigDecimal factor;
 
-    @ManyToOne
-    @JoinColumn(name = "listado")
-    private ListadoModificadorCertificadoJPA listado;
-
     public Long getId() {
         return id;
     }
@@ -52,14 +48,6 @@ public abstract class AbstractModificadorCertificadoJPA {
 
     public void setFactor(BigDecimal factor) {
         this.factor = factor;
-    }
-
-    public ListadoModificadorCertificadoJPA getListado() {
-        return listado;
-    }
-
-    public void setListado(ListadoModificadorCertificadoJPA listado) {
-        this.listado = listado;
     }
 
 }

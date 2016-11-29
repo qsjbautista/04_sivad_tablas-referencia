@@ -1,12 +1,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
-import mx.com.nmp.ms.arquetipo.annotation.journal.JournalData;
-import mx.com.nmp.ms.arquetipo.journal.listener.JournalEntityListener;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
+import java.util.Set;
 
 /**
  * Entidad que representa la tabla ModificadorCertificadoJPA.
@@ -15,6 +10,17 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "cfg_diamante_listado_valor_certificado")
-public class ListadoModificadorCertificadoJPA extends AbstractListadoModificadorCertificadoJPA {
+public class ListadoModificadorCertificadoJPA extends AbstractListadoModificadorJPA {
 
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "listado")
+    private Set<ModificadorCertificadoJPA> modificadoresCertificado;
+
+    public Set<ModificadorCertificadoJPA> getModificadoresCertificado() {
+        return modificadoresCertificado;
+    }
+
+    public void setModificadoresCertificado(Set<ModificadorCertificadoJPA> modificadoresCertificado) {
+        this.modificadoresCertificado = modificadoresCertificado;
+    }
 }

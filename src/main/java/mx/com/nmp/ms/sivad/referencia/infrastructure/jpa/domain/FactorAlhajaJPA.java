@@ -11,5 +11,15 @@ import javax.persistence.*;
 @Table(name = "cfg_factor_alhaja")
 public class FactorAlhajaJPA extends AbstractFactorAlhajaJPA {
 
+    @ManyToOne
+    @JoinColumn(name = "listado")
+    private ListadoFactorAlhajaJPA listado;
 
+    public ListadoFactorAlhajaJPA getListado() {
+        return listado;
+    }
+
+    public void setListado(ListadoFactorAlhajaJPA listado) {
+        this.listado = listado;
+    }
 }

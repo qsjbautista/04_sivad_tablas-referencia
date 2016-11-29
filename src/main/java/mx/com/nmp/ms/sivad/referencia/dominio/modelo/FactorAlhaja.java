@@ -5,7 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Entidad que representa el factor de la alhaja.
@@ -15,24 +15,14 @@ import java.util.Date;
 public class FactorAlhaja {
 
     /**
-     * Identificador del factor de la alhaja.
+     * Metal de la alhaja.
      */
-    private Long id;
+    private String metal;
 
     /**
      * Calidad del metal de la alhaja.
      */
     private String calidad;
-
-    /**
-     * Factor de la alhaja
-     */
-    private BigDecimal factor;
-
-    /**
-     * Metal de la alhaja.
-     */
-    private String metal;
 
     /**
      * Rango de la alhaja.
@@ -42,7 +32,12 @@ public class FactorAlhaja {
     /**
      * Factor de la alhaja
      */
-    private BigDecimal factorComercial;
+    private BigDecimal factor;
+
+    /**
+     * Factor de la alhaja
+     */
+    private BigDecimal desplazamiento;
 
     /**
      * Limite inferior
@@ -57,29 +52,27 @@ public class FactorAlhaja {
     /**
      * Fecha de la ultima actualizacion
      */
-    protected Date ultimaActualizacion;
+    protected DateTime ultimaActualizacion;
 
     /**
      * Constructor.
      *
-     * @param id Identificador del factor Alhaja.
      * @param calidad Calidad del metal de la alhaja.
      * @param factor Factor de la alhaja.
      * @param metal Metal de la alhaja.
      * @param rango Rango de la alhaja.
-     * @param factorComercial Factor comercial.
+     * @param desplazamiento Factor de desplazamiento.
      * @param limiteInferior Limite inferior.
      * @param limiteSuperior Limite superior.
      * @param ultimaActualizacion fecha de la ultima actualizacion.
      */
-    public FactorAlhaja(Long id, String calidad, BigDecimal factor, String metal, String rango, BigDecimal factorComercial,
-                        BigDecimal limiteInferior, BigDecimal limiteSuperior, Date ultimaActualizacion) {
-        this.id = id;
+    public FactorAlhaja(String metal, String calidad, String rango, BigDecimal factor, BigDecimal desplazamiento,
+                        BigDecimal limiteInferior, BigDecimal limiteSuperior, DateTime ultimaActualizacion) {
         this.calidad = calidad;
         this.factor = factor;
         this.metal = metal;
         this.rango = rango;
-        this.factorComercial = factorComercial;
+        this.desplazamiento = desplazamiento;
         this.limiteInferior = limiteInferior;
         this.limiteSuperior = limiteSuperior;
         this.ultimaActualizacion = ultimaActualizacion;
@@ -88,87 +81,45 @@ public class FactorAlhaja {
     /**
      * Constructor.
      *
-     * @param calidad Calidad del metal de la alhaja.
-     * @param factor Factor de la alhaja.
      * @param metal Metal de la alhaja.
+     * @param calidad Calidad del metal de la alhaja.
      * @param rango Rango de la alhaja.
      */
-    public FactorAlhaja(String calidad, BigDecimal factor, String metal, String rango) {
+    public FactorAlhaja(String metal, String calidad, String rango) {
         this.calidad = calidad;
-        this.factor = factor;
         this.metal = metal;
         this.rango = rango;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCalidad() {
-        return calidad;
-    }
-
-    public void setCalidad(String calidad) {
-        this.calidad = calidad;
-    }
-
-    public BigDecimal getFactor() {
-        return factor;
-    }
-
-    public void setFactor(BigDecimal factor) {
-        this.factor = factor;
     }
 
     public String getMetal() {
         return metal;
     }
 
-    public void setMetal(String metal) {
-        this.metal = metal;
+    public String getCalidad() {
+        return calidad;
     }
 
     public String getRango() {
         return rango;
     }
 
-    public void setRango(String rango) {
-        this.rango = rango;
+    public BigDecimal getFactor() {
+        return factor;
     }
 
-    public BigDecimal getFactorComercial() {
-        return factorComercial;
-    }
-
-    public void setFactorComercial(BigDecimal factorComercial) {
-        this.factorComercial = factorComercial;
+    public BigDecimal getDesplazamiento() {
+        return desplazamiento;
     }
 
     public BigDecimal getLimiteInferior() {
         return limiteInferior;
     }
 
-    public void setLimiteInferior(BigDecimal limiteInferior) {
-        this.limiteInferior = limiteInferior;
-    }
-
     public BigDecimal getLimiteSuperior() {
         return limiteSuperior;
     }
 
-    public void setLimiteSuperior(BigDecimal limiteSuperior) {
-        this.limiteSuperior = limiteSuperior;
-    }
-
-    public Date getUltimaActualizacion() {
+    public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
-    }
-
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
-        this.ultimaActualizacion = ultimaActualizacion;
     }
 }

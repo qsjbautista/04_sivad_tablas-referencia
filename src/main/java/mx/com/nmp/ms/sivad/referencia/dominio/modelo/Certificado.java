@@ -14,11 +14,6 @@ import java.math.BigDecimal;
 public class Certificado {
 
     /**
-     * Identificador del certificado.
-     */
-    private Long id;
-
-    /**
      * Nombre del certificado.
      */
     private String certificado;
@@ -31,29 +26,12 @@ public class Certificado {
     /**
      * Constructor.
      *
-     * @param id Identificador del certificado.
-     * @param certificado Nombre del certificado.
-     * @param factor Factor del certificado.
-     */
-    public Certificado(Long id, String certificado, BigDecimal factor) {
-        this.id = id;
-        this.certificado = certificado;
-        this.factor = factor;
-    }
-
-    /**
-     * Constructor.
-     *
      * @param certificado Nombre del certificado.
      * @param factor Factor del certificado.
      */
     public Certificado(String certificado, BigDecimal factor) {
         this.certificado = certificado;
         this.factor = factor;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getCertificado() {

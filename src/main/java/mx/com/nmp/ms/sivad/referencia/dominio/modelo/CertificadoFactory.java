@@ -20,20 +20,8 @@ public class CertificadoFactory {
      * @param factor cantidad del factor.
      * @return La entidad creada.
      */
-    public static Certificado create(String certificado, BigDecimal factor) {
+    public static Certificado crear(String certificado, BigDecimal factor) {
         return new Certificado(certificado, factor);
-    }
-
-    /**
-     * Permite crear una entidad de tipo Certificado con base en los argumentos recibidos.
-     *
-     * @param id Identificador del Certificado.
-     * @param certificado descripcion del certificado.
-     * @param factor cantidad del factor.
-     * @return La entidad creada.
-     */
-    public static Certificado create(Long id, String certificado, BigDecimal factor) {
-        return new Certificado(id, certificado, factor);
     }
 
 }

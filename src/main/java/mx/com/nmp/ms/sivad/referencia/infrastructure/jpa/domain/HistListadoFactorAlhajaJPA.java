@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,16 +17,27 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "hist_cfg_alhaja_listado_factor")
-public class HistListadoFactorAlhajaJPA extends AbstractListadoFactorAlhajaJPA {
+public class HistListadoFactorAlhajaJPA extends AbstractListadoModificadorJPA {
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "listado")
+    private Set<FactorAlhajaJPA> factoresAlhaja;
 
     /**
      * Constructor.
      *
-     * @param factoresAlhaja Lista de factores alhaja.
      */
-    public HistListadoFactorAlhajaJPA(Set<FactorAlhajaJPA> factoresAlhaja) {
-        super.setFactoresAlhaja(factoresAlhaja);
+    public HistListadoFactorAlhajaJPA(DateTime fechaCarga, LocalDate fechaListado,Set<FactorAlhajaJPA> factoresAlhaja) {
+        super.setFechaCarga(fechaCarga);
+        super.setFechaListado(fechaListado);
+        this.setFactoresAlhaja(factoresAlhaja);
     }
 
+    public Set<FactorAlhajaJPA> getFactoresAlhaja() {
+        return factoresAlhaja;
+    }
 
+    public void setFactoresAlhaja(Set<FactorAlhajaJPA> factoresAlhaja) {
+        this.factoresAlhaja = factoresAlhaja;
+    }
 }

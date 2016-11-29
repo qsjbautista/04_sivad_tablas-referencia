@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import org.joda.time.DateTime;
+import java.util.Set;
 
 /**
  * Expone los metodos de acceso a datos para el listado del modificadores de certificado.
@@ -39,7 +39,7 @@ public interface ListadoModificadorCertificadoRepositoryJPA extends
      */
     @Query("SELECT lmc FROM ListadoModificadorCertificadoJPA lmc " +
         "WHERE lmc.fechaCarga BETWEEN :fechaInicial AND :fechaFinal")
-    List<ListadoModificadorCertificadoJPA> obtenerListadoPorFechaCarga(
-        @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
+    Set<ListadoModificadorCertificadoJPA> obtenerListadoPorFechaCarga(
+        @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
 
 }

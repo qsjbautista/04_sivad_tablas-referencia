@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import org.joda.time.DateTime;
+import java.util.Set;
 
 /**
  * Expone los metodos de acceso a datos para el listado de factores alhaja.
@@ -39,7 +39,7 @@ public interface ListadoFactorAlhajaRepositoryJPA extends
      */
     @Query("SELECT lfa FROM ListadoFactorAlhajaJPA lfa " +
         "WHERE lfa.fechaCarga BETWEEN :fechaInicial AND :fechaFinal")
-    List<ListadoFactorAlhajaJPA> obtenerListadoPorFechaCarga(
-        @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
+    Set<ListadoFactorAlhajaJPA> obtenerListadoPorFechaCarga(
+        @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
 
 }

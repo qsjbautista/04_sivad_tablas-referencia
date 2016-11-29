@@ -5,9 +5,9 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -25,12 +25,12 @@ public class ListadoRango {
     /**
      * Fecha en que se realizo la carga.
      */
-    private Date fechaCarga;
+    private DateTime fechaCarga;
 
     /**
      * Fecha en que se realizo el listado.
      */
-    private Date fechaListado;
+    private LocalDate fechaListado;
 
     /**
      * Lista factores de alhaja.
@@ -40,35 +40,34 @@ public class ListadoRango {
     /**
      * Referencia al repositorio de ModificadorRangoRepository.
      */
-    @Inject
     private ModificadorRangoRepository modificadorRangoRepository;
 
-
-
-    // METODOS
-
     /**
-     * Constructor.
-     *
-     * @param factorAlhajas Lista de factores alhaja.
+     * Interface que define el contrato para crear entidades ListadoRango
      */
-    ListadoRango(Set<FactorAlhaja> factorAlhajas) {
-        this.factorAlhajas = factorAlhajas;
+    public interface Builder {
+        DateTime getFechaCarga();
+
+        LocalDate getFechaListado();
+
+        Set<FactorAlhaja> getFactorAlhaja();
     }
 
+
     /**
-     * Constructor.
+     * Constructor. Privado para que solo la fabrica tenga acceso a crear objetos.
      *
-     * @param id Identificador del registro.
-     * @param fechaCarga Fecha en que se realiza la carga.
-     * @param fechaListado Fecha en del listado.
-     * @param factorAlhajas Lista de factores alhaja.
+     * @param builder Referencia al objeto que contiene los datos necesarios para construir la entidad.
+     * @param modificadorRangoRepository Referencia al repositorio de entidades.
      */
-    ListadoRango(Long id, Date fechaCarga, Date fechaListado, Set<FactorAlhaja> factorAlhajas) {
-        this.id = id;
-        this.fechaCarga = fechaCarga;
-        this.fechaListado = fechaListado;
-        this.factorAlhajas = factorAlhajas;
+    ListadoRango(Builder builder, ModificadorRangoRepository modificadorRangoRepository) {
+        super();
+
+        fechaCarga = builder.getFechaCarga();
+        fechaListado = builder.getFechaListado();
+        factorAlhajas = builder.getFactorAlhaja();
+
+        this.modificadorRangoRepository = modificadorRangoRepository;
     }
 
     /**
@@ -89,11 +88,11 @@ public class ListadoRango {
         return id;
     }
 
-    public Date getFechaCarga() {
+    public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
-    public Date getFechaListado() {
+    public LocalDate getFechaListado() {
         return fechaListado;
     }
 

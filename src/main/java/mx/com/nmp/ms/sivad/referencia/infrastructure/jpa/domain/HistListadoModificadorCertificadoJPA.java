@@ -4,8 +4,10 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,16 +17,18 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "hist_cfg_diamante_listado_valor_certificado")
-public class HistListadoModificadorCertificadoJPA extends AbstractListadoModificadorCertificadoJPA {
+public class HistListadoModificadorCertificadoJPA extends AbstractListadoModificadorJPA {
 
-    /**
-     * Constructor.
-     *
-     * @param modificadorCertificado Lista de modificadores certificados.
-     */
-    public HistListadoModificadorCertificadoJPA(Set<ModificadorCertificadoJPA> modificadorCertificado) {
-        super.setModificadoresCertificado(modificadorCertificado);
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "listado")
+    private Set<HistModificadorCertificadoJPA> modificadoresCertificado;
+
+
+    public Set<HistModificadorCertificadoJPA> getModificadoresCertificado() {
+        return modificadoresCertificado;
     }
 
-
+    public void setModificadoresCertificado(Set<HistModificadorCertificadoJPA> modificadoresCertificado) {
+        this.modificadoresCertificado = modificadoresCertificado;
+    }
 }

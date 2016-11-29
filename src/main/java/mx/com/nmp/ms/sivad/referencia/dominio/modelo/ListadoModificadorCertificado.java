@@ -6,8 +6,8 @@ package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
 
-import javax.inject.Inject;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -18,19 +18,14 @@ import java.util.Set;
 public class ListadoModificadorCertificado {
 
     /**
-     * Identificador del registro.
-     */
-    private Long id;
-
-    /**
      * Fecha en que se realizo la carga.
      */
-    private Date fechaCarga;
+    private DateTime fechaCarga;
 
     /**
      * Fecha en que se realizo el listado.
      */
-    private Date fechaListado;
+    private LocalDate fechaListado;
 
     /**
      * Lista de modificadores de certificados.
@@ -40,59 +35,56 @@ public class ListadoModificadorCertificado {
     /**
      * Referencia al repositorio de ModificadorCertificadoRepository.
      */
-    @Inject
     private ModificadorCertificadoRepository modificadorCertificadoRepository;
 
+    /**
+     * Interface que define el contrato para crear entidades ListadoModificadorCertificado
+     */
+    public interface Builder {
+        DateTime getFechaCarga();
+
+        LocalDate getFechaListado();
+
+        Set<Certificado> getCertificados();
+    }
 
 
     // METODOS
 
     /**
-     * Constructor.
+     * Constructor. Privado para que solo la fabrica tenga acceso a crear objetos.
      *
-     * @param certificados Lista de los certificados del diamante.
+     * @param builder Referencia al objeto que contiene los datos necesarios para construir la entidad.
+     * @param modificadorCertificadoRepository Referencia al repositorio de entidades.
      */
-    ListadoModificadorCertificado(Set<Certificado> certificados) {
-        this.certificados = certificados;
-    }
+    private ListadoModificadorCertificado(Builder builder, ModificadorCertificadoRepository modificadorCertificadoRepository) {
+        super();
 
-    /**
-     * Constructor.
-     *
-     * @param id Identificador del registro.
-     * @param fechaCarga Fecha en que se realiza la carga.
-     * @param fechaListado Fecha en del listado.
-     * @param certificados Lista de los certificados del diamante.
-     */
-    ListadoModificadorCertificado(Long id, Date fechaCarga, Date fechaListado, Set<Certificado> certificados) {
-        this.id = id;
-        this.fechaCarga = fechaCarga;
-        this.fechaListado = fechaListado;
-        this.certificados = certificados;
+        fechaCarga = builder.getFechaCarga();
+        fechaListado = builder.getFechaListado();
+        certificados = builder.getCertificados();
+
+        this.modificadorCertificadoRepository = modificadorCertificadoRepository;
     }
 
     /**
      * Permite actualizar el listado de certificados diamante.
      *
-     * @param listado Lista de los certificados del diamante, con el cual se desea reemplazar la lista vigente.
      */
-    public void actualizar(ListadoModificadorCertificado listado) {
-        modificadorCertificadoRepository.actualizarListado(listado);
+    public ListadoModificadorCertificado actualizar() {
+        return modificadorCertificadoRepository.actualizarListado(this);
     }
 
 
 
     // GETTERS
 
-    public Long getId() {
-        return id;
-    }
 
-    public Date getFechaCarga() {
+    public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
-    public Date getFechaListado() {
+    public LocalDate getFechaListado() {
         return fechaListado;
     }
 
@@ -100,4 +92,26 @@ public class ListadoModificadorCertificado {
         return certificados;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ListadoModificadorCertificado)) return false;
+
+        ListadoModificadorCertificado that = (ListadoModificadorCertificado) o;
+
+        if (!getFechaCarga().equals(that.getFechaCarga())) return false;
+        if (!getCertificados().equals(that.getCertificados())) return false;
+        return modificadorCertificadoRepository.equals(that.modificadorCertificadoRepository);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ListadoModificadorCertificado{" +
+            "fechaCarga=" + fechaCarga +
+            ", fechaListado=" + fechaListado +
+            ", certificados=" + certificados +
+            ", modificadorCertificadoRepository=" + modificadorCertificadoRepository +
+            '}';
+    }
 }

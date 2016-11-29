@@ -21,4 +21,13 @@ public interface FactorAlhajaRepositoryJPA extends JpaRepository<FactorAlhajaJPA
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
     FactorAlhajaJPA findByMetalAndCalidadAndRango(String metal, String calidad, String rango);
+
+    /**
+     * Utilizado para obtener el un factor alhaja por el metal, calidad y rango.
+     *
+     * @param metal Metal de la alhaja.
+     * @param rango Rango de la alhaja.
+     * @return La entidad que coincida con los valores de los atributos indicados.
+     */
+    FactorAlhajaJPA findByMetalAndRango(String metal, String rango);
 }

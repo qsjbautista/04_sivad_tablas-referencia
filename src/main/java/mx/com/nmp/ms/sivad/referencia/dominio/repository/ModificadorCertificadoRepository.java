@@ -6,9 +6,9 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertificado;
+import org.joda.time.DateTime;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Utilizado el acceso a datos de modificadores de certificados de diamantes.
@@ -39,13 +39,13 @@ public interface ModificadorCertificadoRepository {
      * @param fechaCarga La fecha de carga.
      * @return La lista de entidades obtenidas.
      */
-    List<ListadoModificadorCertificado> consultarListadoPorFechaCarga(Date fechaCarga);
+    Set<ListadoModificadorCertificado> consultarListadoPorFechaCarga(DateTime fechaCarga);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.
      *
      * @param listado El nuevo listado.
      */
-    void actualizarListado(ListadoModificadorCertificado listado);
+    ListadoModificadorCertificado actualizarListado(ListadoModificadorCertificado listado);
 
 }
