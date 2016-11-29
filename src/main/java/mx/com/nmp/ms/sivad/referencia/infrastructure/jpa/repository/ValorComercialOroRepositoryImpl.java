@@ -129,9 +129,9 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
         Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
         List<ListadoValorComercialOroJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
         List<HistListadoValorComercialOroJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            histListadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
             String msg = "Fecha de vigencia solicitada no existe.";

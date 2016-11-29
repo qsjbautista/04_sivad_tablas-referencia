@@ -36,11 +36,11 @@ public interface ListadoValorComercialMetalJPARepository extends
      *
      * @param fechaInicial La fecha de inicio de la vigencia.
      * @param fechaFinal La fecha de fin de la vigencia.
-     * @return La lista de entidades que coincidan con la fecha indicada.
+     * @return La lista de históricos que coincidan con la fecha indicada.
      */
     @Query("SELECT lvcm FROM ListadoValorComercialMetalJPA lvcm " +
         "WHERE lvcm.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
-    List<ListadoValorComercialMetalJPA> obtenerListadoPorFechaVigencia(
+    List<ListadoValorComercialMetalJPA> obtenerListadosPorFechaVigencia(
         @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
 
 }

@@ -27,11 +27,11 @@ public interface HistListadoValorComercialOroJPARepository extends
      *
      * @param fechaInicial La fecha de inicio de la vigencia.
      * @param fechaFinal La fecha de fin de la vigencia.
-     * @return La lista de entidades que coincidan con la fecha indicada.
+     * @return La lista de históricos que coincidan con la fecha indicada.
      */
     @Query("SELECT hlvco FROM HistListadoValorComercialOroJPA hlvco " +
         "WHERE hlvco.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
-    List<HistListadoValorComercialOroJPA> obtenerListadoPorFechaVigencia(
+    List<HistListadoValorComercialOroJPA> obtenerListadosPorFechaVigencia(
         @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
 
 }
