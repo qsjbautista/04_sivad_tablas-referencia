@@ -13,6 +13,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOroFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA;
@@ -92,8 +93,8 @@ public class ValorComercialOroRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoOroTest01() {
-        Oro oro = OroFactory.create(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_NO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+        OroVO oroVO = new OroVO(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_NO_EXISTE);
+        valorComercialOroRepository.consultarOroVigente(oroVO);
     }
 
     /**
@@ -102,8 +103,8 @@ public class ValorComercialOroRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoOroTest02() {
-        Oro oro = OroFactory.create(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+        OroVO oroVO = new OroVO(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_EXISTE);
+        valorComercialOroRepository.consultarOroVigente(oroVO);
     }
 
     /**
@@ -112,8 +113,8 @@ public class ValorComercialOroRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoOroTest03() {
-        Oro oro = OroFactory.create(COLOR_ORO_EXISTE, CALIDAD_ORO_NO_EXISTE);
-        valorComercialOroRepository.consultarOroVigente(oro);
+        OroVO oroVO = new OroVO(COLOR_ORO_EXISTE, CALIDAD_ORO_NO_EXISTE);
+        valorComercialOroRepository.consultarOroVigente(oroVO);
     }
 
     /**
@@ -123,8 +124,8 @@ public class ValorComercialOroRepositoryIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
     public void obtenerValorGramoOroTest04() {
-        Oro oro = OroFactory.create(COLOR_ORO_EXISTE, CALIDAD_ORO_EXISTE);
-        Oro result = valorComercialOroRepository.consultarOroVigente(oro);
+        OroVO oroVO = new OroVO(COLOR_ORO_EXISTE, CALIDAD_ORO_EXISTE);
+        Oro result = valorComercialOroRepository.consultarOroVigente(oroVO);
 
         assertNotNull(result);
         assertEquals(COLOR_ORO_EXISTE, result.getColor());
@@ -255,8 +256,8 @@ public class ValorComercialOroRepositoryIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
 
-        Oro oroVigente = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
-        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigente);
+        OroVO oroVigenteVO = new OroVO(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
+        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigenteVO);
 
         assertNotNull(resultOroVigente);
         assertEquals(COLOR_ORO_NUEVO, resultOroVigente.getColor());
@@ -309,8 +310,8 @@ public class ValorComercialOroRepositoryIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
 
-        Oro oroVigente = OroFactory.create(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
-        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigente);
+        OroVO oroVigenteVO = new OroVO(COLOR_ORO_NUEVO, CALIDAD_ORO_NUEVO_3);
+        Oro resultOroVigente = valorComercialOroRepository.consultarOroVigente(oroVigenteVO);
 
         assertNotNull(resultOroVigente);
         assertEquals(COLOR_ORO_NUEVO, resultOroVigente.getColor());

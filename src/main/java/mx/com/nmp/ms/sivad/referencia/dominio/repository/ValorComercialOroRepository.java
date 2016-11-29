@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public interface ValorComercialOroRepository {
      * Permite obtener la entidad Oro vigente, que corresponda a las características indicadas en las propiedades
      * del parámetro.
      *
-     * @param oro Entidad con las características de búsqueda.
+     * @param oroVO Value Object con las características de búsqueda.
      * @return La entidad obtenida.
      */
-    Oro consultarOroVigente(Oro oro);
+    Oro consultarOroVigente(OroVO oroVO);
 
     /**
      * Permite obtener la entidad ListadoValorComercialOro vigente.

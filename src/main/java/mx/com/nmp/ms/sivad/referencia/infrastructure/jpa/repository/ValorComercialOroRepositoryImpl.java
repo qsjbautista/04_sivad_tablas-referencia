@@ -12,6 +12,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoEx
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.OroFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialOroJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialOroJPA;
@@ -68,15 +69,15 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      * {@inheritDoc}
      */
     @Override
-    public Oro consultarOroVigente(@NotNull Oro oro) {
-        LOGGER.info(">> consultarOroVigente({})", oro);
+    public Oro consultarOroVigente(@NotNull OroVO oroVO) {
+        LOGGER.info(">> consultarOroVigente({})", oroVO);
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'color: [{}]', 'calidad: [{}]'", oro.getColor(), oro.getCalidad());
+            LOGGER.info("'color: [{}]', 'calidad: [{}]'", oroVO.getColor(), oroVO.getCalidad());
         }
 
         ValorComercialOroJPA valorComercialOroJPA =
-            valorComercialOroJPARepository.findByColorAndCalidad(oro.getColor(), oro.getCalidad());
+            valorComercialOroJPARepository.findByColorAndCalidad(oroVO.getColor(), oroVO.getCalidad());
 
         if (ObjectUtils.isEmpty(valorComercialOroJPA)) {
             String msg = "No existe un valor gramo para las características de oro solicitadas.";

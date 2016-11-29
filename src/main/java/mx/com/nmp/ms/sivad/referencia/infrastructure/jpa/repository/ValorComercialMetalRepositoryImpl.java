@@ -12,6 +12,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoEx
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialMetalJPA;
@@ -68,15 +69,15 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      * {@inheritDoc}
      */
     @Override
-    public Metal consultarMetalVigente(@NotNull Metal metal) {
-        LOGGER.info(">> consultarMetalVigente({})", metal);
+    public Metal consultarMetalVigente(@NotNull MetalVO metalVO) {
+        LOGGER.info(">> consultarMetalVigente({})", metalVO);
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'metal: [{}]', 'calidad: [{}]'", metal.getMetal(), metal.getCalidad());
+            LOGGER.info("'metal: [{}]', 'calidad: [{}]'", metalVO.getMetal(), metalVO.getCalidad());
         }
 
         ValorComercialMetalJPA valorComercialMetalJPA =
-            valorComercialMetalJPARepository.findByMetalAndCalidad(metal.getMetal(), metal.getCalidad());
+            valorComercialMetalJPARepository.findByMetalAndCalidad(metalVO.getMetal(), metalVO.getCalidad());
 
         if (ObjectUtils.isEmpty(valorComercialMetalJPA)) {
             String msg = "No existe un valor gramo para las características de metal solicitadas.";

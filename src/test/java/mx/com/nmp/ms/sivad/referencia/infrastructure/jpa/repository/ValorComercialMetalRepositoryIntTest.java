@@ -13,6 +13,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialMetalJPA;
@@ -92,8 +93,8 @@ public class ValorComercialMetalRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoMetalTest01() {
-        Metal metal = MetalFactory.create(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_NO_EXISTE);
-        valorComercialMetalRepository.consultarMetalVigente(metal);
+        MetalVO metalVO = new MetalVO(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_NO_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metalVO);
     }
 
     /**
@@ -102,8 +103,8 @@ public class ValorComercialMetalRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoMetalTest02() {
-        Metal metal = MetalFactory.create(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_EXISTE);
-        valorComercialMetalRepository.consultarMetalVigente(metal);
+        MetalVO metalVO = new MetalVO(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metalVO);
     }
 
     /**
@@ -112,8 +113,8 @@ public class ValorComercialMetalRepositoryIntTest {
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
     public void obtenerValorGramoMetalTest03() {
-        Metal metal = MetalFactory.create(TIPO_METAL_EXISTE, CALIDAD_METAL_NO_EXISTE);
-        valorComercialMetalRepository.consultarMetalVigente(metal);
+        MetalVO metalVO = new MetalVO(TIPO_METAL_EXISTE, CALIDAD_METAL_NO_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metalVO);
     }
 
     /**
@@ -123,8 +124,8 @@ public class ValorComercialMetalRepositoryIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
     public void obtenerValorGramoMetalTest04() {
-        Metal metal = MetalFactory.create(TIPO_METAL_EXISTE, CALIDAD_METAL_EXISTE);
-        Metal result = valorComercialMetalRepository.consultarMetalVigente(metal);
+        MetalVO metalVO = new MetalVO(TIPO_METAL_EXISTE, CALIDAD_METAL_EXISTE);
+        Metal result = valorComercialMetalRepository.consultarMetalVigente(metalVO);
 
         assertNotNull(result);
         assertEquals(TIPO_METAL_EXISTE, result.getMetal());
@@ -255,8 +256,8 @@ public class ValorComercialMetalRepositoryIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
 
-        Metal metalVigente = MetalFactory.create(TIPO_METAL_NUEVO, CALIDAD_METAL_NUEVO_3);
-        Metal resultMetalVigente = valorComercialMetalRepository.consultarMetalVigente(metalVigente);
+        MetalVO metalVigenteVO = new MetalVO(TIPO_METAL_NUEVO, CALIDAD_METAL_NUEVO_3);
+        Metal resultMetalVigente = valorComercialMetalRepository.consultarMetalVigente(metalVigenteVO);
 
         assertNotNull(resultMetalVigente);
         assertEquals(TIPO_METAL_NUEVO, resultMetalVigente.getMetal());
@@ -309,8 +310,8 @@ public class ValorComercialMetalRepositoryIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
 
-        Metal metalVigente = MetalFactory.create(TIPO_METAL_NUEVO, CALIDAD_METAL_NUEVO_3);
-        Metal resultMetalVigente = valorComercialMetalRepository.consultarMetalVigente(metalVigente);
+        MetalVO metalVigenteVO = new MetalVO(TIPO_METAL_NUEVO, CALIDAD_METAL_NUEVO_3);
+        Metal resultMetalVigente = valorComercialMetalRepository.consultarMetalVigente(metalVigenteVO);
 
         assertNotNull(resultMetalVigente);
         assertEquals(TIPO_METAL_NUEVO, resultMetalVigente.getMetal());

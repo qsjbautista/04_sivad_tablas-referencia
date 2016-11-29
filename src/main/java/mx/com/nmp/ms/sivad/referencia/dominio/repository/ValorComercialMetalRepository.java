@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public interface ValorComercialMetalRepository {
      * Permite obtener la entidad Metal vigente, que corresponda a las características indicadas en las propiedades
      * del parámetro.
      *
-     * @param metal Entidad con las características de búsqueda.
+     * @param metalVO Value Object con las características de búsqueda.
      * @return La entidad obtenida.
      */
-    Metal consultarMetalVigente(Metal metal);
+    Metal consultarMetalVigente(MetalVO metalVO);
 
     /**
      * Permite obtener la entidad ListadoValorComercialMetal vigente.
