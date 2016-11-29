@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Expone los metodos de acceso a datos para el histórico del listado del valor comercial del metal.
@@ -32,7 +32,7 @@ public interface HistListadoValorComercialMetalJPARepository extends
      */
     @Query("SELECT hlvcm FROM HistListadoValorComercialMetalJPA hlvcm " +
         "WHERE hlvcm.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
-    List<HistListadoValorComercialMetalJPA> obtenerListadosPorFechaVigencia(
+    Set<HistListadoValorComercialMetalJPA> obtenerListadosPorFechaVigencia(
         @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
 
 }

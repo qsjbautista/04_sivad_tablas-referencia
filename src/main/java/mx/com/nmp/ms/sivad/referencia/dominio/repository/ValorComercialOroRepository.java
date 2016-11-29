@@ -9,7 +9,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import org.joda.time.LocalDate;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Utilizado para canalizar el acceso a datos de valores comerciales del oro.
@@ -40,7 +40,7 @@ public interface ValorComercialOroRepository {
      * @param fechaVigencia La fecha de vigencia.
      * @return La lista de entidades obtenidas.
      */
-    List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(LocalDate fechaVigencia);
+    Set<ListadoValorComercialOro> consultarListadoPorFechaVigencia(LocalDate fechaVigencia);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.

@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Expone los metodos de acceso a datos para el listado del valor comercial del oro.
@@ -39,7 +39,7 @@ public interface ListadoValorComercialOroJPARepository extends
      */
     @Query("SELECT lvco FROM ListadoValorComercialOroJPA lvco " +
         "WHERE lvco.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
-    List<ListadoValorComercialOroJPA> obtenerListadosPorFechaVigencia(
+    Set<ListadoValorComercialOroJPA> obtenerListadosPorFechaVigencia(
         @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
 
 }

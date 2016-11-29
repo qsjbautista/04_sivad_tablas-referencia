@@ -27,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementación de ValorComercialMetalRepository.
@@ -113,7 +113,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
      * {@inheritDoc}
      */
     @Override
-    public List<ListadoValorComercialMetal> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
+    public Set<ListadoValorComercialMetal> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
 
         if (LOGGER.isInfoEnabled()) {
@@ -129,9 +129,9 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
         Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
         Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
-        List<ListadoValorComercialMetalJPA> listaVigentes =
+        Set<ListadoValorComercialMetalJPA> listaVigentes =
             listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
-        List<HistListadoValorComercialMetalJPA> listaHistoricos =
+        Set<HistListadoValorComercialMetalJPA> listaHistoricos =
             histListadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
@@ -140,7 +140,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialMetalJPA.class);
         }
 
-        List<ListadoValorComercialMetal> result = new ArrayList<>();
+        Set<ListadoValorComercialMetal> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialMetalJPA listadoValorComercialMetalJPA : listaVigentes) {
                 result.add(ValorComercialMetalUtil.convertToListadoDeDominio(listadoValorComercialMetalJPA));

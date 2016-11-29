@@ -205,7 +205,7 @@ public class ValorComercialMetalRepositoryIntTest {
         }
 
         LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
-        List<ListadoValorComercialMetal> result =
+        Set<ListadoValorComercialMetal> result =
             valorComercialMetalRepository.consultarListadoPorFechaVigencia(fechaVigencia);
 
         assertNotNull(result);

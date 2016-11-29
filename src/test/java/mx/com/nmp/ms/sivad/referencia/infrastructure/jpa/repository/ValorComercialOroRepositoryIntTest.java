@@ -205,7 +205,7 @@ public class ValorComercialOroRepositoryIntTest {
         }
 
         LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
-        List<ListadoValorComercialOro> result =
+        Set<ListadoValorComercialOro> result =
             valorComercialOroRepository.consultarListadoPorFechaVigencia(fechaVigencia);
 
         assertNotNull(result);

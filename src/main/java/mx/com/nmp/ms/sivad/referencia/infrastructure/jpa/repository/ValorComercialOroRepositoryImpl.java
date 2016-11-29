@@ -27,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementación de ValorComercialOroRepository.
@@ -113,7 +113,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
      * {@inheritDoc}
      */
     @Override
-    public List<ListadoValorComercialOro> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
+    public Set<ListadoValorComercialOro> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
 
         if (LOGGER.isInfoEnabled()) {
@@ -129,9 +129,9 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
         Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
         Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
 
-        List<ListadoValorComercialOroJPA> listaVigentes =
+        Set<ListadoValorComercialOroJPA> listaVigentes =
             listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
-        List<HistListadoValorComercialOroJPA> listaHistoricos =
+        Set<HistListadoValorComercialOroJPA> listaHistoricos =
             histListadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
@@ -140,7 +140,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
             throw new ListadoValorGramoNoEncontradoException(msg, ListadoValorComercialOroJPA.class);
         }
 
-        List<ListadoValorComercialOro> result = new ArrayList<>();
+        Set<ListadoValorComercialOro> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoValorComercialOroJPA listadoValorComercialOroJPA : listaVigentes) {
                 result.add(ValorComercialOroUtil.convertToListadoDeDominio(listadoValorComercialOroJPA));
