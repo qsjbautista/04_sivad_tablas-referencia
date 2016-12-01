@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 import java.util.Objects;
 
 /**
+ * Entidad de dominio (DDD) usada para administra la lista de factores aplicables sobre el valor del Diamante.
+ *
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
 public class ModificadorValorDiamante {

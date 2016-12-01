@@ -1,48 +1,22 @@
 package mx.com.nmp.ms.sivad.referencia.adminapi.exception;
 
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.soap.SOAPFaultException;
+
 /**
  * Excepción que será lanzada cuando ocurra algún error en la obtención de información de tablas de referencia.
  *
  * @author jbautista
  */
-public class WebServiceException extends RuntimeException {
-
-
-    /**
-     * Variable que contiene el código de error de la excepción.
-     */
-    private final String codigoError;
+public class WebServiceException extends SOAPFaultException {
+    private static final long serialVersionUID = -3148483076881584839L;
 
     /**
      * Constructor.
      *
-     * @param codigoError Código de error de la excepción.
-     * @param mensaje Mensaje que descibe el error.
+     * @param falla <code>SOAPFault</code> representando la falla.
      */
-    public WebServiceException(String codigoError, String mensaje) {
-        super(mensaje);
-        this.codigoError = codigoError;
+    public WebServiceException(SOAPFault falla) {
+        super(falla);
     }
-
-    /**
-     * Constructor.
-     *
-     * @param codigoError Código de error de la excepción.
-     * @param mensaje Mensaje que describe el error.
-     * @param causa Excepción que origino el error.
-     */
-    public WebServiceException(String codigoError, String mensaje, Throwable causa) {
-        super(mensaje, causa);
-        this.codigoError = codigoError;
-    }
-
-    /**
-     * Método que regresa el código de error de la excepción.
-     *
-     * @return Código de error de la excepción.
-     */
-    public String getCodigoError() {
-        return codigoError;
-    }
-
 }
