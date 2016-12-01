@@ -25,6 +25,7 @@ import java.util.Collection;
 @EnableAsync
 @EnableAspectJAutoProxy
 public class TablasReferenciaApplication {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TablasReferenciaApplication.class);
 
     @Inject
