@@ -32,7 +32,7 @@ public abstract class AbstractValorComercialOroJPA {
     /**
      * El valor aplicable a la calidad del oro (kilataje), el cual se requiere para obtener el precio por gramo.
      */
-    @Column(name = "calidad", nullable = false)
+    @Column(name = "kilataje", nullable = false)
     protected Integer calidad;
 
     /**
