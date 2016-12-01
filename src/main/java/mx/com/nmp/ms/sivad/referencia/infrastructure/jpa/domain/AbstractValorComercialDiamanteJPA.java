@@ -44,19 +44,19 @@ public abstract class AbstractValorComercialDiamanteJPA {
     /**
      * Tamaño inferior en quilates que abarca el valor comercial.
      */
-    @Column(name = "tamanio_inferior", nullable = false)
+    @Column(name = "tamanio_inferior", precision = 6, scale = 2, nullable = false)
     protected BigDecimal tamanioInferior;
 
     /**
      * Tamaño superior en quilates que abarca el valor comercial.
      */
-    @Column(name = "tamanio_superior", nullable = false)
+    @Column(name = "tamanio_superior", precision = 6, scale = 2, nullable = false)
     protected BigDecimal tamanioSuperior;
 
     /**
      * Precio en dólares del diamante.
      */
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio", precision = 10, scale = 4, nullable = false)
     protected BigDecimal precio;
 
 

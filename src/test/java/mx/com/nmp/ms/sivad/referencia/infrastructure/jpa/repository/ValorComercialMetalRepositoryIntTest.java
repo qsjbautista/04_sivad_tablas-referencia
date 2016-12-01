@@ -60,10 +60,10 @@ public class ValorComercialMetalRepositoryIntTest {
     private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
-    private static final BigDecimal PRECIO_METAL_EXISTE = new BigDecimal(150.25);
-    private static final BigDecimal PRECIO_METAL_NUEVO_1 = new BigDecimal(50.25);
-    private static final BigDecimal PRECIO_METAL_NUEVO_2 = new BigDecimal(60.25);
-    private static final BigDecimal PRECIO_METAL_NUEVO_3 = new BigDecimal(70.25);
+    private static final BigDecimal PRECIO_METAL_EXISTE = new BigDecimal(150.250).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_METAL_NUEVO_1 = new BigDecimal(50.250).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_METAL_NUEVO_2 = new BigDecimal(60.250).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_METAL_NUEVO_3 = new BigDecimal(70.250).setScale(3, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de ValorComercialMetalRepository.

@@ -38,7 +38,7 @@ public abstract class AbstractValorComercialOroJPA {
     /**
      * Precio en pesos del oro.
      */
-    @Column(name = "precio", nullable = false)
+    @Column(name = "precio", precision = 10, scale = 3, nullable = false)
     protected BigDecimal precio;
 
 
