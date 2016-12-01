@@ -130,9 +130,9 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
         DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         Set<ListadoValorComercialMetalJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            listadoJpaRepository.findByUltimaActualizacionBetween(fechaVigenciaInicio, fechaVigenciaFin);
         Set<HistListadoValorComercialMetalJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            histListadoJpaRepository.findByUltimaActualizacionBetween(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
             String msg = "Fecha de vigencia solicitada no existe.";

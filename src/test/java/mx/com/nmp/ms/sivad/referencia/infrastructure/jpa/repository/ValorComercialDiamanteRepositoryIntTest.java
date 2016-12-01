@@ -749,34 +749,34 @@ public class ValorComercialDiamanteRepositoryIntTest {
         valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fecha);
     }
 
-//    /**
-//     * Utilizado para restaurar el listado de valores comerciales del diamante que corresponda a la fecha de
-//     * vigencia indicada (fecha de vigencia anterior a fecha actual y con datos iniciales).
-//     */
-//    @Test
-//    @Transactional
-//    @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
-//    public void restaurarListadoPorFechaVigenciaTest04() {
-//        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
-//        Calendar calendar = Calendar.getInstance();
-//
-//        try {
-//            calendar.setTime(sdf.parse(FECHA_VIGENCIA));
-//        } catch (ParseException e) {
-//            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
-//            fail();
-//        }
-//
-//        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
-//        ListadoValorComercialDiamante result =
-//            valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fechaVigencia);
-//
-//        assertNotNull(result);
-//        assertNotNull(result.getFechaCarga());
-//        assertNotNull(result.getFechaListado());
-//        assertNotNull(result.getValoresComerciales());
-//        assertFalse(result.getValoresComerciales().isEmpty());
-//        assertTrue(result.getValoresComerciales().size() == 4);
-//    }
+    /**
+     * Utilizado para restaurar el listado de valores comerciales del diamante que corresponda a la fecha de
+     * vigencia indicada (fecha de vigencia anterior a fecha actual y con datos iniciales).
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
+    public void restaurarListadoPorFechaVigenciaTest04() {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
+        Calendar calendar = Calendar.getInstance();
+
+        try {
+            calendar.setTime(sdf.parse(FECHA_VIGENCIA));
+        } catch (ParseException e) {
+            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
+            fail();
+        }
+
+        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
+        ListadoValorComercialDiamante result =
+            valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fechaVigencia);
+
+        assertNotNull(result);
+        assertNotNull(result.getFechaCarga());
+        assertNotNull(result.getFechaListado());
+        assertNotNull(result.getValoresComerciales());
+        assertFalse(result.getValoresComerciales().isEmpty());
+        assertTrue(result.getValoresComerciales().size() == 4);
+    }
 
 }

@@ -8,7 +8,6 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorCome
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
@@ -38,9 +37,6 @@ public interface ListadoValorComercialMetalJPARepository extends
      * @param fechaFinal La fecha de fin de la vigencia.
      * @return La lista de históricos que coincidan con la fecha indicada.
      */
-    @Query("SELECT lvcm FROM ListadoValorComercialMetalJPA lvcm " +
-        "WHERE lvcm.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
-    Set<ListadoValorComercialMetalJPA> obtenerListadosPorFechaVigencia(
-        @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
+    Set<ListadoValorComercialMetalJPA> findByUltimaActualizacionBetween(DateTime fechaInicial, DateTime fechaFinal);
 
 }

@@ -137,9 +137,9 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         Set<ListadoValorComercialDiamanteJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            listadoJpaRepository.findByFechaCargaBetween(fechaVigenciaInicio, fechaVigenciaFin);
         Set<HistListadoValorComercialDiamanteJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            histListadoJpaRepository.findByFechaCargaBetween(fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
             String msg = "Fecha de vigencia solicitada no existe.";
@@ -262,7 +262,8 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         HistListadoValorComercialDiamanteJPA listadoFechaVigencia =
-            histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
+            histListadoJpaRepository.findFirstByFechaCargaBetweenOrderByFechaCargaDesc(
+                fechaVigenciaInicio, fechaVigenciaFin);
 
         if (ObjectUtils.isEmpty(listadoFechaVigencia) ||
             ObjectUtils.isEmpty(listadoFechaVigencia.getValoresComerciales())) {
