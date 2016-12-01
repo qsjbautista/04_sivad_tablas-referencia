@@ -4,7 +4,9 @@
  */
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import java.util.Set;
 
 /**
@@ -17,11 +19,12 @@ public final class ListadoValorComercialDiamanteFactory {
     /**
      * Permite crear una entidad de tipo ListadoValorComercialDiamante con base en los argumentos recibidos.
      *
+     * @param fechaListado La fecha de origen de la información.
      * @param valoresComerciales Lista de valores comerciales de diamantes.
      * @return La entidad creada.
      */
-    public static ListadoValorComercialDiamante create(Set<Diamante> valoresComerciales) {
-        return new ListadoValorComercialDiamante(valoresComerciales);
+    public static ListadoValorComercialDiamante create(LocalDate fechaListado, Set<Diamante> valoresComerciales) {
+        return new ListadoValorComercialDiamante(fechaListado, valoresComerciales);
     }
 
     /**
@@ -32,7 +35,7 @@ public final class ListadoValorComercialDiamanteFactory {
      * @param valoresComerciales Lista de valores comerciales de diamantes.
      * @return
      */
-    public static ListadoValorComercialDiamante create(Date fechaCarga, Date fechaListado, Set<Diamante> valoresComerciales) {
+    public static ListadoValorComercialDiamante create(DateTime fechaCarga, LocalDate fechaListado, Set<Diamante> valoresComerciales) {
         return new ListadoValorComercialDiamante(fechaCarga, fechaListado, valoresComerciales);
     }
 

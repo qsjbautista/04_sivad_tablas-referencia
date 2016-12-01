@@ -1,9 +1,9 @@
 --
 -- HISTÓRICOS
 --
-INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (1, '2016-11-20 10:00:00.000');
-INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (2, '2016-11-21 10:00:00.000');
-INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (3, '2016-11-21 11:00:00.000');
+INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (1, '2016-11-20 10:00:00.521-06:00');
+INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (2, '2016-11-21 10:00:00.521-06:00');
+INSERT INTO hist_cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (3, '2016-11-21 11:00:00.521-06:00');
 
 INSERT INTO hist_cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado) VALUES (1, 'Amarillo', 10, 70.25, 1);
 INSERT INTO hist_cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado) VALUES (2, 'Amarillo', 10, 80.25, 2);
@@ -16,7 +16,7 @@ INSERT INTO hist_cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, lis
 --
 -- VIGENTES
 --
-INSERT INTO cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (4, '2016-11-23 10:00:00.000');
+INSERT INTO cfg_alhaja_listado_valor_comercial_oro (id, ultima_actualizacion) VALUES (4, '2016-11-23 10:00:00.521-06:00');
 
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado) VALUES (1, 'Amarillo', 10, 100.25, 4);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado) VALUES (2, 'Amarillo', 14, 150.25, 4);

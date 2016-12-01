@@ -92,6 +92,7 @@ public class ValorComercialMetalRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
     public void obtenerValorGramoMetalTest01() {
         MetalVO metalVO = new MetalVO(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_NO_EXISTE);
         valorComercialMetalRepository.consultarMetalVigente(metalVO);
@@ -102,6 +103,7 @@ public class ValorComercialMetalRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
     public void obtenerValorGramoMetalTest02() {
         MetalVO metalVO = new MetalVO(TIPO_METAL_NO_EXISTE, CALIDAD_METAL_EXISTE);
         valorComercialMetalRepository.consultarMetalVigente(metalVO);
@@ -112,6 +114,7 @@ public class ValorComercialMetalRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
     public void obtenerValorGramoMetalTest03() {
         MetalVO metalVO = new MetalVO(TIPO_METAL_EXISTE, CALIDAD_METAL_NO_EXISTE);
         valorComercialMetalRepository.consultarMetalVigente(metalVO);

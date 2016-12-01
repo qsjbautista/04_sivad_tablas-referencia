@@ -4,7 +4,8 @@
  */
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.Set;
 
 /**
@@ -31,7 +32,7 @@ public final class ListadoValorComercialOroFactory {
      * @param valoresComerciales Lista de valores comerciales del oro.
      * @return La entidad creada.
      */
-    public static ListadoValorComercialOro create(Date ultimaActualizacion, Set<Oro> valoresComerciales) {
+    public static ListadoValorComercialOro create(DateTime ultimaActualizacion, Set<Oro> valoresComerciales) {
         return new ListadoValorComercialOro(ultimaActualizacion, valoresComerciales);
     }
 

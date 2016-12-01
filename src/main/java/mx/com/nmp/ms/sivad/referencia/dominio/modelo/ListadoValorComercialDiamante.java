@@ -5,10 +5,10 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -21,12 +21,12 @@ public class ListadoValorComercialDiamante {
     /**
      * Fecha en que se realiza la última actualización (fecha de vigencia).
      */
-    private Date fechaCarga;
+    private DateTime fechaCarga;
 
     /**
      * La fecha de origen de la información.
      */
-    private Date fechaListado;
+    private LocalDate fechaListado;
 
     /**
      * Lista de valores comerciales de diamantes.
@@ -46,9 +46,11 @@ public class ListadoValorComercialDiamante {
     /**
      * Constructor.
      *
+     * @param fechaListado La fecha de origen de la información.
      * @param valoresComerciales Lista de valores comerciales de diamantes.
      */
-    ListadoValorComercialDiamante(Set<Diamante> valoresComerciales) {
+    ListadoValorComercialDiamante(LocalDate fechaListado, Set<Diamante> valoresComerciales) {
+        this.fechaListado = fechaListado;
         this.valoresComerciales = valoresComerciales;
     }
 
@@ -59,7 +61,7 @@ public class ListadoValorComercialDiamante {
      * @param fechaListado La fecha de origen de la información.
      * @param valoresComerciales Lista de valores comerciales de diamantes.
      */
-    ListadoValorComercialDiamante(Date fechaCarga, Date fechaListado, Set<Diamante> valoresComerciales) {
+    ListadoValorComercialDiamante(DateTime fechaCarga, LocalDate fechaListado, Set<Diamante> valoresComerciales) {
         this.fechaCarga = fechaCarga;
         this.fechaListado = fechaListado;
         this.valoresComerciales = valoresComerciales;
@@ -97,11 +99,11 @@ public class ListadoValorComercialDiamante {
 
     // GETTERS
 
-    public Date getFechaCarga() {
+    public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
-    public Date getFechaListado() {
+    public LocalDate getFechaListado() {
         return fechaListado;
     }
 

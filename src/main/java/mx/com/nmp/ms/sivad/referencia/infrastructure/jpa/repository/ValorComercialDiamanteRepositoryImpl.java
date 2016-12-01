@@ -19,6 +19,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorCome
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteUtil;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -90,7 +90,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         }
 
         // TODO - Convertir a pesos.
-        BigDecimal precioDiamanteEnPesos = null;
+        BigDecimal precioDiamanteEnPesos = valorComercialDiamanteJPA.getPrecio();
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),
@@ -133,8 +133,8 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
             throw new FechaVigenciaFuturaException(msg, ListadoValorComercialDiamanteJPA.class);
         }
 
-        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
-        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
+        DateTime fechaVigenciaInicio = fechaVigencia.toDateTimeAtStartOfDay();
+        DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         Set<ListadoValorComercialDiamanteJPA> listaVigentes =
             listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
@@ -192,7 +192,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
-        listadoNuevo.setFechaCarga(new Date());
+        listadoNuevo.setFechaCarga(DateTime.now());
         listadoJpaRepository.save(listadoNuevo);
     }
 
@@ -235,7 +235,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         // SE CONVIERTE EL LISTADO HISTÓRICO EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo =
             ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listadoAnterior);
-        listadoNuevo.setFechaCarga(new Date());
+        listadoNuevo.setFechaCarga(DateTime.now());
 
         return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
     }
@@ -258,8 +258,8 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
             throw new FechaVigenciaFuturaException(msg, ListadoValorComercialDiamanteJPA.class);
         }
 
-        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
-        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
+        DateTime fechaVigenciaInicio = fechaVigencia.toDateTimeAtStartOfDay();
+        DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         HistListadoValorComercialDiamanteJPA listadoFechaVigencia =
             histListadoJpaRepository.obtenerListadoPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
@@ -292,7 +292,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         // SE CONVIERTE EL LISTADO HISTÓRICO (DE LA FECHA DE VIGENCIA INDICADA) EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo =
             ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listadoFechaVigencia);
-        listadoNuevo.setFechaCarga(new Date());
+        listadoNuevo.setFechaCarga(DateTime.now());
 
         return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
     }

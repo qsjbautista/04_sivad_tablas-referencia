@@ -5,9 +5,9 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -20,7 +20,7 @@ public class ListadoValorComercialMetal {
     /**
      * Fecha en que se realiza la última actualización.
      */
-    private Date ultimaActualizacion;
+    private DateTime ultimaActualizacion;
 
     /**
      * Lista de valores comerciales de metales.
@@ -52,7 +52,7 @@ public class ListadoValorComercialMetal {
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales de metales.
      */
-    ListadoValorComercialMetal(Date ultimaActualizacion, Set<Metal> valoresComerciales) {
+    ListadoValorComercialMetal(DateTime ultimaActualizacion, Set<Metal> valoresComerciales) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
     }
@@ -70,7 +70,7 @@ public class ListadoValorComercialMetal {
 
     // GETTERS
 
-    public Date getUltimaActualizacion() {
+    public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
     }
 

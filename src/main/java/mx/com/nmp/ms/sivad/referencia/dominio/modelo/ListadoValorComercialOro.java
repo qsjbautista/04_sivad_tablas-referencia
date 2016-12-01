@@ -5,9 +5,9 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -20,7 +20,7 @@ public class ListadoValorComercialOro {
     /**
      * Fecha en que se realiza la última actualización.
      */
-    private Date ultimaActualizacion;
+    private DateTime ultimaActualizacion;
 
     /**
      * Lista de valores comerciales del oro.
@@ -52,7 +52,7 @@ public class ListadoValorComercialOro {
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales del oro.
      */
-    ListadoValorComercialOro(Date ultimaActualizacion, Set<Oro> valoresComerciales) {
+    ListadoValorComercialOro(DateTime ultimaActualizacion, Set<Oro> valoresComerciales) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
     }
@@ -70,7 +70,7 @@ public class ListadoValorComercialOro {
 
     // GETTERS
 
-    public Date getUltimaActualizacion() {
+    public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
     }
 

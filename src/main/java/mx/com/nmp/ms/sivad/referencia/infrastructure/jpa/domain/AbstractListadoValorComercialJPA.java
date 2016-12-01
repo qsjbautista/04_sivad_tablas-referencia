@@ -4,8 +4,10 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los listados de valores comerciales de Oro y Metal.
@@ -27,8 +29,8 @@ public abstract class AbstractListadoValorComercialJPA {
      * Fecha en que se realiza la última actualización.
      */
     @Column(name = "ultima_actualizacion", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    protected Date ultimaActualizacion;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    protected DateTime ultimaActualizacion;
 
 
 
@@ -42,11 +44,11 @@ public abstract class AbstractListadoValorComercialJPA {
         this.id = id;
     }
 
-    public Date getUltimaActualizacion() {
+    public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
     }
 
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
+    public void setUltimaActualizacion(DateTime ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
     }
 

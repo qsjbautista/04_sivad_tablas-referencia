@@ -19,6 +19,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorCome
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialMetalJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialMetalUtil;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -126,8 +126,8 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
             throw new FechaVigenciaFuturaException(msg, ListadoValorComercialMetalJPA.class);
         }
 
-        Date fechaVigenciaInicio = DateUtil.getStartOfDay(fechaVigencia.toDate());
-        Date fechaVigenciaFin = DateUtil.getEndOfDay(fechaVigencia.toDate());
+        DateTime fechaVigenciaInicio = fechaVigencia.toDateTimeAtStartOfDay();
+        DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         Set<ListadoValorComercialMetalJPA> listaVigentes =
             listadoJpaRepository.obtenerListadosPorFechaVigencia(fechaVigenciaInicio, fechaVigenciaFin);
@@ -185,7 +185,7 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
 
         // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
         ListadoValorComercialMetalJPA listadoNuevo = ValorComercialMetalUtil.convertToListadoVigenteJPA(listado);
-        listadoNuevo.setUltimaActualizacion(new Date());
+        listadoNuevo.setUltimaActualizacion(DateTime.now());
         listadoJpaRepository.save(listadoNuevo);
     }
 

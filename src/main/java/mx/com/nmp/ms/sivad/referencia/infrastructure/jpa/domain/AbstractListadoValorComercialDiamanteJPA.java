@@ -1,7 +1,10 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los listados de valores comerciales de Diamante.
@@ -23,15 +26,15 @@ public abstract class AbstractListadoValorComercialDiamanteJPA {
      * Fecha en que se realiza la última actualización (fecha de vigencia).
      */
     @Column(name = "fecha_carga", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    protected Date fechaCarga;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    protected DateTime fechaCarga;
 
     /**
      * La fecha de origen de la información.
      */
     @Column(name = "fecha_listado", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    protected Date fechaListado;
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    protected LocalDate fechaListado;
 
 
 
@@ -45,19 +48,19 @@ public abstract class AbstractListadoValorComercialDiamanteJPA {
         this.id = id;
     }
 
-    public Date getFechaCarga() {
+    public DateTime getFechaCarga() {
         return fechaCarga;
     }
 
-    public void setFechaCarga(Date fechaCarga) {
+    public void setFechaCarga(DateTime fechaCarga) {
         this.fechaCarga = fechaCarga;
     }
 
-    public Date getFechaListado() {
+    public LocalDate getFechaListado() {
         return fechaListado;
     }
 
-    public void setFechaListado(Date fechaListado) {
+    public void setFechaListado(LocalDate fechaListado) {
         this.fechaListado = fechaListado;
     }
 

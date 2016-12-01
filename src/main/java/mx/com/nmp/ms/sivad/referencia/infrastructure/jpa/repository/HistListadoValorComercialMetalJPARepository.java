@@ -5,12 +5,12 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialMetalJPA;
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -33,6 +33,6 @@ public interface HistListadoValorComercialMetalJPARepository extends
     @Query("SELECT hlvcm FROM HistListadoValorComercialMetalJPA hlvcm " +
         "WHERE hlvcm.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
     Set<HistListadoValorComercialMetalJPA> obtenerListadosPorFechaVigencia(
-        @Param("fechaInicial") Date fechaInicial, @Param("fechaFinal") Date fechaFinal);
+        @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
 
 }

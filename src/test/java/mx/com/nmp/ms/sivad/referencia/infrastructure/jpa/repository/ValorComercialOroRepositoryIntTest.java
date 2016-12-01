@@ -92,6 +92,7 @@ public class ValorComercialOroRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
     public void obtenerValorGramoOroTest01() {
         OroVO oroVO = new OroVO(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_NO_EXISTE);
         valorComercialOroRepository.consultarOroVigente(oroVO);
@@ -102,6 +103,7 @@ public class ValorComercialOroRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
     public void obtenerValorGramoOroTest02() {
         OroVO oroVO = new OroVO(COLOR_ORO_NO_EXISTE, CALIDAD_ORO_EXISTE);
         valorComercialOroRepository.consultarOroVigente(oroVO);
@@ -112,6 +114,7 @@ public class ValorComercialOroRepositoryIntTest {
      */
     @Test(expected = ValorGramoNoEncontradoException.class)
     @Transactional
+    @Sql("/bd/test-data-valor_comercial_oro-h2.sql")
     public void obtenerValorGramoOroTest03() {
         OroVO oroVO = new OroVO(COLOR_ORO_EXISTE, CALIDAD_ORO_NO_EXISTE);
         valorComercialOroRepository.consultarOroVigente(oroVO);
