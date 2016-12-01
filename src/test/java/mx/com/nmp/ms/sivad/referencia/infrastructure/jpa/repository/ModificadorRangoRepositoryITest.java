@@ -6,6 +6,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontrado
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertificadoFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoRangoFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.*;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorAlhajaVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository;
@@ -69,7 +70,7 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Test(expected = IllegalArgumentException.class)
     public void consultarListadoPorFechaCargaNulaTest() {
@@ -100,22 +101,22 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Test(expected = FactorAlhajaNoEncontradoException.class)
     public void consultarListadoPorFechaCargaNoDatosTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now());
+        test.consultarListadoPorFechaCarga(LocalDate.now());
     }
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#obtenerFactor(FactorAlhaja)
+     * @see ModificadorRangoRepository#obtenerFactor(FactorAlhajaVO)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     public void obtenerFactor3ParamTest() {
-        FactorAlhaja factorAlhaja= FactorAlhajaFactory.crear("met1", "cal1", "ran1");
+        FactorAlhajaVO factorAlhaja= new FactorAlhajaVO("met1", "cal1", "ran1");
         FactorAlhaja entidad = test.obtenerFactor(factorAlhaja);
 
         assertNotNull(entidad);
@@ -130,13 +131,13 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#obtenerFactor(FactorAlhaja)
+     * @see ModificadorRangoRepository#obtenerFactor(FactorAlhajaVO)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     public void obtenerFactor2ParamTest() {
-        FactorAlhaja factorAlhaja= FactorAlhajaFactory.crear("met1", null, "ran1");
+        FactorAlhajaVO factorAlhaja= new FactorAlhajaVO("met1", "ran1");
         FactorAlhaja entidad = test.obtenerFactor(factorAlhaja);
 
         assertNotNull(entidad);
@@ -167,37 +168,37 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     @Test(expected = FactorAlhajaNoEncontradoException.class)
     public void consultarPorFechaNoExisteTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now());
+        test.consultarListadoPorFechaCarga(LocalDate.now());
     }
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     @Test(expected = FactorAlhajaNoEncontradoException.class)
     public void consultarPorFechaFuturaTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now().plusDays(1));
+        test.consultarListadoPorFechaCarga(LocalDate.now().plusDays(1));
     }
 
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     public void consultarPorFechaNoExisteCatchTest() {
         try {
-            test.consultarListadoPorFechaCarga(DateTime.now());
+            test.consultarListadoPorFechaCarga(LocalDate.now());
         } catch (FactorAlhajaNoEncontradoException e) {
             assertEquals(e.getEntidad().getClass(), FactorAlhajaNoEncontradoException.class.getClass());
         }
@@ -205,13 +206,13 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     public void consultarPorFechaR2Test() {
-        Set<ListadoRango> entidades = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        Set<ListadoRango> entidades = test.consultarListadoPorFechaCarga(LocalDate.parse("2016-11-27"));
 
         assertNotNull(entidades);
         assertEquals(entidades.size(), 1);
@@ -221,13 +222,13 @@ public class ModificadorRangoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorRangoRepository#consultarListadoPorFechaCarga(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_rango-h2.sql")
     public void consultarPorFechaR1Test() {
-        Set<ListadoRango> entidades = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-26T01"));
+        Set<ListadoRango> entidades = test.consultarListadoPorFechaCarga(LocalDate.parse("2016-11-26"));
 
         assertNotNull(entidades);
         assertEquals(entidades.size(), 4);
@@ -247,7 +248,7 @@ public class ModificadorRangoRepositoryITest {
         assertNotNull(listadoInicialIda);
         assertEquals(listadoInicialIda.getFactorAlhajas().size(), 4);
 
-        Set<ListadoRango> histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-26T01"));
+        Set<ListadoRango> histListadoInicialIda = test.consultarListadoPorFechaCarga(LocalDate.parse("2016-11-26"));
         assertNotNull(histListadoInicialIda);
         assertEquals(histListadoInicialIda.size(), 4);
 
@@ -262,18 +263,18 @@ public class ModificadorRangoRepositoryITest {
         factoresAlhaja.add(factor2);
         factoresAlhaja.add(factor3);
 
-        ListadoRango listado = fabricaListado.crear(DateTime.parse("2016-11-28T01"), LocalDate.now().plusDays(-1),factoresAlhaja);
+        ListadoRango listado = fabricaListado.crear(DateTime.parse("2016-11-28"), LocalDate.now().plusDays(-1),factoresAlhaja);
         listado = test.actualizarListado(listado);
         assertEquals(listado.getFactorAlhajas().size(), 3);
         ListadoRango resultListadoVigente = test.consultarListadoVigente();
         assertEquals(resultListadoVigente.getFactorAlhajas().size(), 3);
         assertNotNull(resultListadoVigente);
-        assertNotNull(resultListadoVigente.getFechaCarga());
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
         assertNotNull(resultListadoVigente.getFactorAlhajas());
         assertFalse(resultListadoVigente.getFactorAlhajas().isEmpty());
         assertTrue(resultListadoVigente.getFactorAlhajas().size() == 3);
 
-        histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        histListadoInicialIda = test.consultarListadoPorFechaCarga(LocalDate.parse("2016-11-27"));
 
         assertNotNull(histListadoInicialIda);
         assertNotNull(histListadoInicialIda.isEmpty());
@@ -290,14 +291,14 @@ public class ModificadorRangoRepositoryITest {
         resultListadoVigente = test.consultarListadoVigente();
         assertEquals(resultListadoVigente.getFactorAlhajas().size(),1);
 
-        histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        histListadoInicialIda = test.consultarListadoPorFechaCarga(LocalDate.parse("2016-11-27"));
 
         assertNotNull(histListadoInicialIda);
         assertNotNull(histListadoInicialIda.isEmpty());
         assertEquals(histListadoInicialIda.size(),1);
 
         assertNotNull(resultListadoVigente);
-        assertNotNull(resultListadoVigente.getFechaCarga());
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
         assertNotNull(resultListadoVigente.getFactorAlhajas());
         assertFalse(resultListadoVigente.getFactorAlhajas().isEmpty());
         assertTrue(resultListadoVigente.getFactorAlhajas().size() == 1);

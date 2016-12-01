@@ -22,23 +22,31 @@ public interface ListadoRangoFactory {
     /**
      * Permite crear una entidad de tipo ListadoRango con base en los argumentos recibidos.
      *
-     * @param fechaCarga Fecha en que se realiza la carga.
+     * @param ultimaActualizacion Fecha en que se realiza la carga.
      * @param fechaListado Fecha en del listado.
      * @param factorAlhajas Lista de los certificados del diamante.
      * @return La entidad creada.
      */
-    ListadoRango crear(DateTime fechaCarga, LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas);
+    ListadoRango crear(DateTime ultimaActualizacion, LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas);
+
+    /**
+     * Permite crear una entidad de tipo ListadoRango con base en los argumentos recibidos.
+     *
+     * @param factorAlhajas Lista de los certificados del diamante.
+     * @return La entidad creada.
+     */
+    ListadoRango crear(Set<FactorAlhaja> factorAlhajas);
 
     /**
      * Permite crear una entidad de tipo ListadoRango con base en los argumentos recibidos y con la
      * inyección del repositorio de entidades para que se pueda persistir..
      *
-     * @param fechaCarga Fecha en que se realiza la carga.
+     * @param ultimaActualizacion Fecha en que se realiza la carga.
      * @param fechaListado Fecha en del listado.
      * @param factorAlhajas Lista de los certificados del diamante.
      * @return La entidad creada.
      */
-    ListadoRango crearPersistible(DateTime fechaCarga, LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas);
+    ListadoRango crearPersistible(DateTime ultimaActualizacion, LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas);
 
     /**
      * Crea una entidad a partir de un objeto constructor. a esta entidad le será inyectado

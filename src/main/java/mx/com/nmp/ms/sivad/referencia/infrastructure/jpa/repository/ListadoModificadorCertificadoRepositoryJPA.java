@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -38,8 +40,18 @@ public interface ListadoModificadorCertificadoRepositoryJPA extends
      * @return La lista de entidades que coincidan con la fecha indicada.
      */
     @Query("SELECT lmc FROM ListadoModificadorCertificadoJPA lmc " +
-        "WHERE lmc.fechaCarga BETWEEN :fechaInicial AND :fechaFinal")
-    Set<ListadoModificadorCertificadoJPA> obtenerListadoPorFechaCarga(
+        "WHERE lmc.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
+    Set<ListadoModificadorCertificadoJPA> obtenerListadoPorUltimaActualizacion(
         @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
+
+    /**
+     * PRecupera el listado de factores de valor de diamante con base en una fecha de vigencia.
+     *
+     * @param fechaInicial Fecha de vigencia inicial (ej. 2016-11-24T00:00:00.000).
+     * @param fechaFinal Fecha de vigencia final. (ej. 2016-11-24T23:59:59.999)
+     *
+     * @return Listado de factores de valor de diamante
+     */
+    Set<ListadoModificadorCertificadoJPA> findByUltimaActualizacionBetween(DateTime fechaInicial, DateTime fechaFinal);
 
 }

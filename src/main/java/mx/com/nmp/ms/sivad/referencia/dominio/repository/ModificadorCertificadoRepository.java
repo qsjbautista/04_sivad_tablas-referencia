@@ -6,7 +6,9 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertificado;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.CertificadoVO;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Set;
 
@@ -24,7 +26,7 @@ public interface ModificadorCertificadoRepository {
      * @param certificado Entidad con las características de búsqueda.
      * @return La entidad obtenida.
      */
-    Certificado consultarModificadorCertificadoVigente(Certificado certificado);
+    Certificado consultarModificadorCertificadoVigente(CertificadoVO certificado);
 
     /**
      * Permite obtener la entidad ListadoModificadorCertificado vigente.
@@ -36,10 +38,10 @@ public interface ModificadorCertificadoRepository {
     /**
      * Permite obtener la lista de entidades ListadoModificadorCertificado que correspondan a la fecha de carga indicada.
      *
-     * @param fechaCarga La fecha de carga.
+     * @param ultimaActualizacion La fecha de carga.
      * @return La lista de entidades obtenidas.
      */
-    Set<ListadoModificadorCertificado> consultarListadoPorFechaCarga(DateTime fechaCarga);
+    Set<ListadoModificadorCertificado> consultarListadoPorUltimaActualizacion(LocalDate ultimaActualizacion);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.

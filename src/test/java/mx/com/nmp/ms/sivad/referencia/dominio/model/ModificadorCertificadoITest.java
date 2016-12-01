@@ -115,7 +115,7 @@ public class ModificadorCertificadoITest {
         assertNotNull(test);
         assertNotNull(test.getCertificados());
         assertEquals(test.getCertificados().size(), 1);
-        assertNotNull(test.getFechaCarga());
+        assertNotNull(test.getUltimaActualizacion());
         assertNotNull(test.getFechaListado());
     }
 
@@ -132,7 +132,7 @@ public class ModificadorCertificadoITest {
 
         assertNotNull(test);
         assertNotNull(test.getCertificados());
-        assertNotNull(test.getFechaCarga());
+        assertNotNull(test.getUltimaActualizacion());
         assertNotNull(test.getFechaListado());
     }
 }

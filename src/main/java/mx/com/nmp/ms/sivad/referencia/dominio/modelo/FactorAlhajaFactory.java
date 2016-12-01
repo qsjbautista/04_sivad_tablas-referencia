@@ -5,6 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 

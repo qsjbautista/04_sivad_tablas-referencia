@@ -10,11 +10,13 @@ import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertific
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.CertificadoFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertificado;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.CertificadoVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoModificadorCertificadoJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistModificadorCertificadoJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoModificadorCertificadoJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ModificadorCertificadoJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,7 +75,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
      * {@inheritDoc}
      */
     @Override
-    public Certificado consultarModificadorCertificadoVigente(@NotNull Certificado certificado) {
+    public Certificado consultarModificadorCertificadoVigente(@NotNull CertificadoVO certificado) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(">> consultarModificadorCertificadoVigente [certificado: [{}]]", certificado.getCertificado());
         }
@@ -113,24 +116,25 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
      * {@inheritDoc}
      */
     @Override
-    public Set<ListadoModificadorCertificado> consultarListadoPorFechaCarga(@NotNull DateTime fechaCarga) {
+    public Set<ListadoModificadorCertificado> consultarListadoPorUltimaActualizacion(@NotNull LocalDate ultimaActualizacion) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(">> consultarListadoPorFechaCarga: [{}]",
-                (fechaCarga != null) ? fechaCarga.toString() : "NULL");
+            LOGGER.info(">> consultarListadoPorUltimaActualizacion: [{}]",
+                (ultimaActualizacion != null) ? ultimaActualizacion.toString() : "NULL");
         }
 
-        DateTime fechaCargaFin = fechaCarga.millisOfDay().withMaximumValue();
+        DateTime fechaUltimaActualizacionInicio = ultimaActualizacion.toDateTimeAtStartOfDay();
+        DateTime fechaUltimaActualizacionFin = ultimaActualizacion.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
         Set<ListadoModificadorCertificadoJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
+            listadoJpaRepository.obtenerListadoPorUltimaActualizacion(fechaUltimaActualizacionInicio, fechaUltimaActualizacionFin);
         Set<HistListadoModificadorCertificadoJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
+            histListadoJpaRepository.obtenerListadoPorUltimaActualizacion(fechaUltimaActualizacionInicio, fechaUltimaActualizacionFin);
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
             String msg = "No existe un ListadoModificadorCertificado para la fecha solicitada.";
             LOGGER.warn(msg);
             throw new CertificadoNoEncontradoException(msg, ListadoModificadorCertificadoJPA.class);
         }
-        LOGGER.info(">> listaHistoricos ::" +listaHistoricos.size());
+
         Set<ListadoModificadorCertificado> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(listaVigentes)) {
             for (ListadoModificadorCertificadoJPA listadoModificadorCertificadoJPA : listaVigentes) {
@@ -172,7 +176,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
             }
 
             histListadoModificadorCertificadoJPA.setModificadoresCertificado(histModificadoresCertificadoJPA);
-            histListadoModificadorCertificadoJPA.setFechaCarga(listadoModificadorCertificadoJPA.getFechaCarga());
+            histListadoModificadorCertificadoJPA.setUltimaActualizacion(listadoModificadorCertificadoJPA.getUltimaActualizacion());
             histListadoModificadorCertificadoJPA.setFechaListado(listadoModificadorCertificadoJPA.getFechaListado());
             histListadoJpaRepository.save(histListadoModificadorCertificadoJPA);
 
@@ -193,7 +197,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
         }
 
         listadoNuevo.setModificadoresCertificado(modificadoresCertificados);
-        listadoNuevo.setFechaCarga(DateTime.now());
+        listadoNuevo.setUltimaActualizacion(DateTime.now());
         listadoNuevo.setFechaListado(LocalDate.now());
         return convertirAListadoModificadorCertificado(listadoJpaRepository.save(listadoNuevo));
     }
@@ -213,7 +217,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
             }
         }
 
-        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), certificados);
+        return fabricaEntidad.crear(listado.getUltimaActualizacion(), listado.getFechaListado(), certificados);
     }
 
     /**
@@ -231,7 +235,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
             }
         }
 
-        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), certificados);
+        return fabricaEntidad.crear(listado.getUltimaActualizacion(), listado.getFechaListado(), certificados);
     }
 
 

@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

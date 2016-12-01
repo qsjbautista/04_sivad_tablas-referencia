@@ -20,7 +20,7 @@ public class ListadoModificadorCertificado {
     /**
      * Fecha en que se realizo la carga.
      */
-    private DateTime fechaCarga;
+    private DateTime ultimaActualizacion;
 
     /**
      * Fecha en que se realizo el listado.
@@ -41,7 +41,7 @@ public class ListadoModificadorCertificado {
      * Interface que define el contrato para crear entidades ListadoModificadorCertificado
      */
     public interface Builder {
-        DateTime getFechaCarga();
+        DateTime getUltimaActualizacion();
 
         LocalDate getFechaListado();
 
@@ -60,7 +60,7 @@ public class ListadoModificadorCertificado {
     private ListadoModificadorCertificado(Builder builder, ModificadorCertificadoRepository modificadorCertificadoRepository) {
         super();
 
-        fechaCarga = builder.getFechaCarga();
+        ultimaActualizacion = builder.getUltimaActualizacion();
         fechaListado = builder.getFechaListado();
         certificados = builder.getCertificados();
 
@@ -80,8 +80,8 @@ public class ListadoModificadorCertificado {
     // GETTERS
 
 
-    public DateTime getFechaCarga() {
-        return fechaCarga;
+    public DateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
     }
 
     public LocalDate getFechaListado() {
@@ -99,7 +99,7 @@ public class ListadoModificadorCertificado {
 
         ListadoModificadorCertificado that = (ListadoModificadorCertificado) o;
 
-        if (!getFechaCarga().equals(that.getFechaCarga())) return false;
+        if (!getUltimaActualizacion().equals(that.getUltimaActualizacion())) return false;
         if (!getCertificados().equals(that.getCertificados())) return false;
         return modificadorCertificadoRepository.equals(that.modificadorCertificadoRepository);
     }
@@ -108,7 +108,7 @@ public class ListadoModificadorCertificado {
     @Override
     public String toString() {
         return "ListadoModificadorCertificado{" +
-            "fechaCarga=" + fechaCarga +
+            "fechaCarga=" + ultimaActualizacion +
             ", fechaListado=" + fechaListado +
             ", certificados=" + certificados +
             ", modificadorCertificadoRepository=" + modificadorCertificadoRepository +

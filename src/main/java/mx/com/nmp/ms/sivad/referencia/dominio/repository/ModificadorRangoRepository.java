@@ -6,7 +6,9 @@ package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorAlhajaVO;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Set;
 
@@ -24,7 +26,7 @@ public interface ModificadorRangoRepository {
      * @param factorAlhaja Entidad con las características de búsqueda.
      * @return La entidad obtenida.
      */
-    FactorAlhaja obtenerFactor(FactorAlhaja factorAlhaja);
+    FactorAlhaja obtenerFactor(FactorAlhajaVO factorAlhaja);
 
     /**
      * Permite obtener la entidad ListadoRango vigente.
@@ -36,10 +38,10 @@ public interface ModificadorRangoRepository {
     /**
      * Permite obtener la lista de entidades ListadoRango que correspondan a la fecha de carga indicada.
      *
-     * @param fechaCarga La fecha de carga.
+     * @param ultimaActualizacion La fecha de carga.
      * @return La lista de entidades obtenidas.
      */
-    Set<ListadoRango> consultarListadoPorFechaCarga(DateTime fechaCarga);
+    Set<ListadoRango> consultarListadoPorFechaCarga(LocalDate ultimaActualizacion);
 
     /**
      * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.

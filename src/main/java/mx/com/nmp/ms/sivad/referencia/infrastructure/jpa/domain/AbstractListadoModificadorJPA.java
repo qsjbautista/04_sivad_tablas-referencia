@@ -23,9 +23,9 @@ public abstract class AbstractListadoModificadorJPA {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "fecha_carga", nullable = false)
+    @Column(name = "ultima_actualizacion", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime fechaCarga;
+    private DateTime ultimaActualizacion;
 
     @Column(name = "fecha_listado", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -39,12 +39,12 @@ public abstract class AbstractListadoModificadorJPA {
         this.id = id;
     }
 
-    public DateTime getFechaCarga() {
-        return fechaCarga;
+    public DateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
     }
 
-    public void setFechaCarga(DateTime fechaCarga) {
-        this.fechaCarga = fechaCarga;
+    public void setUltimaActualizacion(DateTime ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 
     public LocalDate getFechaListado() {

@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -30,9 +32,9 @@ public interface HistListadoModificadorCertificadoJPARepository extends
      * @return La lista de entidades que coincidan con la fecha indicada.
      */
     @Query("SELECT hlmc FROM HistListadoModificadorCertificadoJPA hlmc " +
-        "WHERE hlmc.fechaCarga BETWEEN :fechaInicial AND :fechaFinal")
-    Set<HistListadoModificadorCertificadoJPA> obtenerListadoPorFechaCarga(
+        "WHERE hlmc.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
+    Set<HistListadoModificadorCertificadoJPA> obtenerListadoPorUltimaActualizacion(
         @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
 
-    Set<HistListadoModificadorCertificadoJPA> findByFechaCargaBetween(DateTime fechaInicial, DateTime fechaFinal);
+    Set<HistListadoModificadorCertificadoJPA> findByUltimaActualizacionBetween(DateTime fechaInicial, DateTime fechaFinal);
 }

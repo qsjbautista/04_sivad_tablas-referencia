@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import org.joda.time.DateTime;
+
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -38,8 +40,8 @@ public interface ListadoFactorAlhajaRepositoryJPA extends
      * @return La lista de entidades que coincidan con la fecha indicada.
      */
     @Query("SELECT lfa FROM ListadoFactorAlhajaJPA lfa " +
-        "WHERE lfa.fechaCarga BETWEEN :fechaInicial AND :fechaFinal")
-    Set<ListadoFactorAlhajaJPA> obtenerListadoPorFechaCarga(
+        "WHERE lfa.ultimaActualizacion BETWEEN :fechaInicial AND :fechaFinal")
+    Set<ListadoFactorAlhajaJPA> obtenerListadoPorUltimaActualizacion(
         @Param("fechaInicial") DateTime fechaInicial, @Param("fechaFinal") DateTime fechaFinal);
 
 }

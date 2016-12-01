@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import java.math.BigDecimal;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 /**
  * Entidad que representa el factor de la alhaja.

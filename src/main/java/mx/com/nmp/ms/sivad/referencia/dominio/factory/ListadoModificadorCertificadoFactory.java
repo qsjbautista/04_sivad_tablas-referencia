@@ -9,6 +9,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertifica
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -22,23 +23,23 @@ public interface ListadoModificadorCertificadoFactory {
     /**
      * Permite crear una entidad de tipo ListadoModificadorCertificado con base en los argumentos recibidos.
      *
-     * @param fechaCarga Fecha en que se realiza la carga.
+     * @param ultimaActualizacion Fecha en que se realiza la carga.
      * @param fechaListado Fecha en del listado.
      * @param certificados Lista de los certificados del diamante.
      * @return La entidad creada.
      */
-    ListadoModificadorCertificado crear(DateTime fechaCarga, LocalDate fechaListado, Set<Certificado> certificados);
+    ListadoModificadorCertificado crear(DateTime ultimaActualizacion, LocalDate fechaListado, Set<Certificado> certificados);
 
     /**
      * Permite crear una entidad de tipo ListadoModificadorCertificado con base en los argumentos recibidos y con la
      * inyección del repositorio de entidades para que se pueda persistir..
      *
-     * @param fechaCarga Fecha en que se realiza la carga.
+     * @param ultimaActualizacion Fecha en que se realiza la carga.
      * @param fechaListado Fecha en del listado.
      * @param certificados Lista de los certificados del diamante.
      * @return La entidad creada.
      */
-    ListadoModificadorCertificado crearPersistible(DateTime fechaCarga, LocalDate fechaListado, Set<Certificado> certificados);
+    ListadoModificadorCertificado crearPersistible(DateTime ultimaActualizacion, LocalDate fechaListado, Set<Certificado> certificados);
 
     /**
      * Crea una entidad a partir de un objeto constructor. a esta entidad le será inyectado

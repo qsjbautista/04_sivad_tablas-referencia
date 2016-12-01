@@ -49,8 +49,8 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
      * {@inheritDoc}
      */
     @Override
-    public ListadoModificadorCertificado crear(final DateTime fechaCarga, final LocalDate fechaListado, final Set<Certificado> certificados) {
-        final ListadoModificadorCertificado.Builder builder = getBuilder(fechaCarga, fechaListado, certificados);
+    public ListadoModificadorCertificado crear(final DateTime ultimaActualizacion, final LocalDate fechaListado, final Set<Certificado> certificados) {
+        final ListadoModificadorCertificado.Builder builder = getBuilder(ultimaActualizacion, fechaListado, certificados);
 
         return crearDesde(builder);
     }
@@ -59,8 +59,8 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
      * {@inheritDoc}
      */
     @Override
-    public ListadoModificadorCertificado crearPersistible(final DateTime fechaCarga, final LocalDate fechaListado, final Set<Certificado> certificados) {
-        final ListadoModificadorCertificado.Builder builder = getBuilder(fechaCarga, fechaListado, certificados);
+    public ListadoModificadorCertificado crearPersistible(final DateTime ultimaActualizacion, final LocalDate fechaListado, final Set<Certificado> certificados) {
+        final ListadoModificadorCertificado.Builder builder = getBuilder(ultimaActualizacion, fechaListado, certificados);
 
         return crearPersistibleDesde(builder);
     }
@@ -112,13 +112,13 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
     /**
      * Crea un objeto constructor a partir del valor de los argumentos.
      *
-     * @param fechaCarga Fecha de vigencia de la lista de factores.
+     * @param ultimaActualizacion Fecha de vigencia de la lista de factores.
      * @param fechaListado Fecha de origen de la información.
      * @param certificados Lista de modificadores de certificados.
      *
      * @return Objeto constructor creado.
      */
-    private static ListadoModificadorCertificado.Builder getBuilder(final DateTime fechaCarga, final LocalDate fechaListado,
+    private static ListadoModificadorCertificado.Builder getBuilder(final DateTime ultimaActualizacion, final LocalDate fechaListado,
                                                                final Set<Certificado> certificados) {
         return new ListadoModificadorCertificado.Builder() {
             @Override
@@ -127,8 +127,8 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
             }
 
             @Override
-            public DateTime getFechaCarga() {
-                return fechaCarga;
+            public DateTime getUltimaActualizacion() {
+                return ultimaActualizacion;
             }
 
             @Override
@@ -143,13 +143,12 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
      *
      * @param builder Objeto constructor de la entidad.
      *
-     * @throws IllegalArgumentException Cuando algún valor del {@link ModificadorValorDiamante.Builder} es incorrecto.
      */
     private static void validarBuilder(final ListadoModificadorCertificado.Builder builder) {
         Assert.notNull(builder, "El objeto constructor no debe ser nulo.");
 
         Assert.notNull(builder.getCertificados(), "Certificados no debe ser nulo");
-        Assert.notNull(builder.getFechaCarga(), "Fecha carga no debe ser nula");
+        Assert.notNull(builder.getUltimaActualizacion(), "Fecha carga no debe ser nula");
         Assert.notNull(builder.getFechaListado(), "Fecha listado no debe ser nula");
     }
 

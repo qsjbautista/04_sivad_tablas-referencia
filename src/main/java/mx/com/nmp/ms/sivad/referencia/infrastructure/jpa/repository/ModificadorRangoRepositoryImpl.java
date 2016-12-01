@@ -10,12 +10,15 @@ import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoRangoFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhajaFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorAlhajaVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorAlhajaJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistFactorAlhajaJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoFactorAlhajaJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoFactorAlhajaJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,7 +76,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
      * {@inheritDoc}
      */
     @Override
-    public FactorAlhaja obtenerFactor(@NotNull FactorAlhaja factorAlhaja) {
+    public FactorAlhaja obtenerFactor(@NotNull FactorAlhajaVO factorAlhaja) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(">> obtenerFactor [metal: [{}], calidad: [{}], rango: [{}]]", factorAlhaja.getMetal(),
                 factorAlhaja.getCalidad(), factorAlhaja.getRango());
@@ -121,21 +125,22 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
      * {@inheritDoc}
      */
     @Override
-    public Set<ListadoRango> consultarListadoPorFechaCarga(@NotNull DateTime fechaCarga) {
+    public Set<ListadoRango> consultarListadoPorFechaCarga(@NotNull LocalDate ultimaActualizacion) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(">> consultarListadoPorFechaCarga: [{}]",
-                (fechaCarga != null) ? fechaCarga.toString() : "NULL");
+                (ultimaActualizacion != null) ? ultimaActualizacion.toString() : "NULL");
         }
 
-        DateTime fechaCargaFin = fechaCarga.millisOfDay().withMaximumValue();
+        DateTime fechaUltimaActualizacionInicio = ultimaActualizacion.toDateTimeAtStartOfDay();
+        DateTime fechaUltimaActualizacionFin = ultimaActualizacion.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();;
 
         Set<ListadoFactorAlhajaJPA> listaVigentes =
-            listadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
+            listadoJpaRepository.obtenerListadoPorUltimaActualizacion(fechaUltimaActualizacionInicio, fechaUltimaActualizacionFin);
         Set<HistListadoFactorAlhajaJPA> listaHistoricos =
-            histListadoJpaRepository.obtenerListadoPorFechaCarga(fechaCarga.millisOfDay().withMinimumValue(), fechaCargaFin);
+            histListadoJpaRepository.obtenerListadoPorUltimaActualizacion(fechaUltimaActualizacionInicio, fechaUltimaActualizacionFin);
 
         if (ObjectUtils.isEmpty(listaVigentes) && ObjectUtils.isEmpty(listaHistoricos)) {
-            String msg = "No existe un Listado de Factores para la fecha proporcionada.";
+            String msg = "No existe un Listado de Factores para la fecha solicitada.";
             LOGGER.warn(msg);
             throw new FactorAlhajaNoEncontradoException(msg, ListadoFactorAlhajaJPA.class);
         }
@@ -146,6 +151,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
                 result.add(convertirAListadoRango(listadoFactorAlhajaJPA));
             }
         }
+
 
         if (!ObjectUtils.isEmpty(listaHistoricos)) {
             for (HistListadoFactorAlhajaJPA histListadoFactorAlhajaJPA : listaHistoricos) {
@@ -188,7 +194,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             }
 
             histListadoFactorAlhajaJPA.setFactoresAlhaja(histListadoFactoresAlhajaJPA);
-            histListadoFactorAlhajaJPA.setFechaCarga(listadoFactorAlhajaJPA.getFechaCarga());
+            histListadoFactorAlhajaJPA.setUltimaActualizacion(listadoFactorAlhajaJPA.getUltimaActualizacion());
             histListadoFactorAlhajaJPA.setFechaListado(listadoFactorAlhajaJPA.getFechaListado());
             histListadoJpaRepository.save(histListadoFactorAlhajaJPA);
 
@@ -216,7 +222,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
         }
 
         listadoNuevo.setFactoresAlhaja(factoresAlhaja);
-        listadoNuevo.setFechaCarga(DateTime.now());
+        listadoNuevo.setUltimaActualizacion(DateTime.now());
         listadoNuevo.setFechaListado(LocalDate.now());
         return convertirAListadoRango(listadoJpaRepository.save(listadoNuevo));
     }
@@ -238,7 +244,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             }
         }
 
-        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), factoresAlhaja);
+        return fabricaEntidad.crear(listado.getUltimaActualizacion(), listado.getFechaListado(), factoresAlhaja);
     }
 
     /**
@@ -258,7 +264,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             }
         }
 
-        return fabricaEntidad.crear(listado.getFechaCarga(), listado.getFechaListado(), factoresAlhaja);
+        return fabricaEntidad.crear(listado.getUltimaActualizacion(), listado.getFechaListado(), factoresAlhaja);
     }
 
 

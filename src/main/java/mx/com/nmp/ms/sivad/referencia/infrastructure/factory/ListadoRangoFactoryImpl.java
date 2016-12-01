@@ -49,8 +49,8 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
      * {@inheritDoc}
      */
     @Override
-    public ListadoRango crear(final DateTime fechaCarga, final LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas) {
-        final ListadoRango.Builder builder = getBuilder(fechaCarga, fechaListado, factorAlhajas);
+    public ListadoRango crear(final DateTime ultimaActualizacion, final LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas) {
+        final ListadoRango.Builder builder = getBuilder(ultimaActualizacion, fechaListado, factorAlhajas);
 
         return crearDesde(builder);
     }
@@ -59,8 +59,18 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
      * {@inheritDoc}
      */
     @Override
-    public ListadoRango crearPersistible(final DateTime fechaCarga, final LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas) {
-        final ListadoRango.Builder builder = getBuilder(fechaCarga, fechaListado, factorAlhajas);
+    public ListadoRango crear(Set<FactorAlhaja> factorAlhajas) {
+        final ListadoRango.Builder builder = getBuilder(null, null, factorAlhajas);
+
+        return crearDesde(builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ListadoRango crearPersistible(final DateTime ultimaActualizacion, final LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas) {
+        final ListadoRango.Builder builder = getBuilder(ultimaActualizacion, fechaListado, factorAlhajas);
 
         return crearPersistibleDesde(builder);
     }
@@ -111,21 +121,21 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
     /**
      * Crea un objeto constructor a partir del valor de los argumentos.
      *
-     * @param fechaCarga Fecha de vigencia de la lista de factores.
+     * @param ultimaActualizacion Fecha de vigencia de la lista de factores.
      * @param fechaListado Fecha de origen de la información.
      * @param factorAlhajas Lista de modificadores de factores Alhajas.
      *
      * @return Objeto constructor creado.
      */
-    private static ListadoRango.Builder getBuilder(final DateTime fechaCarga, final LocalDate fechaListado,
+    private static ListadoRango.Builder getBuilder(final DateTime ultimaActualizacion, final LocalDate fechaListado,
                                                                     final Set<FactorAlhaja> factorAlhajas) {
         return new ListadoRango.Builder() {
             @Override
             public Set<FactorAlhaja> getFactorAlhaja() { return factorAlhajas; }
 
             @Override
-            public DateTime getFechaCarga() {
-                return fechaCarga;
+            public DateTime getUltimaActualizacion() {
+                return ultimaActualizacion;
             }
 
             @Override

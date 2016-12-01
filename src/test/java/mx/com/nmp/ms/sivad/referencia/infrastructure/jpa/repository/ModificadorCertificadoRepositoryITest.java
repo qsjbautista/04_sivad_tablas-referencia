@@ -6,6 +6,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertific
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.CertificadoFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertificado;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.CertificadoVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoModificadorCertificadoJPA;
 import org.joda.time.DateTime;
@@ -47,7 +48,7 @@ public class ModificadorCertificadoRepositoryITest {
     @Inject
     private ListadoModificadorCertificadoFactory fabricaListado;
 
-    private Certificado certificado;
+    private CertificadoVO certificado;
 
     private Set<Certificado> listaCertificados;
 
@@ -69,11 +70,11 @@ public class ModificadorCertificadoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Test(expected = IllegalArgumentException.class)
     public void consultarListadoPorFechaCargaNulaTest() {
-        test.consultarListadoPorFechaCarga(null);
+        test.consultarListadoPorUltimaActualizacion(null);
     }
 
     /**
@@ -100,22 +101,22 @@ public class ModificadorCertificadoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Test(expected = CertificadoNoEncontradoException.class)
     public void consultarListadoPorFechaCargaNoDatosTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now());
+        test.consultarListadoPorUltimaActualizacion(LocalDate.now());
     }
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarModificadorCertificadoVigente(Certificado)
+     * @see ModificadorCertificadoRepository#consultarModificadorCertificadoVigente(CertificadoVO)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     public void consultarModificadorCertificadoVigenteTest() {
-        certificado = CertificadoFactory.crear("Certificado 1", null);
+        certificado = new CertificadoVO("Certificado 1");
         Certificado entidad = test.consultarModificadorCertificadoVigente(certificado);
 
         assertNotNull(entidad);
@@ -142,37 +143,37 @@ public class ModificadorCertificadoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     @Test(expected = CertificadoNoEncontradoException.class)
     public void consultarPorFechaNoExisteTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now());
+        test.consultarListadoPorUltimaActualizacion(LocalDate.now());
     }
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     @Test(expected = CertificadoNoEncontradoException.class)
     public void consultarPorFechaFuturaTest() {
-        test.consultarListadoPorFechaCarga(DateTime.now().plusDays(1));
+        test.consultarListadoPorUltimaActualizacion(LocalDate.now().plusDays(1));
     }
 
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     public void consultarPorFechaNoExisteCatchTest() {
         try {
-            test.consultarListadoPorFechaCarga(DateTime.now());
+            test.consultarListadoPorUltimaActualizacion(LocalDate.now());
         } catch (CertificadoNoEncontradoException e) {
             assertEquals(e.getEntidad().getClass(), ListadoModificadorCertificadoJPA.class.getClass());
         }
@@ -180,13 +181,13 @@ public class ModificadorCertificadoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     public void consultarPorFechaR2Test() {
-        Set<ListadoModificadorCertificado> entidades = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        Set<ListadoModificadorCertificado> entidades = test.consultarListadoPorUltimaActualizacion(LocalDate.parse("2016-11-27"));
 
         assertNotNull(entidades);
         assertEquals(entidades.size(), 1);
@@ -196,13 +197,13 @@ public class ModificadorCertificadoRepositoryITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorCertificadoRepository#consultarListadoPorFechaCarga(DateTime)
+     * @see ModificadorCertificadoRepository#consultarListadoPorUltimaActualizacion(LocalDate)
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-modificador_certificado-h2.sql")
     public void consultarPorFechaR1Test() {
-        Set<ListadoModificadorCertificado> entidades = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        Set<ListadoModificadorCertificado> entidades = test.consultarListadoPorUltimaActualizacion(LocalDate.parse("2016-11-27"));
 
         assertNotNull(entidades);
         assertEquals(entidades.size(), 1);
@@ -222,7 +223,7 @@ public class ModificadorCertificadoRepositoryITest {
         assertNotNull(listadoInicialIda);
         assertEquals(listadoInicialIda.getCertificados().size(), 4);
 
-        Set<ListadoModificadorCertificado> histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-26T01"));
+        Set<ListadoModificadorCertificado> histListadoInicialIda = test.consultarListadoPorUltimaActualizacion(LocalDate.parse("2016-11-26"));
         assertNotNull(histListadoInicialIda);
         assertEquals(histListadoInicialIda.size(), 4);
 
@@ -240,12 +241,12 @@ public class ModificadorCertificadoRepositoryITest {
         ListadoModificadorCertificado resultListadoVigente = test.consultarListadoVigente();
         assertEquals(resultListadoVigente.getCertificados().size(), 3);
         assertNotNull(resultListadoVigente);
-        assertNotNull(resultListadoVigente.getFechaCarga());
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
         assertNotNull(resultListadoVigente.getCertificados());
         assertFalse(resultListadoVigente.getCertificados().isEmpty());
         assertTrue(resultListadoVigente.getCertificados().size() == 3);
 
-        histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-26T01"));
+        histListadoInicialIda = test.consultarListadoPorUltimaActualizacion(LocalDate.parse("2016-11-26"));
 
         assertNotNull(histListadoInicialIda);
         assertNotNull(histListadoInicialIda.isEmpty());
@@ -261,14 +262,14 @@ public class ModificadorCertificadoRepositoryITest {
         resultListadoVigente = test.consultarListadoVigente();
         assertEquals(resultListadoVigente.getCertificados().size(),1);
 
-        histListadoInicialIda = test.consultarListadoPorFechaCarga(DateTime.parse("2016-11-27T01"));
+        histListadoInicialIda = test.consultarListadoPorUltimaActualizacion(LocalDate.parse("2016-11-27"));
 
         assertNotNull(histListadoInicialIda);
         assertNotNull(histListadoInicialIda.isEmpty());
         assertEquals(histListadoInicialIda.size(),1);
 
         assertNotNull(resultListadoVigente);
-        assertNotNull(resultListadoVigente.getFechaCarga());
+        assertNotNull(resultListadoVigente.getUltimaActualizacion());
         assertNotNull(resultListadoVigente.getCertificados());
         assertFalse(resultListadoVigente.getCertificados().isEmpty());
         assertTrue(resultListadoVigente.getCertificados().size() == 1);

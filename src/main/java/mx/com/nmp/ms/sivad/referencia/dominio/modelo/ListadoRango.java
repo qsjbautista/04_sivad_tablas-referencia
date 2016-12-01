@@ -25,7 +25,7 @@ public class ListadoRango {
     /**
      * Fecha en que se realizo la carga.
      */
-    private DateTime fechaCarga;
+    private DateTime ultimaActualizacion;
 
     /**
      * Fecha en que se realizo el listado.
@@ -46,7 +46,7 @@ public class ListadoRango {
      * Interface que define el contrato para crear entidades ListadoRango
      */
     public interface Builder {
-        DateTime getFechaCarga();
+        DateTime getUltimaActualizacion();
 
         LocalDate getFechaListado();
 
@@ -63,7 +63,7 @@ public class ListadoRango {
     ListadoRango(Builder builder, ModificadorRangoRepository modificadorRangoRepository) {
         super();
 
-        fechaCarga = builder.getFechaCarga();
+        ultimaActualizacion = builder.getUltimaActualizacion();
         fechaListado = builder.getFechaListado();
         factorAlhajas = builder.getFactorAlhaja();
 
@@ -88,8 +88,8 @@ public class ListadoRango {
         return id;
     }
 
-    public DateTime getFechaCarga() {
-        return fechaCarga;
+    public DateTime getUltimaActualizacion() {
+        return ultimaActualizacion;
     }
 
     public LocalDate getFechaListado() {
