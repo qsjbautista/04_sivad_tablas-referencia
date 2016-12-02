@@ -37,17 +37,6 @@ public class Metal {
      *
      * @param metal El tipo del metal.
      * @param calidad Valor aplicable a la calidad del metal (Ejemplo: 0.925).
-     */
-    Metal(String metal, String calidad) {
-        this.metal = metal;
-        this.calidad = calidad;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param metal El tipo del metal.
-     * @param calidad Valor aplicable a la calidad del metal (Ejemplo: 0.925).
      * @param precio Precio en pesos del metal por gramo.
      */
     Metal(String metal, String calidad, BigDecimal precio) {

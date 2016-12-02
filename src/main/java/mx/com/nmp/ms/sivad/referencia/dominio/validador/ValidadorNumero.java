@@ -43,4 +43,24 @@ public final class ValidadorNumero {
 
         return valor;
     }
+
+    /**
+     * Método que valida si {@code valor} es mayor que cero.
+     *
+     * @param valor Valor numérico a validarPositivo.
+     *
+     * @return {@code valor} si es mayor que cero.
+     *
+     * @throws IllegalArgumentException Cuando {@code valor} es menor o igual que cero.
+     */
+    public static Integer validarPositivo(Integer valor) {
+        Assert.notNull(valor, "El valor no debe ser nulo");
+
+        if (valor <= 0) {
+            throw new IllegalArgumentException("El valor debe ser mayor que 0.");
+        }
+
+        return valor;
+    }
+
 }

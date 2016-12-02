@@ -7,7 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOroFactory;
@@ -271,7 +270,7 @@ public class ValorComercialOroRepositoryIntTest {
     /**
      * Utilizado para actualizar el listado de valores comerciales del oro (con un listado vacío).
      */
-    @Test(expected = ListadoValorGramoSinElementosException.class)
+    @Test(expected = IllegalArgumentException.class)
     @Transactional
     public void actualizarListadoTest01() {
         Set<Oro> valoresComerciales = new HashSet<>();

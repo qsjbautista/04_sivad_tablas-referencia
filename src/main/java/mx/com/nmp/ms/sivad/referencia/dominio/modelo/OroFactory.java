@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
+import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorNumero;
+import org.springframework.util.Assert;
+
 import java.math.BigDecimal;
 
 /**
@@ -13,16 +16,13 @@ import java.math.BigDecimal;
  */
 public final class OroFactory {
 
-    /**
-     * Permite crear una entidad de tipo Oro con base en los argumentos recibidos.
-     *
-     * @param color El color del oro.
-     * @param calidad La calidad del oro.
-     * @return La entidad creada.
-     */
-    public static Oro create(String color, Integer calidad) {
-        return new Oro(color, calidad);
-    }
+    private static final String CALIDAD_NULO = "La calidad no debe ser nula.";
+    private static final String COLOR_NULO = "El color no debe ser nulo.";
+    private static final String PRECIO_NULO = "El precio no debe ser nulo.";
+
+
+
+    // METODOS
 
     /**
      * Permite crear una entidad de tipo Oro con base en los argumentos recibidos.
@@ -33,6 +33,12 @@ public final class OroFactory {
      * @return La entidad creada.
      */
     public static Oro create(String color, Integer calidad, BigDecimal precio) {
+        Assert.notNull(color, COLOR_NULO);
+        Assert.notNull(calidad, CALIDAD_NULO);
+        Assert.notNull(precio, PRECIO_NULO);
+
+        ValidadorNumero.validarPositivo(calidad);
+        ValidadorNumero.validarPositivo(precio);
         return new Oro(color, calidad, precio);
     }
 

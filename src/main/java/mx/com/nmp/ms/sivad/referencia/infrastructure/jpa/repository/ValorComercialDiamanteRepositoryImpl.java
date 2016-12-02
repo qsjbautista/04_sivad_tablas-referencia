@@ -7,7 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
@@ -172,12 +171,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     public void actualizarListado(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListado({})", listado);
 
-        if (ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            String msg = "El listado con el cual se desea reemplazar la lista vigente no tiene elementos.";
-            LOGGER.error(msg);
-            throw new ListadoValorComercialSinElementosException(msg, ListadoValorComercialDiamanteJPA.class);
-        }
-
         ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 
         if (!ObjectUtils.isEmpty(listadoVigente)) {
@@ -248,10 +241,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Transactional
     public ListadoValorComercialDiamante restaurarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> restaurarListadoPorFecha({})", fechaVigencia);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
-        }
 
         if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
             String msg = "La fecha de vigencia solicitada no puede ser una fecha futura.";

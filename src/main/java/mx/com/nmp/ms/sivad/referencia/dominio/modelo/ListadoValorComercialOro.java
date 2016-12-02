@@ -30,7 +30,6 @@ public class ListadoValorComercialOro {
     /**
      * Referencia al repositorio de ValorComercialOroRepository.
      */
-    @Inject
     private ValorComercialOroRepository valorComercialOroRepository;
 
 
@@ -41,9 +40,12 @@ public class ListadoValorComercialOro {
      * Constructor.
      *
      * @param valoresComerciales Lista de valores comerciales del oro.
+     * @param valorComercialOroRepository Referencia al repositorio de ValorComercialOroRepository.
      */
-    ListadoValorComercialOro(Set<Oro> valoresComerciales) {
+    ListadoValorComercialOro(Set<Oro> valoresComerciales,
+                             ValorComercialOroRepository valorComercialOroRepository) {
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialOroRepository = valorComercialOroRepository;
     }
 
     /**
@@ -51,19 +53,20 @@ public class ListadoValorComercialOro {
      *
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales del oro.
+     * @param valorComercialOroRepository Referencia al repositorio de ValorComercialOroRepository.
      */
-    ListadoValorComercialOro(DateTime ultimaActualizacion, Set<Oro> valoresComerciales) {
+    ListadoValorComercialOro(DateTime ultimaActualizacion, Set<Oro> valoresComerciales,
+                             ValorComercialOroRepository valorComercialOroRepository) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialOroRepository = valorComercialOroRepository;
     }
 
     /**
      * Permite actualizar el listado de precios de oro.
-     *
-     * @param listado El listado de valores comerciales del oro, con el cual se desea reemplazar la lista vigente.
      */
-    public void actualizar(ListadoValorComercialOro listado) {
-        valorComercialOroRepository.actualizarListado(listado);
+    public void actualizar() {
+        valorComercialOroRepository.actualizarListado(this);
     }
 
 

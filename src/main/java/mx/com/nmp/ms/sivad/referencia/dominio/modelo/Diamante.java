@@ -10,7 +10,6 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.ValorComercialDiamanteVO
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository;
 import org.springframework.util.ObjectUtils;
 
-import javax.inject.Inject;
 import java.math.BigDecimal;
 
 /**
@@ -53,7 +52,6 @@ public class Diamante {
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
      */
-    @Inject
     private ModificadorValorDiamanteRepository modificadorValorDiamanteRepository;
 
 
@@ -69,15 +67,18 @@ public class Diamante {
      * @param tamanioInferior Tamaño inferior en quilates que abarca el valor comercial.
      * @param tamanioSuperior Tamaño superior en quilates que abarca el valor comercial.
      * @param precio Precio en dólares del diamante.
+     * @param modificadorValorDiamanteRepository Referencia al repositorio de ValorComercialDiamanteRepository.
      */
     Diamante(String corte, String color, String claridad, BigDecimal tamanioInferior,
-             BigDecimal tamanioSuperior, BigDecimal precio) {
+             BigDecimal tamanioSuperior, BigDecimal precio,
+             ModificadorValorDiamanteRepository modificadorValorDiamanteRepository) {
         this.corte = corte;
         this.color = color;
         this.claridad = claridad;
         this.tamanioInferior = tamanioInferior;
         this.tamanioSuperior = tamanioSuperior;
         this.precio = precio;
+        this.modificadorValorDiamanteRepository = modificadorValorDiamanteRepository;
     }
 
     /**

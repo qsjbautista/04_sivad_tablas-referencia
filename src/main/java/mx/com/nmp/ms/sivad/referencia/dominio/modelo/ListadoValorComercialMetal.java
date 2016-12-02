@@ -30,7 +30,6 @@ public class ListadoValorComercialMetal {
     /**
      * Referencia al repositorio de ValorComercialMetalRepository.
      */
-    @Inject
     private ValorComercialMetalRepository valorComercialMetalRepository;
 
 
@@ -41,9 +40,12 @@ public class ListadoValorComercialMetal {
      * Constructor.
      *
      * @param valoresComerciales Lista de valores comerciales de metales.
+     * @param valorComercialMetalRepository Referencia al repositorio de ValorComercialMetalRepository.
      */
-    ListadoValorComercialMetal(Set<Metal> valoresComerciales) {
+    ListadoValorComercialMetal(Set<Metal> valoresComerciales,
+                               ValorComercialMetalRepository valorComercialMetalRepository) {
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialMetalRepository = valorComercialMetalRepository;
     }
 
     /**
@@ -51,19 +53,20 @@ public class ListadoValorComercialMetal {
      *
      * @param ultimaActualizacion Fecha en que se realiza la última actualización.
      * @param valoresComerciales Lista de valores comerciales de metales.
+     * @param valorComercialMetalRepository Referencia al repositorio de ValorComercialMetalRepository.
      */
-    ListadoValorComercialMetal(DateTime ultimaActualizacion, Set<Metal> valoresComerciales) {
+    ListadoValorComercialMetal(DateTime ultimaActualizacion, Set<Metal> valoresComerciales,
+                               ValorComercialMetalRepository valorComercialMetalRepository) {
         this.ultimaActualizacion = ultimaActualizacion;
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialMetalRepository = valorComercialMetalRepository;
     }
 
     /**
      * Permite actualizar el listado de precios de metal.
-     *
-     * @param listado El listado de valores comerciales del metal, con el cual se desea reemplazar la lista vigente.
      */
-    public void actualizar(ListadoValorComercialMetal listado) {
-        valorComercialMetalRepository.actualizarListado(listado);
+    public void actualizar() {
+        valorComercialMetalRepository.actualizarListado(this);
     }
 
 

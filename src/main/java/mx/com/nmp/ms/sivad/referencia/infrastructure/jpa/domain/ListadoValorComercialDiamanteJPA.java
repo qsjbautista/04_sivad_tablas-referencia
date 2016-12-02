@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "cfg_diamante_listado_valor_comercial")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ListadoValorComercialDiamanteJPA extends AbstractListadoValorComercialDiamanteJPA {
 
     /**

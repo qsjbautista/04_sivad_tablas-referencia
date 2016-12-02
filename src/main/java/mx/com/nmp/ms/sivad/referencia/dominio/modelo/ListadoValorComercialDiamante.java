@@ -36,7 +36,6 @@ public class ListadoValorComercialDiamante {
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
      */
-    @Inject
     private ValorComercialDiamanteRepository valorComercialDiamanteRepository;
 
 
@@ -48,10 +47,13 @@ public class ListadoValorComercialDiamante {
      *
      * @param fechaListado La fecha de origen de la información.
      * @param valoresComerciales Lista de valores comerciales de diamantes.
+     * @param valorComercialDiamanteRepository Referencia al repositorio de ValorComercialDiamanteRepository.
      */
-    ListadoValorComercialDiamante(LocalDate fechaListado, Set<Diamante> valoresComerciales) {
+    ListadoValorComercialDiamante(LocalDate fechaListado, Set<Diamante> valoresComerciales,
+                                  ValorComercialDiamanteRepository valorComercialDiamanteRepository) {
         this.fechaListado = fechaListado;
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialDiamanteRepository = valorComercialDiamanteRepository;
     }
 
     /**
@@ -60,20 +62,21 @@ public class ListadoValorComercialDiamante {
      * @param fechaCarga Fecha en que se realiza la última actualización (fecha de vigencia).
      * @param fechaListado La fecha de origen de la información.
      * @param valoresComerciales Lista de valores comerciales de diamantes.
+     * @param valorComercialDiamanteRepository Referencia al repositorio de ValorComercialDiamanteRepository.
      */
-    ListadoValorComercialDiamante(DateTime fechaCarga, LocalDate fechaListado, Set<Diamante> valoresComerciales) {
+    ListadoValorComercialDiamante(DateTime fechaCarga, LocalDate fechaListado, Set<Diamante> valoresComerciales,
+                                  ValorComercialDiamanteRepository valorComercialDiamanteRepository) {
         this.fechaCarga = fechaCarga;
         this.fechaListado = fechaListado;
         this.valoresComerciales = valoresComerciales;
+        this.valorComercialDiamanteRepository = valorComercialDiamanteRepository;
     }
 
     /**
      * Permite actualizar el listado de precios de diamantes.
-     *
-     * @param listado El listado de valores comerciales del diamante, con el cual se desea reemplazar la lista vigente.
      */
-    public void actualizar(ListadoValorComercialDiamante listado) {
-        valorComercialDiamanteRepository.actualizarListado(listado);
+    public void actualizar() {
+        valorComercialDiamanteRepository.actualizarListado(this);
     }
 
     /**

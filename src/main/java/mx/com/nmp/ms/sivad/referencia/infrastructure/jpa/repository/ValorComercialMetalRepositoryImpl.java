@@ -7,7 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
@@ -172,12 +171,6 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
     @Transactional
     public void actualizarListado(@NotNull ListadoValorComercialMetal listado) {
         LOGGER.info(">> actualizarListado({})", listado);
-
-        if (ObjectUtils.isEmpty(listado.getValoresComerciales())) {
-            String msg = "El listado con el cual se desea reemplazar la lista vigente no tiene elementos.";
-            LOGGER.error(msg);
-            throw new ListadoValorGramoSinElementosException(msg, ListadoValorComercialMetalJPA.class);
-        }
 
         ListadoValorComercialMetalJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 

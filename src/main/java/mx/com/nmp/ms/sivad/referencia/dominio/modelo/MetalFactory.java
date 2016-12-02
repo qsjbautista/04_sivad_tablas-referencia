@@ -4,6 +4,9 @@
  */
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
+import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorNumero;
+import org.springframework.util.Assert;
+
 import java.math.BigDecimal;
 
 /**
@@ -13,16 +16,12 @@ import java.math.BigDecimal;
  */
 public final class MetalFactory {
 
-    /**
-     * Permite crear una entidad de tipo Metal con base en los argumentos recibidos.
-     *
-     * @param metal El tipo del metal.
-     * @param calidad Valor aplicable a la calidad del metal (Ejemplo: 0.925).
-     * @return La entidad creada.
-     */
-    public static Metal create(String metal, String calidad) {
-        return new Metal(metal, calidad);
-    }
+    private static final String METAL_NULO = "El metal no debe ser nulo.";
+    private static final String PRECIO_NULO = "El precio no debe ser nulo.";
+
+
+
+    // METODOS
 
     /**
      * Permite crear una entidad de tipo Metal con base en los argumentos recibidos.
@@ -33,6 +32,10 @@ public final class MetalFactory {
      * @return La entidad creada.
      */
     public static Metal create(String metal, String calidad, BigDecimal precio) {
+        Assert.notNull(metal, METAL_NULO);
+        Assert.notNull(precio, PRECIO_NULO);
+
+        ValidadorNumero.validarPositivo(precio);
         return new Metal(metal, calidad, precio);
     }
 

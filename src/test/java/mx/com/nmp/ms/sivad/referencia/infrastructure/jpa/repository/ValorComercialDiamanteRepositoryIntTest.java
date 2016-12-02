@@ -7,7 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
@@ -594,7 +593,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
     /**
      * Utilizado para actualizar el listado de valores comerciales del diamante (con un listado vacío).
      */
-    @Test(expected = ListadoValorComercialSinElementosException.class)
+    @Test(expected = IllegalArgumentException.class)
     @Transactional
     public void actualizarListadoTest01() {
         Set<Diamante> valoresComerciales = new HashSet<>();
