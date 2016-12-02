@@ -119,6 +119,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         }
 
+        LOGGER.info("<< {}", response.getDesplazamiento());
 
         return response;
     }
@@ -131,7 +132,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
      */
     @Override
     public ObtenerFactorResponse obtenerFactor(ObtenerFactorRequest parameters) {
-        LOGGER.info(">> obtenerDesplazamiento({})", parameters);
+        LOGGER.info(">> obtenerFactor({})", parameters);
 
         ObtenerFactorResponse response = new ObtenerFactorResponse();
 
@@ -146,6 +147,8 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         }
 
+        LOGGER.info("<< {}", response.getFactor());
+
         return response;
     }
 
@@ -157,7 +160,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
      */
     @Override
     public ObtenerLimitesIncrementoResponse obtenerLimitesIncremento(ObtenerLimitesIncrementoRequest parameters) {
-        LOGGER.info(">> obtenerDesplazamiento({})", parameters);
+        LOGGER.info(">> obtenerLimitesIncremento({})", parameters);
 
         ObtenerLimitesIncrementoResponse response = new ObtenerLimitesIncrementoResponse();
 
@@ -177,6 +180,8 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-007", "No existe el rango solicitado");
             }
         }
+
+        LOGGER.info("<< {}", response.getLimitesIncremento());
 
         return response;
     }

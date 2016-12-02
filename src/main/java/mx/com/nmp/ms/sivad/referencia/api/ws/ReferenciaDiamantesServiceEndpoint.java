@@ -61,6 +61,8 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
             }
         }
 
+        LOGGER.info("<< {}", response.getValorComercial());
+
         return response;
     }
 
@@ -87,6 +89,9 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-009", e.getMessage());
             }
         }
+
+        LOGGER.info("<< {}", response.getFactor());
+
         return response;
     }
 }
