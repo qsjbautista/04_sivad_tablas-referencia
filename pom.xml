@@ -49,6 +49,7 @@
 		<!-- termina ordenamiento -->
 
         <!-- sonar -->
+        <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
         <sonar-maven-plugin.version>3.0.2</sonar-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.7.201606060606</jacoco-maven-plugin.version>
 
@@ -425,6 +426,7 @@
 	</build>
 
     <profiles>
+
         <!-- Desactivar evaluación estricta del plugin Javadoc en Java 1.8 -->
         <profile>
             <id>disable-java8-doclint</id>
