@@ -77,4 +77,35 @@ public class Oro {
         return calidad;
     }
 
+    @Override
+    public String toString() {
+        return "Oro{" +
+            "color='" + color + '\'' +
+            ", calidad=" + calidad +
+            ", precio=" + precio +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Oro)) return false;
+
+        Oro oro = (Oro) o;
+
+        if (!calidad.equals(oro.calidad)) return false;
+        if (!color.equals(oro.color)) return false;
+        if (!precio.equals(oro.precio)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = color.hashCode();
+        result = 31 * result + calidad.hashCode();
+        result = 31 * result + precio.hashCode();
+        return result;
+    }
+
 }

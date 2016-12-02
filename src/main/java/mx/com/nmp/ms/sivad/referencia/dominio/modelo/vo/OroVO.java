@@ -48,4 +48,12 @@ public class OroVO {
         return calidad;
     }
 
+    @Override
+    public String toString() {
+        return "OroVO{" +
+            "color='" + color + '\'' +
+            ", calidad=" + calidad +
+            '}';
+    }
+
 }

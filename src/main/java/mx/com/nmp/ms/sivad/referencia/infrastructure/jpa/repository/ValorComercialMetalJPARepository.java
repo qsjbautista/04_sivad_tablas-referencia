@@ -17,6 +17,14 @@ import org.springframework.stereotype.Repository;
 public interface ValorComercialMetalJPARepository extends JpaRepository<ValorComercialMetalJPA, Long> {
 
     /**
+     * Utilizado para obtener la entidad que coincida exactamente con el atributo "metal" indicado.
+     *
+     * @param metal El tipo de metal.
+     * @return La entidad que coincida con el valor del atributo indicado.
+     */
+    ValorComercialMetalJPA findByMetal(String metal);
+
+    /**
      * Utilizado para obtener la entidad que coincida exactamente con los atributos "metal" y "calidad" indicados.
      *
      * @param metal El tipo de metal.

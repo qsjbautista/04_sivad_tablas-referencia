@@ -136,4 +136,44 @@ public class Diamante {
         return precio;
     }
 
+    @Override
+    public String toString() {
+        return "Diamante{" +
+            "corte='" + corte + '\'' +
+            ", color='" + color + '\'' +
+            ", claridad='" + claridad + '\'' +
+            ", tamanioInferior=" + tamanioInferior +
+            ", tamanioSuperior=" + tamanioSuperior +
+            ", precio=" + precio +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Diamante)) return false;
+
+        Diamante diamante = (Diamante) o;
+
+        if (!claridad.equals(diamante.claridad)) return false;
+        if (!color.equals(diamante.color)) return false;
+        if (!corte.equals(diamante.corte)) return false;
+        if (!precio.equals(diamante.precio)) return false;
+        if (!tamanioInferior.equals(diamante.tamanioInferior)) return false;
+        if (!tamanioSuperior.equals(diamante.tamanioSuperior)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = corte.hashCode();
+        result = 31 * result + color.hashCode();
+        result = 31 * result + claridad.hashCode();
+        result = 31 * result + tamanioInferior.hashCode();
+        result = 31 * result + tamanioSuperior.hashCode();
+        result = 31 * result + precio.hashCode();
+        return result;
+    }
+
 }

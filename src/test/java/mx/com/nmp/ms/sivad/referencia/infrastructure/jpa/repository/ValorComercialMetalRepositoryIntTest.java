@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,12 +56,15 @@ public class ValorComercialMetalRepositoryIntTest {
     private static final String CALIDAD_METAL_NUEVO_2 = "0.325";
     private static final String CALIDAD_METAL_NUEVO_3 = "0.425";
     private static final String TIPO_METAL_EXISTE = "Plata";
+    private static final String TIPO_METAL_EXISTE_2 = "Platino";
     private static final String TIPO_METAL_NO_EXISTE = "Cobre";
     private static final String TIPO_METAL_NUEVO = "Acero";
     private static final String FECHA_VIGENCIA = "2016-11-21";
+    private static final String FECHA_VIGENCIA_VIGENTES = "2016-11-23";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
     private static final BigDecimal PRECIO_METAL_EXISTE = new BigDecimal(150.250).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_METAL_EXISTE_2 = new BigDecimal(155.250).setScale(3, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_METAL_NUEVO_1 = new BigDecimal(50.250).setScale(3, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_METAL_NUEVO_2 = new BigDecimal(60.250).setScale(3, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_METAL_NUEVO_3 = new BigDecimal(70.250).setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -138,6 +142,47 @@ public class ValorComercialMetalRepositoryIntTest {
     }
 
     /**
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal y calidad existen.
+     *
+     * Existe más de un registro en la BD con las mismas características.
+     */
+    @Test(expected = IncorrectResultSizeDataAccessException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal_02-h2.sql")
+    public void obtenerValorGramoMetalTest05() {
+        MetalVO metalVO = new MetalVO(TIPO_METAL_EXISTE, CALIDAD_METAL_EXISTE);
+        valorComercialMetalRepository.consultarMetalVigente(metalVO);
+    }
+
+    /**
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal no existe y la calidad es nula.
+     */
+    @Test(expected = ValorGramoNoEncontradoException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
+    public void obtenerValorGramoMetalTest06() {
+        MetalVO metalVO = new MetalVO(TIPO_METAL_NO_EXISTE, null);
+        valorComercialMetalRepository.consultarMetalVigente(metalVO);
+    }
+
+    /**
+     * Utilizado para consultar un valor por gramo de metal, cuyo tipo de metal existe y la calidad es nula.
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal_03-h2.sql")
+    public void obtenerValorGramoMetalTest07() {
+        MetalVO metalVO = new MetalVO(TIPO_METAL_EXISTE_2, null);
+        Metal result = valorComercialMetalRepository.consultarMetalVigente(metalVO);
+
+        assertNotNull(result);
+        assertEquals(TIPO_METAL_EXISTE_2, result.getMetal());
+        assertEquals(null, result.getCalidad());
+        assertNotNull(result.obtenerValorGramo());
+        assertEquals(PRECIO_METAL_EXISTE_2, result.obtenerValorGramo());
+    }
+
+    /**
      * Utilizado para consultar el listado de valores comerciales del metal vigente (sin datos).
      */
     @Test(expected = ListadoValorGramoNoEncontradoException.class)
@@ -160,6 +205,18 @@ public class ValorComercialMetalRepositoryIntTest {
         assertNotNull(result.getValoresComerciales());
         assertFalse(result.getValoresComerciales().isEmpty());
         assertTrue(result.getValoresComerciales().size() == 4);
+    }
+
+    /**
+     * Utilizado para consultar el listado de valores comerciales del metal vigente (con datos).
+     *
+     * Existe más de un listado vigente en la BD.
+     */
+    @Test(expected = IncorrectResultSizeDataAccessException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal_02-h2.sql")
+    public void consultarListadoVigenteTest03() {
+        valorComercialMetalRepository.consultarListadoVigente();
     }
 
     /**
@@ -191,7 +248,7 @@ public class ValorComercialMetalRepositoryIntTest {
 
     /**
      * Utilizado para consultar los listados de valores comerciales del metal de la fecha de vigencia indicada
-     * (fecha de vigencia anterior a fecha actual y con datos).
+     * (fecha de vigencia anterior a fecha actual y con datos - coincidencia históricos).
      */
     @Test
     @Transactional
@@ -213,6 +270,32 @@ public class ValorComercialMetalRepositoryIntTest {
 
         assertNotNull(result);
         assertTrue(result.size() == 2);
+    }
+
+    /**
+     * Utilizado para consultar los listados de valores comerciales del metal de la fecha de vigencia indicada
+     * (fecha de vigencia anterior a fecha actual y con datos - coincidencia vigentes).
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_metal-h2.sql")
+    public void consultarListadoPorFechaVigenciaTest04() {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
+        Calendar calendar = Calendar.getInstance();
+
+        try {
+            calendar.setTime(sdf.parse(FECHA_VIGENCIA_VIGENTES));
+        } catch (ParseException e) {
+            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
+            fail();
+        }
+
+        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
+        Set<ListadoValorComercialMetal> result =
+            valorComercialMetalRepository.consultarListadoPorFechaVigencia(fechaVigencia);
+
+        assertNotNull(result);
+        assertTrue(result.size() == 1);
     }
 
     /**

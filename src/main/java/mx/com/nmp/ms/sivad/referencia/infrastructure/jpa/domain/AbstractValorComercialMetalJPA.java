@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los valores comerciales de Metal.
@@ -32,7 +33,7 @@ public abstract class AbstractValorComercialMetalJPA {
     /**
      * Valor aplicable a la calidad del metal (Ejemplo: 0.925).
      */
-    @Column(name = "calidad", nullable = false)
+    @Column(name = "calidad", nullable = true)
     protected String calidad;
 
     /**
@@ -75,6 +76,26 @@ public abstract class AbstractValorComercialMetalJPA {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractValorComercialMetalJPA)) return false;
+
+        AbstractValorComercialMetalJPA that = (AbstractValorComercialMetalJPA) o;
+
+        if (calidad != null ? !calidad.equals(that.calidad) : that.calidad != null) return false;
+        if (!id.equals(that.id)) return false;
+        if (!metal.equals(that.metal)) return false;
+        if (!precio.equals(that.precio)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, metal, calidad, precio);
     }
 
 }

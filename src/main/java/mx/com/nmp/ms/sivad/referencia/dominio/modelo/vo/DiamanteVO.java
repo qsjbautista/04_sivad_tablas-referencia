@@ -72,4 +72,14 @@ public class DiamanteVO {
         return quilatesCt;
     }
 
+    @Override
+    public String toString() {
+        return "DiamanteVO{" +
+            "corte='" + corte + '\'' +
+            ", color='" + color + '\'' +
+            ", claridad='" + claridad + '\'' +
+            ", quilatesCt=" + quilatesCt +
+            '}';
+    }
+
 }

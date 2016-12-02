@@ -37,4 +37,14 @@ public class HistValorComercialMetalJPA extends AbstractValorComercialMetalJPA {
         this.listado = listado;
     }
 
+    @Override
+    public String toString() {
+        return "HistValorComercialMetalJPA{" +
+            "id=" + id +
+            ", metal='" + metal + '\'' +
+            ", calidad='" + calidad + '\'' +
+            ", precio=" + precio +
+            '}';
+    }
+
 }

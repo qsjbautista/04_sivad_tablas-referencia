@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los valores comerciales de Diamante.
@@ -117,6 +118,29 @@ public abstract class AbstractValorComercialDiamanteJPA {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractValorComercialDiamanteJPA)) return false;
+
+        AbstractValorComercialDiamanteJPA that = (AbstractValorComercialDiamanteJPA) o;
+
+        if (!claridad.equals(that.claridad)) return false;
+        if (!color.equals(that.color)) return false;
+        if (!corte.equals(that.corte)) return false;
+        if (!id.equals(that.id)) return false;
+        if (!precio.equals(that.precio)) return false;
+        if (!tamanioInferior.equals(that.tamanioInferior)) return false;
+        if (!tamanioSuperior.equals(that.tamanioSuperior)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, corte, color, claridad, tamanioInferior, tamanioSuperior, precio);
     }
 
 }

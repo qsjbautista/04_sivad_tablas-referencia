@@ -78,4 +78,12 @@ public class ListadoValorComercialMetal {
         return valoresComerciales;
     }
 
+    @Override
+    public String toString() {
+        return "ListadoValorComercialMetal{" +
+            "ultimaActualizacion=" + ultimaActualizacion +
+            ", valoresComerciales=" + valoresComerciales +
+            '}';
+    }
+
 }

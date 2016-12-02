@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los listados de valores comerciales de Diamante.
@@ -62,6 +63,25 @@ public abstract class AbstractListadoValorComercialDiamanteJPA {
 
     public void setFechaListado(LocalDate fechaListado) {
         this.fechaListado = fechaListado;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractListadoValorComercialDiamanteJPA)) return false;
+
+        AbstractListadoValorComercialDiamanteJPA that = (AbstractListadoValorComercialDiamanteJPA) o;
+
+        if (!fechaCarga.equals(that.fechaCarga)) return false;
+        if (!fechaListado.equals(that.fechaListado)) return false;
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fechaCarga, fechaListado);
     }
 
 }

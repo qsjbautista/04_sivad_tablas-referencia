@@ -37,4 +37,17 @@ public class HistValorComercialDiamanteJPA extends AbstractValorComercialDiamant
         this.listado = listado;
     }
 
+    @Override
+    public String toString() {
+        return "HistValorComercialDiamanteJPA{" +
+            "id=" + id +
+            ", corte='" + corte + '\'' +
+            ", color='" + color + '\'' +
+            ", claridad='" + claridad + '\'' +
+            ", tamanioInferior=" + tamanioInferior +
+            ", tamanioSuperior=" + tamanioSuperior +
+            ", precio=" + precio +
+            '}';
+    }
+
 }

@@ -77,4 +77,35 @@ public class Metal {
         return calidad;
     }
 
+    @Override
+    public String toString() {
+        return "Metal{" +
+            "metal='" + metal + '\'' +
+            ", calidad='" + calidad + '\'' +
+            ", precio=" + precio +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Metal)) return false;
+
+        Metal metal1 = (Metal) o;
+
+        if (calidad != null ? !calidad.equals(metal1.calidad) : metal1.calidad != null) return false;
+        if (!metal.equals(metal1.metal)) return false;
+        if (!precio.equals(metal1.precio)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = metal.hashCode();
+        result = 31 * result + (calidad != null ? calidad.hashCode() : 0);
+        result = 31 * result + precio.hashCode();
+        return result;
+    }
+
 }

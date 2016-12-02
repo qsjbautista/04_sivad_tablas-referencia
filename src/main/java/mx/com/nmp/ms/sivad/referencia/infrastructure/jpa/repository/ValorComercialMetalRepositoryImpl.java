@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -72,13 +73,17 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
     @Override
     public Metal consultarMetalVigente(@NotNull MetalVO metalVO) {
         LOGGER.info(">> consultarMetalVigente({})", metalVO);
+        LOGGER.info(metalVO.toString());
 
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'metal: [{}]', 'calidad: [{}]'", metalVO.getMetal(), metalVO.getCalidad());
+        ValorComercialMetalJPA valorComercialMetalJPA;
+
+        if (ObjectUtils.isEmpty(metalVO.getCalidad())) {
+            valorComercialMetalJPA =
+                valorComercialMetalJPARepository.findByMetal(metalVO.getMetal());
+        } else {
+            valorComercialMetalJPA =
+                valorComercialMetalJPARepository.findByMetalAndCalidad(metalVO.getMetal(), metalVO.getCalidad());
         }
-
-        ValorComercialMetalJPA valorComercialMetalJPA =
-            valorComercialMetalJPARepository.findByMetalAndCalidad(metalVO.getMetal(), metalVO.getCalidad());
 
         if (ObjectUtils.isEmpty(valorComercialMetalJPA)) {
             String msg = "No existe un valor gramo para las características de metal solicitadas.";
@@ -97,8 +102,16 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
     public ListadoValorComercialMetal consultarListadoVigente() {
         LOGGER.info(">> consultarListadoVigente()");
 
-        ListadoValorComercialMetalJPA listadoValorComercialMetalJPA =
-            listadoJpaRepository.obtenerListadoVigente();
+        ListadoValorComercialMetalJPA listadoValorComercialMetalJPA;
+
+        try {
+            listadoValorComercialMetalJPA = listadoJpaRepository.obtenerListadoVigente();
+        } catch (IncorrectResultSizeDataAccessException e) {
+            String msg = "Inconsistencia de datos; existe más de un resultado.";
+            LOGGER.error(msg);
+            e.printStackTrace();
+            throw e;
+        }
 
         if (ObjectUtils.isEmpty(listadoValorComercialMetalJPA)) {
             String msg = "No existe un listado de valor gramo metal vigente.";
@@ -115,10 +128,6 @@ public class ValorComercialMetalRepositoryImpl implements ValorComercialMetalRep
     @Override
     public Set<ListadoValorComercialMetal> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
-        }
 
         if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
             String msg = "La fecha de vigencia solicitada no puede ser una fecha futura.";

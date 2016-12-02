@@ -111,4 +111,13 @@ public class ListadoValorComercialDiamante {
         return valoresComerciales;
     }
 
+    @Override
+    public String toString() {
+        return "ListadoValorComercialDiamante{" +
+            "fechaCarga=" + fechaCarga +
+            ", fechaListado=" + fechaListado +
+            ", valoresComerciales=" + valoresComerciales +
+            '}';
+    }
+
 }

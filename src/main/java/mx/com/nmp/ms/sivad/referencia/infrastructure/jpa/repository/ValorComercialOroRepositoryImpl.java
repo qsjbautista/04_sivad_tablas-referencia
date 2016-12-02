@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -72,10 +73,7 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
     @Override
     public Oro consultarOroVigente(@NotNull OroVO oroVO) {
         LOGGER.info(">> consultarOroVigente({})", oroVO);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'color: [{}]', 'calidad: [{}]'", oroVO.getColor(), oroVO.getCalidad());
-        }
+        LOGGER.info(oroVO.toString());
 
         ValorComercialOroJPA valorComercialOroJPA =
             valorComercialOroJPARepository.findByColorAndCalidad(oroVO.getColor(), oroVO.getCalidad());
@@ -97,8 +95,16 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
     public ListadoValorComercialOro consultarListadoVigente() {
         LOGGER.info(">> consultarListadoVigente()");
 
-        ListadoValorComercialOroJPA listadoValorComercialOroJPA =
-            listadoJpaRepository.obtenerListadoVigente();
+        ListadoValorComercialOroJPA listadoValorComercialOroJPA;
+
+        try {
+            listadoValorComercialOroJPA = listadoJpaRepository.obtenerListadoVigente();
+        } catch (IncorrectResultSizeDataAccessException e) {
+            String msg = "Inconsistencia de datos; existe más de un resultado.";
+            LOGGER.error(msg);
+            e.printStackTrace();
+            throw e;
+        }
 
         if (ObjectUtils.isEmpty(listadoValorComercialOroJPA)) {
             String msg = "No existe un listado de valor gramo oro vigente.";
@@ -115,10 +121,6 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
     @Override
     public Set<ListadoValorComercialOro> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
-        }
 
         if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
             String msg = "La fecha de vigencia solicitada no puede ser una fecha futura.";

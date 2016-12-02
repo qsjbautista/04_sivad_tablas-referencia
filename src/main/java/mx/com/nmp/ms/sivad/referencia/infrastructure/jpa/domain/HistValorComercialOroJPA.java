@@ -37,5 +37,15 @@ public class HistValorComercialOroJPA extends AbstractValorComercialOroJPA {
         this.listado = listado;
     }
 
+    @Override
+    public String toString() {
+        return "HistValorComercialOroJPA{" +
+            "id=" + id +
+            ", color='" + color + '\'' +
+            ", calidad=" + calidad +
+            ", precio=" + precio +
+            '}';
+    }
+
 }
 

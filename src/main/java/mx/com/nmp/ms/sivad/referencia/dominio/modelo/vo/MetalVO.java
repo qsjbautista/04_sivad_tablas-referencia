@@ -48,4 +48,12 @@ public class MetalVO {
         return calidad;
     }
 
+    @Override
+    public String toString() {
+        return "MetalVO{" +
+            "metal='" + metal + '\'' +
+            ", calidad='" + calidad + '\'' +
+            '}';
+    }
+
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los listados de valores comerciales de Oro y Metal.
@@ -50,6 +51,24 @@ public abstract class AbstractListadoValorComercialJPA {
 
     public void setUltimaActualizacion(DateTime ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractListadoValorComercialJPA)) return false;
+
+        AbstractListadoValorComercialJPA that = (AbstractListadoValorComercialJPA) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!ultimaActualizacion.equals(that.ultimaActualizacion)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ultimaActualizacion);
     }
 
 }

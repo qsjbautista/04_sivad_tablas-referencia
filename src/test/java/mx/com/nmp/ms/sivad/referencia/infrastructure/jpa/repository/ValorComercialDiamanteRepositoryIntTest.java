@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
     private static final String CLARIDAD_NUEVO_2 = "SI2";
     private static final String CLARIDAD_NUEVO_3 = "SI3";
     private static final String FECHA_VIGENCIA = "2016-11-21";
+    private static final String FECHA_VIGENCIA_VIGENTES = "2016-11-23";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
 
     private static final BigDecimal QUILATES_CT_EXISTE = new BigDecimal(0.92D).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -446,6 +448,24 @@ public class ValorComercialDiamanteRepositoryIntTest {
     }
 
     /**
+     * Utilizado para consultar el valor comercial de un diamante cuyas características son:
+     * CORTE - SI EXISTE
+     * COLOR - SI EXISTE
+     * CLARIDAD - SI EXISTE
+     * QUILATES CT - SI EXISTE (se encuentra dentro del rango)
+     *
+     * Existe más de un registro en la BD con las mismas características.
+     */
+    @Test(expected = IncorrectResultSizeDataAccessException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
+    public void obtenerValorComercialDiamanteTest21() {
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
+    }
+
+    /**
      * Utilizado para consultar el listado vigente de valores comerciales del diamante (sin datos).
      */
     @Test(expected = ListadoValorComercialNoEncontradoException.class)
@@ -481,6 +501,18 @@ public class ValorComercialDiamanteRepositoryIntTest {
     }
 
     /**
+     * Utilizado para consultar el listado vigente de valores comerciales del diamante (con datos).
+     *
+     * Existe más de un listado vigente en la BD.
+     */
+    @Test(expected = IncorrectResultSizeDataAccessException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
+    public void consultarListadoVigenteTest03() {
+        valorComercialDiamanteRepository.consultarListadoVigente();
+    }
+
+    /**
      * Utilizado para consultar los listados de valores comerciales del diamante de la fecha de vigencia indicada
      * (fecha de vigencia posterior a fecha actual).
      */
@@ -509,7 +541,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
 
     /**
      * Utilizado para consultar los listados de valores comerciales del diamante de la fecha de vigencia indicada
-     * (fecha de vigencia anterior a fecha actual y con datos).
+     * (fecha de vigencia anterior a fecha actual y con datos - coincidencia históricos).
      */
     @Test
     @Transactional
@@ -531,6 +563,32 @@ public class ValorComercialDiamanteRepositoryIntTest {
 
         assertNotNull(result);
         assertTrue(result.size() == 2);
+    }
+
+    /**
+     * Utilizado para consultar los listados de valores comerciales del diamante de la fecha de vigencia indicada
+     * (fecha de vigencia anterior a fecha actual y con datos - coincidencia vigentes).
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
+    public void consultarListadoPorFechaVigenciaTest04() {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
+        Calendar calendar = Calendar.getInstance();
+
+        try {
+            calendar.setTime(sdf.parse(FECHA_VIGENCIA_VIGENTES));
+        } catch (ParseException e) {
+            LOGGER.error("Ocurrio una excepcion inesperada al realizar la operacion. {}", e.getMessage());
+            fail();
+        }
+
+        LocalDate fechaVigencia = LocalDate.fromDateFields(calendar.getTime());
+        Set<ListadoValorComercialDiamante> result =
+            valorComercialDiamanteRepository.consultarListadoPorFechaVigencia(fechaVigencia);
+
+        assertNotNull(result);
+        assertTrue(result.size() == 1);
     }
 
     /**
@@ -678,7 +736,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
      */
     @Test(expected = ListadoValorComercialNoEncontradoException.class)
     @Transactional
-    @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
+    @Sql("/bd/test-data-valor_comercial_diamante_03-h2.sql")
     public void restaurarListadoAnteriorTest02() {
         valorComercialDiamanteRepository.restaurarListadoAnterior();
     }
@@ -690,6 +748,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void restaurarListadoAnteriorTest03() {
+        List<ListadoValorComercialDiamanteJPA> listadoInicialIda = jpaRepository.findAll();
+        assertNotNull(listadoInicialIda);
+        assertTrue(listadoInicialIda.size() > 0);
+
+        List<HistListadoValorComercialDiamanteJPA> histListadoInicialIda = histJPARepository.findAll();
+        assertNotNull(histListadoInicialIda);
+        assertTrue(histListadoInicialIda.size() > 0);
+        int tamanioHistListadoInicial = histListadoInicialIda.size();
+
         ListadoValorComercialDiamante result = valorComercialDiamanteRepository.restaurarListadoAnterior();
 
         assertNotNull(result);
@@ -699,14 +766,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertFalse(result.getValoresComerciales().isEmpty());
         assertTrue(result.getValoresComerciales().size() == 4);
 
-        // TODO - TMP
-        LOGGER.info("| {} | {} | {} | {} | {} | {} |", "CORTE", "COLOR", "CLARIDAD",
-            "TAMANIO INFERIOR", "TAMANIO SUPERIOR", "PRECIO");
-        for (Diamante d : result.getValoresComerciales()){
+        List<ListadoValorComercialDiamanteJPA> listadoInicialVuelta = jpaRepository.findAll();
+        assertNotNull(listadoInicialVuelta);
+        assertTrue(listadoInicialVuelta.size() > 0);
+        assertEquals(1, listadoInicialVuelta.size());
 
-            LOGGER.info("| {} | {} | {} | {} | {} | {} |", d.getCorte(), d.getColor(), d.getClaridad(),
-                d.getTamanioInferior(), d.getTamanioSuperior(), d.getPrecio());
-        }
+        List<HistListadoValorComercialDiamanteJPA> histListadoInicialVuelta = histJPARepository.findAll();
+        assertNotNull(histListadoInicialVuelta);
+        assertTrue(histListadoInicialVuelta.size() > 0);
+        assertEquals(tamanioHistListadoInicial + 1, histListadoInicialVuelta.size());
     }
 
     /**
@@ -743,7 +811,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
      */
     @Test(expected = ListadoValorComercialNoEncontradoException.class)
     @Transactional
-    @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
+    @Sql("/bd/test-data-valor_comercial_diamante_03-h2.sql")
     public void restaurarListadoPorFechaVigenciaTest03() {
         LocalDate fecha = new LocalDate();
         valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fecha);
@@ -757,6 +825,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void restaurarListadoPorFechaVigenciaTest04() {
+        List<ListadoValorComercialDiamanteJPA> listadoInicialIda = jpaRepository.findAll();
+        assertNotNull(listadoInicialIda);
+        assertTrue(listadoInicialIda.size() > 0);
+
+        List<HistListadoValorComercialDiamanteJPA> histListadoInicialIda = histJPARepository.findAll();
+        assertNotNull(histListadoInicialIda);
+        assertTrue(histListadoInicialIda.size() > 0);
+        int tamanioHistListadoInicial = histListadoInicialIda.size();
+
         SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
         Calendar calendar = Calendar.getInstance();
 
@@ -777,6 +854,16 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertNotNull(result.getValoresComerciales());
         assertFalse(result.getValoresComerciales().isEmpty());
         assertTrue(result.getValoresComerciales().size() == 4);
+
+        List<ListadoValorComercialDiamanteJPA> listadoInicialVuelta = jpaRepository.findAll();
+        assertNotNull(listadoInicialVuelta);
+        assertTrue(listadoInicialVuelta.size() > 0);
+        assertEquals(1, listadoInicialVuelta.size());
+
+        List<HistListadoValorComercialDiamanteJPA> histListadoInicialVuelta = histJPARepository.findAll();
+        assertNotNull(histListadoInicialVuelta);
+        assertTrue(histListadoInicialVuelta.size() > 0);
+        assertEquals(tamanioHistListadoInicial + 1, histListadoInicialVuelta.size());
     }
 
 }

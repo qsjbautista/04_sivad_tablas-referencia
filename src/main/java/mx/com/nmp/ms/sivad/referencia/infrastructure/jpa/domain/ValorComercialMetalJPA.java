@@ -37,4 +37,14 @@ public class ValorComercialMetalJPA extends AbstractValorComercialMetalJPA {
         this.listado = listado;
     }
 
+    @Override
+    public String toString() {
+        return "ValorComercialMetalJPA{" +
+            "id=" + id +
+            ", metal='" + metal + '\'' +
+            ", calidad='" + calidad + '\'' +
+            ", precio=" + precio +
+            '}';
+    }
+
 }

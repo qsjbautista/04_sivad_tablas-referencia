@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -73,11 +74,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     public Diamante obtenerValorComercial(@NotNull DiamanteVO diamanteVO) {
         LOGGER.info(">> obtenerValorComercial({})", diamanteVO);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'corte: [{}]', 'color: [{}]', 'claridad: [{}]', 'quilatesCt: [{}]'",
-                diamanteVO.getCorte(), diamanteVO.getColor(), diamanteVO.getClaridad(), diamanteVO.getQuilatesCt());
-        }
+        LOGGER.info(diamanteVO.toString());
 
         ValorComercialDiamanteJPA valorComercialDiamanteJPA =
             valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getCorte(), diamanteVO.getColor(),
@@ -104,8 +101,16 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     public ListadoValorComercialDiamante consultarListadoVigente() {
         LOGGER.info(">> consultarListadoVigente()");
 
-        ListadoValorComercialDiamanteJPA listadoValorComercialDiamanteJPA =
-            listadoJpaRepository.obtenerListadoVigente();
+        ListadoValorComercialDiamanteJPA listadoValorComercialDiamanteJPA;
+
+        try {
+            listadoValorComercialDiamanteJPA = listadoJpaRepository.obtenerListadoVigente();
+        } catch (IncorrectResultSizeDataAccessException e) {
+            String msg = "Inconsistencia de datos; existe más de un resultado.";
+            LOGGER.error(msg);
+            e.printStackTrace();
+            throw e;
+        }
 
         if (ObjectUtils.isEmpty(listadoValorComercialDiamanteJPA)) {
             String msg = "No existe un listado de valor comercial diamante vigente.";
@@ -122,10 +127,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     public Set<ListadoValorComercialDiamante> consultarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> consultarListadoPorFechaVigencia({})", fechaVigencia);
-
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("'fechaVigencia: [{}]'", fechaVigencia.toString());
-        }
 
         if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
             String msg = "La fecha de vigencia solicitada no puede ser una fecha futura.";

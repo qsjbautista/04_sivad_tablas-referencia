@@ -37,4 +37,14 @@ public class ValorComercialOroJPA extends AbstractValorComercialOroJPA {
         this.listado = listado;
     }
 
+    @Override
+    public String toString() {
+        return "ValorComercialOroJPA{" +
+            "id=" + id +
+            ", color='" + color + '\'' +
+            ", calidad=" + calidad +
+            ", precio=" + precio +
+            '}';
+    }
+
 }

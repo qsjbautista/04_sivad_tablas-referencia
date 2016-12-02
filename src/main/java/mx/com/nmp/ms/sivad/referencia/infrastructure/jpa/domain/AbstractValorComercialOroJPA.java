@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Clase abstracta que factoriza los atributos comunes de los valores comerciales de Oro.
@@ -75,6 +76,26 @@ public abstract class AbstractValorComercialOroJPA {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractValorComercialOroJPA)) return false;
+
+        AbstractValorComercialOroJPA that = (AbstractValorComercialOroJPA) o;
+
+        if (!calidad.equals(that.calidad)) return false;
+        if (!color.equals(that.color)) return false;
+        if (!id.equals(that.id)) return false;
+        if (!precio.equals(that.precio)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, color, calidad, precio);
     }
 
 }
