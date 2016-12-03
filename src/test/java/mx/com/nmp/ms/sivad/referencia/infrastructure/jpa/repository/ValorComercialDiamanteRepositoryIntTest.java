@@ -489,7 +489,6 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertFalse(result.getValoresComerciales().isEmpty());
         assertTrue(result.getValoresComerciales().size() == 10);
 
-        // TODO - TMP
         LOGGER.info("| {} | {} | {} | {} | {} | {} |", "CORTE", "COLOR", "CLARIDAD",
             "TAMANIO INFERIOR", "TAMANIO SUPERIOR", "PRECIO");
         for (Diamante d : result.getValoresComerciales()){

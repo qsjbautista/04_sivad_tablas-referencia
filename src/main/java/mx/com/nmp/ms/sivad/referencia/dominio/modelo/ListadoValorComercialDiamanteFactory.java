@@ -29,7 +29,7 @@ public final class ListadoValorComercialDiamanteFactory {
     private static final String VALORES_COMERCIALES_VACIO = "La lista de valores comerciales no debe estar vacia.";
 
     /**
-     * Referencia al repositorio de ValorComercialOroRepository.
+     * Referencia al repositorio de ValorComercialDiamanteRepository.
      */
     private static ValorComercialDiamanteRepository repositorio;
 
@@ -50,7 +50,7 @@ public final class ListadoValorComercialDiamanteFactory {
         Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
 
         ValidadorFecha.validarFechaFutura(fechaListado, FECHA_LISTADO_FUTURA);
-        return new ListadoValorComercialDiamante(fechaListado, valoresComerciales, repositorio);
+        return new ListadoValorComercialDiamante(fechaListado, valoresComerciales, getRepositorio());
     }
 
     /**
@@ -69,14 +69,15 @@ public final class ListadoValorComercialDiamanteFactory {
 
         ValidadorFecha.validarFechaFutura(fechaCarga, FECHA_CARGA_FUTURA);
         ValidadorFecha.validarFechaFutura(fechaListado, FECHA_LISTADO_FUTURA);
-        return new ListadoValorComercialDiamante(fechaCarga, fechaListado, valoresComerciales, repositorio);
+        return new ListadoValorComercialDiamante(fechaCarga, fechaListado, valoresComerciales, getRepositorio());
     }
 
-
-
-    // GETTERS
-
-    public ValorComercialDiamanteRepository getRepositorio() {
+    /**
+     * Permite obtener la referencia al repositorio de ValorComercialDiamanteRepository.
+     *
+     * @return Referencia al repositorio de ValorComercialDiamanteRepository.
+     */
+    private static ValorComercialDiamanteRepository getRepositorio() {
         if (ObjectUtils.isEmpty(repositorio)) {
             repositorio = ApplicationContextProvider.get().getBean(ValorComercialDiamanteRepository.class);
         }

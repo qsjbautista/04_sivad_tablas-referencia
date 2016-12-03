@@ -26,7 +26,7 @@ public final class ListadoValorComercialMetalFactory {
     private static final String VALORES_COMERCIALES_VACIO = "La lista de valores comerciales no debe estar vacia.";
 
     /**
-     * Referencia al repositorio de ValorComercialOroRepository.
+     * Referencia al repositorio de ValorComercialMetalRepository.
      */
     private static ValorComercialMetalRepository repositorio;
 
@@ -44,7 +44,7 @@ public final class ListadoValorComercialMetalFactory {
         Assert.notNull(valoresComerciales, VALORES_COMERCIALES_NULOS);
         Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
 
-        return new ListadoValorComercialMetal(valoresComerciales, repositorio);
+        return new ListadoValorComercialMetal(valoresComerciales, getRepositorio());
     }
 
     /**
@@ -60,18 +60,20 @@ public final class ListadoValorComercialMetalFactory {
         Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
 
         ValidadorFecha.validarFechaFutura(ultimaActualizacion, FECHA_ULTIMA_ACTUALIZACION_FUTURA);
-        return new ListadoValorComercialMetal(ultimaActualizacion, valoresComerciales, repositorio);
+        return new ListadoValorComercialMetal(ultimaActualizacion, valoresComerciales, getRepositorio());
     }
 
-
-
-    // GETTERS
-
-    public ValorComercialMetalRepository getRepositorio() {
+    /**
+     * Permite obtener la referencia al repositorio de ValorComercialMetalRepository.
+     *
+     * @return Referencia al repositorio de ValorComercialMetalRepository.
+     */
+    private static ValorComercialMetalRepository getRepositorio() {
         if (ObjectUtils.isEmpty(repositorio)) {
             repositorio = ApplicationContextProvider.get().getBean(ValorComercialMetalRepository.class);
         }
 
         return repositorio;
     }
+
 }

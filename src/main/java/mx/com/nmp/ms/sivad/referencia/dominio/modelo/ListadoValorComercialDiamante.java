@@ -8,7 +8,6 @@ import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteR
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-import javax.inject.Inject;
 import java.util.Set;
 
 /**

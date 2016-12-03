@@ -50,7 +50,7 @@ public class Diamante {
     private BigDecimal precio;
 
     /**
-     * Referencia al repositorio de ValorComercialDiamanteRepository.
+     * Referencia al repositorio de ModificadorValorDiamanteRepository.
      */
     private ModificadorValorDiamanteRepository modificadorValorDiamanteRepository;
 
@@ -67,7 +67,7 @@ public class Diamante {
      * @param tamanioInferior Tamaño inferior en quilates que abarca el valor comercial.
      * @param tamanioSuperior Tamaño superior en quilates que abarca el valor comercial.
      * @param precio Precio en dólares del diamante.
-     * @param modificadorValorDiamanteRepository Referencia al repositorio de ValorComercialDiamanteRepository.
+     * @param modificadorValorDiamanteRepository Referencia al repositorio de ModificadorValorDiamanteRepository.
      */
     Diamante(String corte, String color, String claridad, BigDecimal tamanioInferior,
              BigDecimal tamanioSuperior, BigDecimal precio,
@@ -100,11 +100,10 @@ public class Diamante {
                 FactorValorDiamante.class, msg);
         }
 
-        // TODO - Pregunta: ¿Regresar el resultado redondeado a 4 decimales?
         ValorComercialDiamanteVO valorComercialDiamanteVO = new ValorComercialDiamanteVO(
-            modificadorValorDiamante.getFactor().getMinimo().multiply(this.getPrecio()),
-            modificadorValorDiamante.getFactor().getMedio().multiply(this.getPrecio()),
-            modificadorValorDiamante.getFactor().getMaximo().multiply(this.getPrecio()));
+            modificadorValorDiamante.getFactor().getMinimo().multiply(this.getPrecio()).setScale(4, BigDecimal.ROUND_HALF_UP),
+            modificadorValorDiamante.getFactor().getMedio().multiply(this.getPrecio()).setScale(4, BigDecimal.ROUND_HALF_UP),
+            modificadorValorDiamante.getFactor().getMaximo().multiply(this.getPrecio()).setScale(4, BigDecimal.ROUND_HALF_UP));
 
         return valorComercialDiamanteVO;
     }

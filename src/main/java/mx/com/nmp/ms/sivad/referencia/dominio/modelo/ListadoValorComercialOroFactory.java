@@ -44,7 +44,7 @@ public final class ListadoValorComercialOroFactory {
         Assert.notNull(valoresComerciales, VALORES_COMERCIALES_NULOS);
         Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
 
-        return new ListadoValorComercialOro(valoresComerciales, repositorio);
+        return new ListadoValorComercialOro(valoresComerciales, getRepositorio());
     }
 
     /**
@@ -61,14 +61,15 @@ public final class ListadoValorComercialOroFactory {
 
         ValidadorFecha.validarFechaFutura(ultimaActualizacion, FECHA_ULTIMA_ACTUALIZACION_FUTURA);
 
-        return new ListadoValorComercialOro(ultimaActualizacion, valoresComerciales, repositorio);
+        return new ListadoValorComercialOro(ultimaActualizacion, valoresComerciales, getRepositorio());
     }
 
-
-
-    // GETTERS
-
-    public ValorComercialOroRepository getRepositorio() {
+    /**
+     * Permite obtener la referencia al repositorio de ValorComercialOroRepository.
+     *
+     * @return Referencia al repositorio de ValorComercialOroRepository.
+     */
+    private static ValorComercialOroRepository getRepositorio() {
         if (ObjectUtils.isEmpty(repositorio)) {
             repositorio = ApplicationContextProvider.get().getBean(ValorComercialOroRepository.class);
         }

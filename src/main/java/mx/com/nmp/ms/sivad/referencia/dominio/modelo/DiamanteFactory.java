@@ -27,9 +27,9 @@ public final class DiamanteFactory {
     private static final String TAMANIO_SUPERIOR_NULO = "El tamanio superior no debe ser nulo.";
 
     /**
-     * Referencia al repositorio de ValorComercialDiamanteRepository.
+     * Referencia al repositorio de ModificadorValorDiamanteRepository.
      */
-    private static ModificadorValorDiamanteRepository repositorio;
+    private static ModificadorValorDiamanteRepository repositorioModificador;
 
 
 
@@ -58,19 +58,20 @@ public final class DiamanteFactory {
         ValidadorNumero.validarPositivo(tamanioInferior);
         ValidadorNumero.validarPositivo(tamanioSuperior);
         ValidadorNumero.validarPositivo(precio);
-        return new Diamante(corte, color, claridad, tamanioInferior, tamanioSuperior, precio, repositorio);
+        return new Diamante(corte, color, claridad, tamanioInferior, tamanioSuperior, precio, getRepositorio());
     }
 
-
-
-    // GETTERS
-
-    public ModificadorValorDiamanteRepository getRepositorio() {
-        if (ObjectUtils.isEmpty(repositorio)) {
-            repositorio = ApplicationContextProvider.get().getBean(ModificadorValorDiamanteRepository.class);
+    /**
+     * Permite obtener la referencia al repositorio de ModificadorValorDiamanteRepository.
+     *
+     * @return Referencia al repositorio de ModificadorValorDiamanteRepository.
+     */
+    private static ModificadorValorDiamanteRepository getRepositorio() {
+        if (ObjectUtils.isEmpty(repositorioModificador)) {
+            repositorioModificador = ApplicationContextProvider.get().getBean(ModificadorValorDiamanteRepository.class);
         }
 
-        return repositorio;
+        return repositorioModificador;
     }
 
 }
