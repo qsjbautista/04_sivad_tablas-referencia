@@ -98,7 +98,6 @@ public final class ValorComercialOroUtil {
                 hvco.setColor(vco.getColor());
                 hvco.setCalidad(vco.getCalidad());
                 hvco.setPrecio(vco.getPrecio());
-                hvco.setListado(result);
                 valoresComerciales.add(hvco);
             }
         }
@@ -126,7 +125,6 @@ public final class ValorComercialOroUtil {
                 vco.setColor(oro.getColor());
                 vco.setCalidad(oro.getCalidad());
                 vco.setPrecio(oro.obtenerValorGramo());
-                vco.setListado(result);
                 valoresComerciales.add(vco);
             }
         }

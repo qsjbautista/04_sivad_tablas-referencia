@@ -97,7 +97,6 @@ public final class ValorComercialMetalUtil {
                 hvcm.setMetal(vcm.getMetal());
                 hvcm.setCalidad(vcm.getCalidad());
                 hvcm.setPrecio(vcm.getPrecio());
-                hvcm.setListado(result);
                 valoresComerciales.add(hvcm);
             }
         }
@@ -125,7 +124,6 @@ public final class ValorComercialMetalUtil {
                 vcm.setMetal(metal.getMetal());
                 vcm.setCalidad(metal.getCalidad());
                 vcm.setPrecio(metal.obtenerValorGramo());
-                vcm.setListado(result);
                 valoresComerciales.add(vcm);
             }
         }

@@ -7,8 +7,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -21,24 +19,9 @@ import javax.persistence.Table;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ValorComercialMetalJPA extends AbstractValorComercialMetalJPA {
 
-    /**
-     * Listado al que está asociado el valor comercial.
-     */
-    @ManyToOne
-    @JoinColumn(name = "listado")
-    private ListadoValorComercialMetalJPA listado;
 
 
-
-    // GETTERS Y SETTERS
-
-    public ListadoValorComercialMetalJPA getListado() {
-        return listado;
-    }
-
-    public void setListado(ListadoValorComercialMetalJPA listado) {
-        this.listado = listado;
-    }
+    // METODOS
 
     @Override
     public String toString() {

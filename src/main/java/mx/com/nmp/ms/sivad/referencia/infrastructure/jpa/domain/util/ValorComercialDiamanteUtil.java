@@ -103,7 +103,6 @@ public final class ValorComercialDiamanteUtil {
                 hvcd.setTamanioInferior(vcd.getTamanioInferior());
                 hvcd.setTamanioSuperior(vcd.getTamanioSuperior());
                 hvcd.setPrecio(vcd.getPrecio());
-                hvcd.setListado(result);
                 valoresComerciales.add(hvcd);
             }
         }
@@ -135,7 +134,6 @@ public final class ValorComercialDiamanteUtil {
                 vcd.setTamanioInferior(hvcd.getTamanioInferior());
                 vcd.setTamanioSuperior(hvcd.getTamanioSuperior());
                 vcd.setPrecio(hvcd.getPrecio());
-                vcd.setListado(result);
                 valoresComerciales.add(vcd);
             }
         }
@@ -167,7 +165,6 @@ public final class ValorComercialDiamanteUtil {
                 vcd.setTamanioInferior(diamante.getTamanioInferior());
                 vcd.setTamanioSuperior(diamante.getTamanioSuperior());
                 vcd.setPrecio(diamante.getPrecio());
-                vcd.setListado(result);
                 valoresComerciales.add(vcd);
             }
         }
