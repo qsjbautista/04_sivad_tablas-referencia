@@ -23,6 +23,6 @@ public interface ValorComercialOroJPARepository extends JpaRepository<ValorComer
      * @param calidad La calidad del oro.
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    ValorComercialOroJPA findByColorAndCalidad(String color, Integer calidad);
+    ValorComercialOroJPA findByColorAndCalidad(String color, String calidad);
 
 }

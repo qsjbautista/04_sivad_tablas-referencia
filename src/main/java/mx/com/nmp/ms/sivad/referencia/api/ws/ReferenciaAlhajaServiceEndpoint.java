@@ -55,7 +55,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         if (parameters != null) {
             try {
-                OroVO oroVO = new OroVO(parameters.getColor(), Integer.parseInt(parameters.getCalidad()));
+                OroVO oroVO = new OroVO(parameters.getColor(), parameters.getCalidad());
                 Oro oroResult = valorComercialOroRepository.consultarOroVigente(oroVO);
                 response.setPrecioPorGramo(oroResult.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {

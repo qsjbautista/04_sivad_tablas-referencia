@@ -42,10 +42,10 @@ public class OroIntTest {
 
     private static final String COLOR = "Amarillo";
     private static final String COLOR_NUEVO = "Morado";
-    private static final Integer CALIDAD = 14;
-    private static final Integer CALIDAD_NUEVA_1 = 11;
-    private static final Integer CALIDAD_NUEVA_2 = 13;
-    private static final Integer CALIDAD_NUEVA_3 = 15;
+    private static final String CALIDAD = "14";
+    private static final String CALIDAD_NUEVA_1 = "11";
+    private static final String CALIDAD_NUEVA_2 = "13";
+    private static final String CALIDAD_NUEVA_3 = "15";
     private static final BigDecimal PRECIO = new BigDecimal(150.250).setScale(3, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_NUEVO_1 = new BigDecimal(50.250).setScale(3, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_NUEVO_2 = new BigDecimal(60.250).setScale(3, BigDecimal.ROUND_HALF_UP);

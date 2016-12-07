@@ -19,7 +19,7 @@ public class OroVO {
     /**
      * El valor aplicable a la calidad del oro (kilataje), el cual se requiere para obtener el precio por gramo.
      */
-    private Integer calidad;
+    private String calidad;
 
 
 
@@ -31,7 +31,7 @@ public class OroVO {
      * @param color El color del oro.
      * @param calidad La calidad del oro.
      */
-    public OroVO(String color, Integer calidad) {
+    public OroVO(String color, String calidad) {
         this.color = color;
         this.calidad = calidad;
     }
@@ -44,7 +44,7 @@ public class OroVO {
         return color;
     }
 
-    public Integer getCalidad() {
+    public String getCalidad() {
         return calidad;
     }
 

@@ -49,11 +49,11 @@ public class ValorComercialOroRepositoryIntTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(ValorComercialOroRepositoryIntTest.class);
 
-    private static final Integer CALIDAD_ORO_EXISTE = 14;
-    private static final Integer CALIDAD_ORO_NO_EXISTE = 2;
-    private static final Integer CALIDAD_ORO_NUEVO_1 = 11;
-    private static final Integer CALIDAD_ORO_NUEVO_2 = 13;
-    private static final Integer CALIDAD_ORO_NUEVO_3 = 15;
+    private static final String CALIDAD_ORO_EXISTE = "14";
+    private static final String CALIDAD_ORO_NO_EXISTE = "2";
+    private static final String CALIDAD_ORO_NUEVO_1 = "11";
+    private static final String CALIDAD_ORO_NUEVO_2 = "13";
+    private static final String CALIDAD_ORO_NUEVO_3 = "15";
     private static final String COLOR_ORO_EXISTE = "Amarillo";
     private static final String COLOR_ORO_NO_EXISTE = "Verde";
     private static final String COLOR_ORO_NUEVO = "Morado";

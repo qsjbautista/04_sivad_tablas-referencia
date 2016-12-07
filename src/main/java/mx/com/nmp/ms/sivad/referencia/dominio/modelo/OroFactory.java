@@ -32,12 +32,11 @@ public final class OroFactory {
      * @param precio Precio en pesos del oro por gramo.
      * @return La entidad creada.
      */
-    public static Oro create(String color, Integer calidad, BigDecimal precio) {
+    public static Oro create(String color, String calidad, BigDecimal precio) {
         Assert.notNull(color, COLOR_NULO);
         Assert.notNull(calidad, CALIDAD_NULO);
         Assert.notNull(precio, PRECIO_NULO);
 
-        ValidadorNumero.validarPositivo(calidad);
         ValidadorNumero.validarPositivo(precio);
         return new Oro(color, calidad, precio);
     }

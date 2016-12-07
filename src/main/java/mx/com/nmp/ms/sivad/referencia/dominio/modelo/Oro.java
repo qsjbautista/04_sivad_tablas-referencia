@@ -21,7 +21,7 @@ public class Oro {
     /**
      * El valor aplicable a la calidad del oro (kilataje), el cual se requiere para obtener el precio por gramo.
      */
-    private Integer calidad;
+    private String calidad;
 
     /**
      * Precio en pesos del oro.
@@ -39,7 +39,7 @@ public class Oro {
      * @param calidad La calidad del oro.
      * @param precio Precio en pesos del oro por gramo.
      */
-    Oro(String color, Integer calidad, BigDecimal precio) {
+    Oro(String color, String calidad, BigDecimal precio) {
         this.color = color;
         this.calidad = calidad;
         this.precio = precio;
@@ -62,7 +62,7 @@ public class Oro {
         return color;
     }
 
-    public Integer getCalidad() {
+    public String getCalidad() {
         return calidad;
     }
 

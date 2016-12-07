@@ -33,8 +33,8 @@ public abstract class AbstractValorComercialOroJPA {
     /**
      * El valor aplicable a la calidad del oro (kilataje), el cual se requiere para obtener el precio por gramo.
      */
-    @Column(name = "kilataje", nullable = false)
-    protected Integer calidad;
+    @Column(name = "calidad", nullable = false)
+    protected String calidad;
 
     /**
      * Precio en pesos del oro.
@@ -62,11 +62,11 @@ public abstract class AbstractValorComercialOroJPA {
         this.color = color;
     }
 
-    public Integer getCalidad() {
+    public String getCalidad() {
         return calidad;
     }
 
-    public void setCalidad(Integer calidad) {
+    public void setCalidad(String calidad) {
         this.calidad = calidad;
     }
 
