@@ -1,5 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.api.ws;
 
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
@@ -13,6 +14,7 @@ import mx.com.nmp.ms.sivad.referencia.ws.diamantes.ReferenciaDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 
@@ -43,7 +45,7 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
         ObtenerValorComercialResponse response = new ObtenerValorComercialResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getColor()) && !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt())) {
             DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
 
             try {
@@ -56,9 +58,11 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
                 response.setValorComercial(valorComercial);
             } catch (ValorComercialNoEncontradoException e) {
-                LOGGER.info(e.getMessage());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-010", e.getMessage());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR010.getMessageException() + " para las entradas: corte: ({}), color: ({}), claridad: ({}), Quilates: ({})", parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR010.getCodeException(), WebServiceExceptionCodes.NMPR010.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), corte: ({}), color: ({}), claridad: ({}), Quilates: ({})", parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
         }
 
         LOGGER.info("<< {}", response.getValorComercial());
@@ -78,16 +82,18 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
         ObtenerModificadorResponse response = new ObtenerModificadorResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCertificadoDiamante())) {
             CertificadoVO certificadoVO = new CertificadoVO(parameters.getCertificadoDiamante());
 
             try {
                 Certificado factor = modificadorCertificadoRepository.consultarModificadorCertificadoVigente(certificadoVO);
                 response.setFactor(factor.getFactor());
             } catch (CertificadoNoEncontradoException e) {
-                LOGGER.info(e.getMessage());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-009", e.getMessage());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR009.getMessageException() + " para las entradas: certificado ({})", parameters.getCertificadoDiamante());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR009.getCodeException(), WebServiceExceptionCodes.NMPR009.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), certificado: ({}) ", parameters, parameters.getCertificadoDiamante());
         }
 
         LOGGER.info("<< {}", response.getFactor());

@@ -1,6 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.api.ws;
 
-
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
@@ -17,9 +17,9 @@ import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 
@@ -41,6 +41,9 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
     @Inject
     ModificadorRangoRepository modificadorRangoRepository;
 
+    @Autowired
+    private Environment env;
+
     /**
      * Obtiene el valor por gramo correspondiente a las caracteristicas del metal de una alhaja.
      *
@@ -53,15 +56,17 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerValorGramoOroResponse response = new ObtenerValorGramoOroResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getColor())) {
             try {
                 OroVO oroVO = new OroVO(parameters.getColor(), parameters.getCalidad());
                 Oro oroResult = valorComercialOroRepository.consultarOroVigente(oroVO);
                 response.setPrecioPorGramo(oroResult.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {
-                LOGGER.info(e.getMessage());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NMP-TR-008", e.getMessage());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: calidad({}), color: ({})", parameters.getCalidad(), parameters.getColor());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), calidad: ({}), color: ({}) ", parameters, parameters.getCalidad(), parameters.getColor());
         }
 
         LOGGER.info("<< {}", response.getPrecioPorGramo());
@@ -70,7 +75,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
     }
 
     /**
-     * Permite obtener el valor por gramo de metales distintos a oro.
+     * Permite simo el valor por gramo de metales distintos a oro.
      *
      * @param parameters Metal y Calidad
      * @return returns mx.com.nmp.ms.ws.referencia.datatypes.ObtenerValorGramoMetalResponse
@@ -81,15 +86,17 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerValorGramoMetalResponse response = new ObtenerValorGramoMetalResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad())) {
             try {
                 MetalVO metalVO = new MetalVO(parameters.getMetal(), parameters.getCalidad());
                 Metal metal = valorComercialMetalRepository.consultarMetalVigente(metalVO);
                 response.setPrecioPorGramo(metal.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {
-                LOGGER.info(e.getMessage());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NMP-TR-011", e.getMessage());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: metal({}), calidad: ({})", parameters.getMetal(), parameters.getCalidad());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(env.getProperty("tablasReferencia.exception.codigo.nmptr011"), e.getMessage());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}) ", parameters, parameters.getMetal(), parameters.getCalidad());
         }
 
         LOGGER.info("<< {}", response.getPrecioPorGramo());
@@ -108,15 +115,17 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerDesplazamientoResponse response = new ObtenerDesplazamientoResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
                 response.setDesplazamiento(factorAlhaja.getFactor());
             } catch (FactorAlhajaNoEncontradoException e) {
-                LOGGER.info("No existe el rango solicitado");
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-007", "No existe el rango solicitado");
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
         }
 
         LOGGER.info("<< {}", response.getDesplazamiento());
@@ -136,15 +145,17 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerFactorResponse response = new ObtenerFactorResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
                 response.setFactor(factorAlhaja.getFactor());
             } catch (FactorAlhajaNoEncontradoException e) {
-                LOGGER.info("No existe el rango solicitado");
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-007", "No existe el rango solicitado");
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
         }
 
         LOGGER.info("<< {}", response.getFactor());
@@ -164,7 +175,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerLimitesIncrementoResponse response = new ObtenerLimitesIncrementoResponse();
 
-        if (parameters != null) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
@@ -176,9 +187,11 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 response.setLimitesIncremento(rangoLimite);
 
             } catch (FactorAlhajaNoEncontradoException e) {
-                LOGGER.info("No existe el rango solicitado");
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon("NPM-TR-007", "No existe el rango solicitado");
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
             }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
         }
 
         LOGGER.info("<< {}", response.getLimitesIncremento());
