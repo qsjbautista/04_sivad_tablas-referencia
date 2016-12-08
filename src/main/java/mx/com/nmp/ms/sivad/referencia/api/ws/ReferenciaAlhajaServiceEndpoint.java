@@ -93,7 +93,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 response.setPrecioPorGramo(metal.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: metal({}), calidad: ({})", parameters.getMetal(), parameters.getCalidad());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(env.getProperty("tablasReferencia.exception.codigo.nmptr011"), e.getMessage());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}) ", parameters, parameters.getMetal(), parameters.getCalidad());
