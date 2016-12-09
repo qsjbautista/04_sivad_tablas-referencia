@@ -169,7 +169,6 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
 
         Assert.notNull(builder.getCertificados(), "Certificados no debe ser nulo");
         Assert.notNull(builder.getUltimaActualizacion(), "Fecha carga no debe ser nula");
-        Assert.notNull(builder.getFechaListado(), "Fecha listado no debe ser nula");
     }
 
 }
