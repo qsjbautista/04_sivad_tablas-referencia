@@ -198,7 +198,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
 
         listadoNuevo.setModificadoresCertificado(modificadoresCertificados);
         listadoNuevo.setUltimaActualizacion(DateTime.now());
-        listadoNuevo.setFechaListado(LocalDate.now());
+        listadoNuevo.setFechaListado(listado.getFechaListado());
         return convertirAListadoModificadorCertificado(listadoJpaRepository.save(listadoNuevo));
     }
 

@@ -42,6 +42,25 @@ public interface ListadoModificadorCertificadoFactory {
     ListadoModificadorCertificado crearPersistible(DateTime ultimaActualizacion, LocalDate fechaListado, Set<Certificado> certificados);
 
     /**
+     * Permite crear una entidad de tipo ListadoModificadorCertificado con base en los argumentos recibidos.
+     *
+     * @param fechaListado Fecha en del listado.
+     * @param certificados Lista de los certificados del diamante.
+     * @return La entidad creada.
+     */
+    ListadoModificadorCertificado crear(LocalDate fechaListado, Set<Certificado> certificados);
+
+    /**
+     * Permite crear una entidad de tipo ListadoModificadorCertificado con base en los argumentos recibidos y con la
+     * inyección del repositorio de entidades para que se pueda persistir..
+     *
+     * @param fechaListado Fecha en del listado.
+     * @param certificados Lista de los certificados del diamante.
+     * @return La entidad creada.
+     */
+    ListadoModificadorCertificado crearPersistible(LocalDate fechaListado, Set<Certificado> certificados);
+
+    /**
      * Crea una entidad a partir de un objeto constructor. a esta entidad le será inyectado
      * el repositorio de entidades para que se pueda persistir.
      *

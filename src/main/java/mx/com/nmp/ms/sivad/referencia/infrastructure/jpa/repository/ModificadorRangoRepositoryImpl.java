@@ -223,7 +223,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
 
         listadoNuevo.setFactoresAlhaja(factoresAlhaja);
         listadoNuevo.setUltimaActualizacion(DateTime.now());
-        listadoNuevo.setFechaListado(LocalDate.now());
+        listadoNuevo.setFechaListado(listado.getFechaListado());
         return convertirAListadoRango(listadoJpaRepository.save(listadoNuevo));
     }
 

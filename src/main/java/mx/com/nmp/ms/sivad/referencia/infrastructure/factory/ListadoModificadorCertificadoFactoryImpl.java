@@ -69,6 +69,26 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
      * {@inheritDoc}
      */
     @Override
+    public ListadoModificadorCertificado crear(final LocalDate fechaListado, final Set<Certificado> certificados) {
+        final ListadoModificadorCertificado.Builder builder = getBuilder(null, fechaListado, certificados);
+
+        return crearDesde(builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ListadoModificadorCertificado crearPersistible(final LocalDate fechaListado, final Set<Certificado> certificados) {
+        final ListadoModificadorCertificado.Builder builder = getBuilder(null, fechaListado, certificados);
+
+        return crearPersistibleDesde(builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ListadoModificadorCertificado crearPersistibleDesde(final ListadoModificadorCertificado.Builder builder) {
         return crear(builder, getRepositorio());
     }
