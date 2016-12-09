@@ -35,21 +35,23 @@ class valorComercialOro {
      */
     @Usage("Permite actualizar el Valor del Oro mediante un archivo")
     @Command
-    def actualizar(InvocationContext context, @Usage("URL donde se encuentra el archivo:") @Required @Argument String url) {
-
-        if (ObjectUtils.isEmpty(url)) {
-            out.println("Se requiere la url ")
+    def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument String contenido) {
+        ListadoValorComercialOro  listadoValorComercialOro= null
+        if (ObjectUtils.isEmpty(contenido)) {
+            out.println("Se requiere el contenido a procesar ")
         }else{
-            File file = new File(url)
-            if(!file.exists()){
-                out.println("El archivo no existe")
-            }else{
-                ListadoValorComercialOro listadoValorComercialOro = crearListado(file, context)
-                getListadoValorComercialOro(context).actualizar(listadoValorComercialOro)
+                try {
+                    listadoValorComercialOro = crearListado(contenido)
+                }catch(Exception e){
+                    e.stackTrace
+                    out.println("No se creo el listado")
+                }
+
+                getConsultaListado(context).actualizarListado(listadoValorComercialOro)
                 out.println("Se actualizo correctamente ")
             }
-        }
     }
+
 
     /**
      * Permite obtener el valor comercial del oro
@@ -71,11 +73,10 @@ class valorComercialOro {
                 def elementos = getConsultaListado(context).consultarListadoPorFechaVigencia(fechaFormat)
                 mostrarTablaResultados(elementos)
             } catch (Exception e) {
-                out.println("La fecha: [${fecha}] no regresa resultados ")
+                out.println("No hay resultados para la fecha: [${fecha}]")
                 e.printStackTrace()
             }
     }
-
 
     /**
      * Utilizado para representar los elementos del catálogo en un formato de tabla.
@@ -94,9 +95,9 @@ class valorComercialOro {
             elementos.each { elemento ->
                 elemento.valoresComerciales.each { valorcomercial ->
                     row {
-                        label(valorcomercial.color, foreground: green)
-                        label(valorcomercial.calidad, foreground: red)
-                        label(valorcomercial.precio, foreground: blue)
+                        label(valorcomercial.color, foreground: white)
+                        label(valorcomercial.calidad, foreground: white)
+                        label(valorcomercial.precio, foreground: white)
                     }
                 }
             }
@@ -110,25 +111,66 @@ class valorComercialOro {
      * @param context El contexto de la invocación
      * @return ListadoValorcomercialOroFactory
      */
-    private static def crearListado(File file, InvocationContext context){
+    private def crearListado(String contenido){
 
-        def lines = file.readLines()
-        def oroSet = new HashSet<>()
         String color
-        int calidad
+        String calidad
         BigDecimal precio
         Oro oroNuevo
+        def dataList = []
+        def infoTxt = [:]
+        def oroSet = new HashSet<>()
+        def c = "Color"
+        def ca = "Calidad"
+        def p = "Precio"
 
-        for (line in lines) {
-            def item = line.split(",")
-            color = item[1]//color
-            calidad = Integer.parseInt(item[2]) //calidad
-            precio = new BigDecimal(item[3]) //precio
-            oroNuevo = getOroFactory(context).create(color, calidad, precio)
+        contenido.eachLine { line ->
+            if (line.trim()) {
+                def (key, value) = line.split(':').collect() { it.trim() }
+                infoTxt."$key" = value
+            } else {
+                if (infoTxt) {
+                    dataList << infoTxt
+                    infoTxt = [:]
+                }
+            }
+
+        }
+
+        if(infoTxt){
+            dataList << infoTxt
+        }
+
+        dataList.eachWithIndex{ it , index ->
+            //out.println("Carga $index")
+            it.each {k, v ->
+                out.println("$k" : "$v")
+                if(c == k)
+                    color = v.toString()
+                if(ca == k)
+                    calidad = v.toString()
+                if(p == k)
+                    precio = new BigDecimal(v.toString())
+            }
+            try{
+                oroNuevo = OroFactory.create(color, calidad, precio)
+            }catch(Exception e){
+                out.println("No se pudo crear el oro" )
+                e.stackTrace
+            }
             oroSet.add(oroNuevo)
         }
 
-        return getListadoValorComercialOroFactory(context).create(oroSet)
+        ListadoValorComercialOro listadoValorComercialOro = null
+        try {
+            //out.println("La Lista tiene un tamanio de: " + oroSet.size()+ " elementos")
+            listadoValorComercialOro = ListadoValorComercialOroFactory.create(oroSet)
+            //out.println("la lista tiene " + listadoValorComercialOro.getValoresComerciales().size())
+        }catch(Exception e){
+            e.stackTrace
+        }
+
+        return listadoValorComercialOro
     }
 
     /**
@@ -141,34 +183,5 @@ class valorComercialOro {
         context.attributes['spring.beanfactory'].getBean(ValorComercialOroRepository)
     }
 
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoValorComercialOro.
-     */
-   private static ListadoValorComercialOro getListadoValorComercialOro(InvocationContext context) {
-       context.attributes['spring.beanfactory'].getBean(ListadoValorComercialOro)
-   }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoValorComercialOroFactory.
-     */
-    private static ListadoValorComercialOroFactory getListadoValorComercialOroFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ListadoValorComercialOroFactory)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase OroFactory
-     */
-    private static OroFactory getOroFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(OroFactory)
-    }
 
 }
