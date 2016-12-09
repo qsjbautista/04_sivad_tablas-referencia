@@ -26,3 +26,7 @@ microservicio:
 
 cxf:
   path: /soap-api
+
+tipocambio:
+  convertidor:
+    wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl

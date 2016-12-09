@@ -48,6 +48,10 @@ server:
     port: 10344
     address: localhost
 
+tipocambio:
+  convertidor:
+    wsdlLocation: http://localhost:10344/soap-api/ConvertidorTipoCambioService?wsdl
+
 # ===================================================================
 # Propiedades especificas de la aplicacion
 # ===================================================================
