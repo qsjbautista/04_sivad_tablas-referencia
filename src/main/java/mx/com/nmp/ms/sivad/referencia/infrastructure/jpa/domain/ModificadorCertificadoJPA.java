@@ -14,15 +14,4 @@ import javax.persistence.Table;
 @Table(name = "cfg_diamante_valor_certificado")
 public class ModificadorCertificadoJPA extends AbstractModificadorCertificadoJPA {
 
-    @ManyToOne
-    @JoinColumn(name = "listado")
-    private ListadoModificadorCertificadoJPA listado;
-
-    public ListadoModificadorCertificadoJPA getListado() {
-        return listado;
-    }
-
-    public void setListado(ListadoModificadorCertificadoJPA listado) {
-        this.listado = listado;
-    }
 }

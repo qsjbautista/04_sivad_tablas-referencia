@@ -73,10 +73,9 @@ public class ListadoRango {
     /**
      * Permite actualizar el listado factores de la alhaja.
      *
-     * @param listado Lista de los factores alhaja, con el cual se desea reemplazar la lista vigente.
      */
-    public void actualizar(ListadoRango listado) {
-        modificadorRangoRepository.actualizarListado(listado);
+    public ListadoRango actualizar() {
+        return modificadorRangoRepository.actualizarListado(this);
     }
 
 

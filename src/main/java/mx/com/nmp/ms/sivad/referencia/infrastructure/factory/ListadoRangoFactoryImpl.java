@@ -12,6 +12,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoReposit
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Constructor;
@@ -32,6 +33,9 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
      * Referencias al constructor de la entidad.
      */
     private final Constructor<ListadoRango> constructor;
+    private static final String FECHA_ULTIMA_ACTUALIZACION = "La fecha de ultima actualización no debe ser nula.";
+    private static final String FECHA_LISTADO_NULA = "La fecha de listado no debe ser nula.";
+    private static final String LISTADO_NULO = "La lista de elementos no debe ser nula.";
 
     /**
      * Referencia al repositorio de entidades.
@@ -60,6 +64,7 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
      */
     @Override
     public ListadoRango crear(Set<FactorAlhaja> factorAlhajas) {
+        Assert.notNull(factorAlhajas, LISTADO_NULO);
         final ListadoRango.Builder builder = getBuilder(null, null, factorAlhajas);
 
         return crearDesde(builder);
@@ -70,6 +75,9 @@ public class ListadoRangoFactoryImpl implements ListadoRangoFactory {
      */
     @Override
     public ListadoRango crearPersistible(final DateTime ultimaActualizacion, final LocalDate fechaListado, Set<FactorAlhaja> factorAlhajas) {
+        Assert.notNull(ultimaActualizacion, FECHA_ULTIMA_ACTUALIZACION);
+        Assert.notNull(fechaListado, FECHA_LISTADO_NULA);
+        Assert.notNull(factorAlhajas, LISTADO_NULO);
         final ListadoRango.Builder builder = getBuilder(ultimaActualizacion, fechaListado, factorAlhajas);
 
         return crearPersistibleDesde(builder);

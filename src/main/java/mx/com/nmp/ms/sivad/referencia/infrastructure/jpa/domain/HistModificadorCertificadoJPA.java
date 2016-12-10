@@ -18,24 +18,5 @@ import javax.persistence.Table;
 @Table(name = "hist_cfg_diamante_valor_certificado")
 public class HistModificadorCertificadoJPA extends AbstractModificadorCertificadoJPA {
 
-    /**
-     * Listado al que está asociado el valor comercial.
-     */
-    @ManyToOne
-    @JoinColumn(name = "listado")
-    private HistListadoModificadorCertificadoJPA listado;
-
-
-
-    // GETTERS Y SETTERS
-
-    public HistListadoModificadorCertificadoJPA getListado() {
-        return listado;
-    }
-
-    public void setListado(HistListadoModificadorCertificadoJPA listado) {
-        this.listado = listado;
-    }
-
 }
 
