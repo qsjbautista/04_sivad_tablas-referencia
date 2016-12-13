@@ -15,11 +15,9 @@ spring:
         name: sivad-tablas-referencia
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:tcp://localhost/~/tablas_referencia;DB_CLOSE_DELAY\=-1|sivad
-        #url: jdbc:h2:mem:tablas_referencia;DB_CLOSE_DELAY=-1
-       # url: jdbc:h2:file:./target/h2db/db/sivad_tablas_referencia;DB_CLOSE_DELAY=-1
-        name:
-        username: sivad
+        url: jdbc:h2:mem:tablas_referencia;DB_CLOSE_DELAY=-1
+    name:
+        username:
         password:
     jpa:
         database-platform: mx.com.nmp.ms.arquetipo.db.h2.FixedH2Dialect

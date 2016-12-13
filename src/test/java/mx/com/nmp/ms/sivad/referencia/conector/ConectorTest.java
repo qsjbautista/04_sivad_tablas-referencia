@@ -1,47 +1,46 @@
 package mx.com.nmp.ms.sivad.referencia.conector;
 
-import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioEndpoint;
+import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioService;
+import mx.com.nmp.ms.sivad.cambiario.ws.convertidor.datatypes.ConvertirRequest;
+import mx.com.nmp.ms.sivad.cambiario.ws.convertidor.datatypes.ConvertirResponse;
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
-import org.apache.cxf.bus.spring.SpringBus;
-import org.apache.cxf.jaxws.EndpointImpl;
+import mx.com.nmp.ms.sivad.referencia.conector.referencia.ReferenciaConvertidorConector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.xml.ws.Endpoint;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TablasReferenciaApplication.class, properties = "server.port=10344",
-    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = TablasReferenciaApplication.class)
 public class ConectorTest {
-    private static Endpoint ep;
 
     @Inject
     Convertidor convertidor;
 
-    @Inject
-    private SpringBus bus;
+    @MockBean
+    ReferenciaConvertidorConector referenciaConvertidorConector;
 
-    @PostConstruct
-    public void setUp() {
-        if (ObjectUtils.isEmpty(ep)) {
-            ep = new EndpointImpl(bus, new ConvertidorTipoCambioEndpoint());
-            ((EndpointImpl) ep).setPublishedEndpointUrl("http://localhost:10344/soap-api/ConvertidorTipoCambioService?wsdl");
-            ep.publish("/ConvertidorTipoCambioService");
-        }
-    }
-
+    @MockBean
+    ConvertidorTipoCambioService convertidorTipoCambioService;
 
     @Test
-    public void convertirTest(){
-      BigDecimal divisaConvertida = convertidor.convertir("MXN", "USD", new BigDecimal(18));
+    public void convertirTest() {
+        ConvertirResponse response = new ConvertirResponse();
+        response.setConversion(BigDecimal.valueOf(18l));
+
+        given(this.convertidorTipoCambioService.convertir(any(ConvertirRequest.class))).willReturn(response);
+        // FIXME se debería probar que ReferenciaConvertidorConector funciona bien con un WS mock como el anterior
+        given(this.referenciaConvertidorConector.getWsReferenciaTipoCambio()).willReturn(convertidorTipoCambioService);
+
+        BigDecimal divisaConvertida = convertidor.convertir("MXN", "USD", new BigDecimal(18));
         assertEquals(BigDecimal.valueOf(18), divisaConvertida);
     }
 
