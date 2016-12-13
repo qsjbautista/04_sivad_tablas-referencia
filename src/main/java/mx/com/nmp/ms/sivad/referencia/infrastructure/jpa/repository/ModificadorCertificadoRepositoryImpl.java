@@ -169,7 +169,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
                     HistModificadorCertificadoJPA histModificadorCertificadoJPA = new HistModificadorCertificadoJPA();
                     histModificadorCertificadoJPA.setCertificado(modificadorCertificadoJPA.getCertificado());
                     histModificadorCertificadoJPA.setFactor(modificadorCertificadoJPA.getFactor());
-                    histModificadorCertificadoJPA.setListado(histListadoModificadorCertificadoJPA);
+                    //histModificadorCertificadoJPA.setListado(histListadoModificadorCertificadoJPA);
 
                     histModificadoresCertificadoJPA.add(histModificadorCertificadoJPA);
                 }
@@ -190,7 +190,7 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
                 ModificadorCertificadoJPA modificadorCertificadoJPA = new ModificadorCertificadoJPA();
                 modificadorCertificadoJPA.setCertificado(certificado.getCertificado());
                 modificadorCertificadoJPA.setFactor(certificado.getFactor());
-                modificadorCertificadoJPA.setListado(listadoNuevo);
+                //modificadorCertificadoJPA.setListado(listadoNuevo);
 
                 modificadoresCertificados.add(modificadorCertificadoJPA);
             }
