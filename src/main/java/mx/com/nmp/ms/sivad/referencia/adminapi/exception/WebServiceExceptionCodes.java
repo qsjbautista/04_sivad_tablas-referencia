@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.adminapi.exception;
  * @author jbautista
  */
 public enum WebServiceExceptionCodes {
+    NMPR004("NMP-TR-004", "Error en datos de entrada"),
     NMPR007("NMP-TR-007","No existe el rango solicitado"),
     NMPR008("NMP-TR-008", "No existe un valor gramo para las características de oro solicitadas"),
     NMPR009("NMP-TR-009","No existe el certificado solicitado"),

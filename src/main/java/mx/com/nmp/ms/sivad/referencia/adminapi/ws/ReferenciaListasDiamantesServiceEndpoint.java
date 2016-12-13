@@ -1,25 +1,23 @@
 package mx.com.nmp.ms.sivad.referencia.adminapi.ws;
 
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ModificadorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.*;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.ValorComercialDiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
-import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ValorComercial;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteBatchProcessor;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.ReferenciaListasDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.*;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author osanchez
@@ -43,6 +41,13 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
      */
     @Inject
     FactorValorDiamanteFactory factorValorDiamanteFactory;
+
+    /**
+     * Referencia a la fabrica de Value Object
+     */
+    @Inject
+    ValorComercialDiamanteBatchProcessor valorComercialDiamanteBatchProcessor;
+
     /**
      * @param parameters
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
@@ -50,18 +55,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     @Override
     public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
         LOGGER.info(">> actualizarListaValorComercial({})", parameters);
-        Set<Diamante> diamantes = new HashSet<>();
-        for (PrecioCorte precioCorte : parameters.getListado().getPreciosCorte()) {
-            for(PrecioCorteDetalle  precioCorteDetalle: precioCorte.getPrecioCorte()) {
-                Diamante diamante = DiamanteFactory.create(precioCorte.getCorte(), precioCorteDetalle.getColor(),
-                    precioCorteDetalle.getClaridad(), precioCorteDetalle.getTamanioInferior(), precioCorteDetalle.getTamanioSuperior(),
-                    precioCorteDetalle.getPrecio());
-                diamantes.add(diamante);
-            }
-        }
-        ListadoValorComercialDiamante listadoValorComercialDiamante = ListadoValorComercialDiamanteFactory.create(LocalDate.now(),
-            diamantes);
-        listadoValorComercialDiamante.actualizar();
+        valorComercialDiamanteBatchProcessor.procesa(parameters);
         return new Void();
     }
 
@@ -73,11 +67,23 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     public Void actualizarListaFactor(ActualizarListaFactorRequest parameters) {
         LOGGER.info(">> actualizarListaFactor({})", parameters);
 
-        FactorValorDiamante vo = factorValorDiamanteFactory
-            .crearCon(parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(),
-                parameters.getFactorDiamante().getFactorMaximo());
-        ModificadorValorDiamante modificadorValorDiamante = modificadorValorDiamanteFactory.crearPersistibleCon(DateTime.now(), LocalDate.now(), vo);
-        modificadorValorDiamante.actualizar();
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getFactorDiamante())
+            && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMinimo()) && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMedio())
+            && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMaximo())) {
+            try {
+                FactorValorDiamante vo = factorValorDiamanteFactory
+                    .crearCon(parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(),
+                        parameters.getFactorDiamante().getFactorMaximo());
+                ModificadorValorDiamante modificadorValorDiamante = modificadorValorDiamanteFactory.crearPersistibleCon(DateTime.now(), LocalDate.now(), vo);
+                modificadorValorDiamante.actualizar();
+            } catch (Exception e) {
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "."+ e.getMessage());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
+            }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), minimo: ({}), medio: ({}), maximo: ({}) ", parameters,
+                parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio() , parameters.getFactorDiamante().getFactorMaximo());
+        }
         return new Void();
     }
 }
