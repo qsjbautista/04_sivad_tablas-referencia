@@ -112,8 +112,10 @@ public class ModificadorValorDiamanteUTest {
      */
     @Test
     public void crearWithEqualsTest(){
-        ModificadorValorDiamante test = fabrica.crearCon(DateTime.now(), LocalDate.now(), vo);
-        ModificadorValorDiamante test2 = fabrica.crearCon(DateTime.now(), LocalDate.now(), vo);
+        DateTime nowDateTime = DateTime.now();
+        LocalDate nowLocalDate = LocalDate.now();
+        ModificadorValorDiamante test = fabrica.crearCon(nowDateTime, nowLocalDate, vo);
+        ModificadorValorDiamante test2 = fabrica.crearCon(nowDateTime, nowLocalDate, vo);
 
         assertEquals(test, test);
         assertFalse(test.equals(null));
