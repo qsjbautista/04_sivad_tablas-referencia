@@ -163,14 +163,8 @@ class modificadorTipoCertificado {
 
         }
         ListadoModificadorCertificado listadoModificadorCertificado = null
-        try {
-            out.prinln(fecha, new LocalDate(), certificadoSet)
-            LocalDate fechaLocal = new LocalDate(new Date())
-            listadoModificadorCertificado = getListadoModificadorCertificadoFactory(context).crear(fechaLocal, certificadoSet)
-        } catch (Exception e) {
-            e.stackTrace
-            out.prinln("No se creo la lista")
-        }
+        LocalDate fechaLocal = new LocalDate(new Date())
+        listadoModificadorCertificado = getListadoModificadorCertificadoFactory(context).crear(fechaLocal, certificadoSet)
 
         return listadoModificadorCertificado
     }
