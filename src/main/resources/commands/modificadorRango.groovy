@@ -49,7 +49,7 @@ class modificadorTipoRango {
                 }
 
                 try{
-                    getListadoRango(context).actualizar(listadoRango)
+                    getModificadorRangoRepository(context).actualizarListado(listadoRango)
                     out.println("Se actualizo correctamente ")
                 }catch(Exception e){
                     e.stackTrace
@@ -173,6 +173,8 @@ class modificadorTipoRango {
                 if(nCalidad == k)
                     calidad = v.toString()
                 if(nRango == k)
+                    rango = new BigDecimal(v.toString())
+                if(nFactor == k)
                     factor = new BigDecimal(v.toString())
                 if(nDesplazamiento == k)
                     desplazamiento = new BigDecimal(v.toString())
@@ -195,10 +197,10 @@ class modificadorTipoRango {
         ListadoRango listadoRango = null
         ListadoRango listadoRango2 = null
             try {
-                listadoRango  = getListadoRangoFactory(context).crear(factorAlhajaSet)
-                listadoRango2 = ListadoRangoFactory.crear(factorAlhajaSet)
+                listadoRango  = getListadoRangoFactory(context).crear(DateTime.now(), LocalDate.now(),factorAlhajaSet)
+                //listadoRango2 = ListadoRangoFactory.crear(factorAlhajaSet)
                 out.println("el tamaño del listado es : "+ listadoRango.getFactorAlhajas().size())
-                out.println("el tamaño del listado1 es : "+ listadoRango2.getFactorAlhajas().size())
+                //out.println("el tamaño del listado1 es : "+ listadoRango2.getFactorAlhajas().size())
             }catch(Exception e){
                 e.printStackTrace()
                 out.println("No se pudo crear el listadoFactory")

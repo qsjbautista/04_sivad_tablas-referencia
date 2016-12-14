@@ -174,7 +174,6 @@ public class ModificadorCertificadoRepositoryImpl implements ModificadorCertific
                     histModificadoresCertificadoJPA.add(histModificadorCertificadoJPA);
                 }
             }
-
             histListadoModificadorCertificadoJPA.setModificadoresCertificado(histModificadoresCertificadoJPA);
             histListadoModificadorCertificadoJPA.setUltimaActualizacion(listadoModificadorCertificadoJPA.getUltimaActualizacion());
             histListadoModificadorCertificadoJPA.setFechaListado(listadoModificadorCertificadoJPA.getFechaListado());
