@@ -5,6 +5,8 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.model;
 
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
+import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
+import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
@@ -18,13 +20,17 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.HistListadoV
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.ListadoValorComercialDiamanteJPARepository;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -37,6 +43,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.matches;
+import static org.mockito.Mockito.when;
 
 /**
  * Clase de prueba utilizada para validar el comportamiento de la entidad de dominio Diamante.
@@ -63,9 +72,11 @@ public class DiamanteIntTest {
     private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
     private static final BigDecimal PRECIO = new BigDecimal(73.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_PESOS = new BigDecimal(1460.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_NUEVO_1 = new BigDecimal(40.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_NUEVO_2 = new BigDecimal(36.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_NUEVO_3 = new BigDecimal(30.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_NUEVO_3_PESOS = new BigDecimal(600.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal QUILATES_CT = new BigDecimal(0.92D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal QUILATES_CT_NUEVO = new BigDecimal(1.35D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_INFERIOR = new BigDecimal(0.90D).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -73,12 +84,12 @@ public class DiamanteIntTest {
     private static final BigDecimal TAMANIO_SUPERIOR = new BigDecimal(0.99D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_SUPERIOR_NUEVO = new BigDecimal(1.49D).setScale(2, BigDecimal.ROUND_HALF_UP);
 
-    private static final BigDecimal VALOR_COMERCIAL_MINIMO =
-        new BigDecimal(21.9000D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal VALOR_COMERCIAL_MEDIO =
-        new BigDecimal(29.2000D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal VALOR_COMERCIAL_MAXIMO =
-        new BigDecimal(36.5000D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MINIMO_PESOS =
+        new BigDecimal(438.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MEDIO_PESOS =
+        new BigDecimal(584.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MAXIMO_PESOS =
+        new BigDecimal(730.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
@@ -98,9 +109,31 @@ public class DiamanteIntTest {
     @Inject
     private HistListadoValorComercialDiamanteJPARepository histJPARepository;
 
+    /**
+     * Referencia al conector con microservicio de tipo cambiario.
+     */
+    @Mock
+    private Convertidor convertidor;
+
 
 
     // METODOS
+
+    /**
+     * Constructor.
+     */
+    public DiamanteIntTest() {
+        super();
+    }
+
+    /**
+     * Configuración inicial.
+     */
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
+    }
 
     /**
      * Utilizado para crear una entidad Diamante a través del factory con las siguientes características:
@@ -487,6 +520,9 @@ public class DiamanteIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest01() {
+        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);
+
         DiamanteVO diamanteVO = new DiamanteVO(CORTE, COLOR, CLARIDAD, QUILATES_CT);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
@@ -496,16 +532,16 @@ public class DiamanteIntTest {
         assertEquals(CLARIDAD, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR, result.getTamanioSuperior());
-        assertEquals(PRECIO, result.getPrecio());
+        assertEquals(PRECIO_PESOS, result.getPrecio());
 
         ValorComercialDiamanteVO valorComercialDiamanteVO = result.obtenerValorComercial();
         assertNotNull(valorComercialDiamanteVO);
         assertNotNull(valorComercialDiamanteVO.getValorMinimo());
         assertNotNull(valorComercialDiamanteVO.getValorMedio());
         assertNotNull(valorComercialDiamanteVO.getValorMaximo());
-        assertEquals(VALOR_COMERCIAL_MINIMO, valorComercialDiamanteVO.getValorMinimo());
-        assertEquals(VALOR_COMERCIAL_MEDIO, valorComercialDiamanteVO.getValorMedio());
-        assertEquals(VALOR_COMERCIAL_MAXIMO, valorComercialDiamanteVO.getValorMaximo());
+        assertEquals(VALOR_COMERCIAL_MINIMO_PESOS, valorComercialDiamanteVO.getValorMinimo());
+        assertEquals(VALOR_COMERCIAL_MEDIO_PESOS, valorComercialDiamanteVO.getValorMedio());
+        assertEquals(VALOR_COMERCIAL_MAXIMO_PESOS, valorComercialDiamanteVO.getValorMaximo());
     }
 
     /**
@@ -540,6 +576,9 @@ public class DiamanteIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 1);
 
+        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);
+
         DiamanteVO diamanteVigenteVO = new DiamanteVO(CORTE, COLOR, CLARIDAD, QUILATES_CT);
         Diamante resultDiamanteVigente = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVigenteVO);
 
@@ -549,7 +588,7 @@ public class DiamanteIntTest {
         assertEquals(CLARIDAD, resultDiamanteVigente.getClaridad());
         assertEquals(TAMANIO_INFERIOR, resultDiamanteVigente.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR, resultDiamanteVigente.getTamanioSuperior());
-        assertEquals(PRECIO, resultDiamanteVigente.getPrecio());
+        assertEquals(PRECIO_PESOS, resultDiamanteVigente.getPrecio());
 
         List<ListadoValorComercialDiamanteJPA> listadoInicialVuelta = jpaRepository.findAll();
         assertNotNull(listadoInicialVuelta);
@@ -600,6 +639,9 @@ public class DiamanteIntTest {
         assertFalse(resultListadoVigente.getValoresComerciales().isEmpty());
         assertTrue(resultListadoVigente.getValoresComerciales().size() == 3);
 
+        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_NUEVO_3_PESOS);
+
         DiamanteVO diamanteVigenteVO = new DiamanteVO(CORTE_NUEVO, COLOR_NUEVO, CLARIDAD_NUEVO_3, QUILATES_CT_NUEVO);
         Diamante resultDiamanteVigente = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVigenteVO);
 
@@ -609,7 +651,7 @@ public class DiamanteIntTest {
         assertEquals(CLARIDAD_NUEVO_3, resultDiamanteVigente.getClaridad());
         assertEquals(TAMANIO_INFERIOR_NUEVO, resultDiamanteVigente.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_NUEVO, resultDiamanteVigente.getTamanioSuperior());
-        assertEquals(PRECIO_NUEVO_3, resultDiamanteVigente.getPrecio());
+        assertEquals(PRECIO_NUEVO_3_PESOS, resultDiamanteVigente.getPrecio());
 
         List<ListadoValorComercialDiamanteJPA> listadoInicialVuelta = jpaRepository.findAll();
         assertNotNull(listadoInicialVuelta);

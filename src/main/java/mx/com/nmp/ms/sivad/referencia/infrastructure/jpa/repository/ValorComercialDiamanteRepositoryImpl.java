@@ -5,6 +5,8 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
+import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
+import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
@@ -63,6 +65,12 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Inject
     private ValorComercialDiamanteJPARepository valorComercialDiamanteJPARepository;
 
+    /**
+     * Referencia al conector con microservicio de tipo cambiario.
+     */
+    @Inject
+    private Convertidor convertidor;
+
 
 
     // METODOS
@@ -85,8 +93,8 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
             throw new ValorComercialNoEncontradoException(ValorComercialDiamanteJPA.class, msg);
         }
 
-        // TODO - Convertir a pesos.
-        BigDecimal precioDiamanteEnPesos = valorComercialDiamanteJPA.getPrecio();
+        BigDecimal precioDiamanteEnPesos = convertidor.convertir(
+            TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo(), valorComercialDiamanteJPA.getPrecio());
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),

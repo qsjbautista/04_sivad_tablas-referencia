@@ -8,6 +8,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.CertificadoVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.DiamanteVO;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.ValorComercialDiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.ReferenciaDiamanteService;
@@ -50,11 +51,12 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
             try {
                 Diamante diamante = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
+                ValorComercialDiamanteVO valorComercialDiamanteVO = diamante.obtenerValorComercial();
                 ValorComercial valorComercial = new ValorComercial();
 
-                valorComercial.setValorMaximo(diamante.getTamanioSuperior());
-                valorComercial.setValorMedio(diamante.getPrecio());
-                valorComercial.setValorMinimo(diamante.getTamanioInferior());
+                valorComercial.setValorMaximo(valorComercialDiamanteVO.getValorMaximo());
+                valorComercial.setValorMedio(valorComercialDiamanteVO.getValorMedio());
+                valorComercial.setValorMinimo(valorComercialDiamanteVO.getValorMinimo());
 
                 response.setValorComercial(valorComercial);
             } catch (ValorComercialNoEncontradoException e) {
