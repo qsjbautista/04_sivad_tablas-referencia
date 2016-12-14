@@ -26,9 +26,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Pruebas de integración para la entidad {@link ModificadorValorDiamante}
+ * Pruebas de integración para la entidad {@link ListadoModificadorCertificado}
  *
- * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
+ * @author mmarquez
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TablasReferenciaApplication.class)
@@ -60,17 +60,14 @@ public class ModificadorCertificadoITest {
      */
     @Before
     public void setUp() throws Exception {
-        //fabricaCertificado = new CertificadoFactory();
         certificado = CertificadoFactory.crear("certificado", BigDecimal.valueOf(0.20));
         listaCertificados = new HashSet<Certificado>();
         listaCertificados.add(certificado);
-
-        //lista = fabricaListado.crear(DateTime.now(), LocalDate.now(), listaCertificados);
     }
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearWithPersistenteParametrosNulosTest() {
@@ -79,7 +76,7 @@ public class ModificadorCertificadoITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearWithPersistenteFechaCargaNulaTest() {
@@ -88,7 +85,7 @@ public class ModificadorCertificadoITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearWithPersistenteFechaListadoNulaTest() {
@@ -97,7 +94,7 @@ public class ModificadorCertificadoITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearWithPersistenteVONuloTest() {
@@ -106,7 +103,7 @@ public class ModificadorCertificadoITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      */
     @Test
     public void crearWithPersistenteTest(){
@@ -121,7 +118,7 @@ public class ModificadorCertificadoITest {
 
     /**
      * (non-Javadoc)
-     * @see ModificadorValorDiamanteFactory#crearPersistibleCon(DateTime, LocalDate, FactorValorDiamante)
+     * @see ListadoModificadorCertificadoFactory#crearPersistible(DateTime, LocalDate, Set<Certificado>)
      * @see ModificadorValorDiamante#actualizar()
      */
     @Test

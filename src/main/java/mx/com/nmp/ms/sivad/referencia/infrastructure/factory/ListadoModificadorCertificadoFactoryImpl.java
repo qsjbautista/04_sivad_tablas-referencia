@@ -60,6 +60,8 @@ public class ListadoModificadorCertificadoFactoryImpl implements ListadoModifica
      */
     @Override
     public ListadoModificadorCertificado crearPersistible(final DateTime ultimaActualizacion, final LocalDate fechaListado, final Set<Certificado> certificados) {
+        Assert.notNull(ultimaActualizacion, "UltimaActualizacion no debe ser nulo.");
+        Assert.notNull(fechaListado, "fechaListado no debe ser nulo.");
         final ListadoModificadorCertificado.Builder builder = getBuilder(ultimaActualizacion, fechaListado, certificados);
 
         return crearPersistibleDesde(builder);
