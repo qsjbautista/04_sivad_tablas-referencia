@@ -25,16 +25,16 @@ import org.springframework.util.ObjectUtils
  *
  * @author roramirez
  */
-@Usage("Administración del Modificador tipo rango")
+@Usage("Administración del Modificador tipo Rango")
 class modificadorTipoRango {
 
     /**
-     * Permite obtener el valor comercial del oro
+     * Permite obtener el valor del tipo Rango
      *
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar el Valor del Oro mediante un archivo")
+    @Usage("Permite actualizar el Factor Alhaja")
     @Command
     def actualizar(InvocationContext context, @Usage("contenido ") @Required @Argument String contenido) {
         ListadoRango listadoRango  = null
@@ -45,12 +45,12 @@ class modificadorTipoRango {
                  listadoRango = crearListado(contenido, context)
                 }catch(Exception e){
                     e.printStackTrace()
-                    out.println("No se pudo crear la lista")
+                    out.println("No es posible crear la lista")
                 }
 
                 try{
                     getModificadorRangoRepository(context).actualizarListado(listadoRango)
-                    out.println("Se actualizo correctamente ")
+                    out.println("Se actualizó correctamente")
                 }catch(Exception e){
                     e.stackTrace
                     out.println("No se pudo crear la lista")
@@ -61,7 +61,7 @@ class modificadorTipoRango {
 
 
     /**
-     * Permite obtener el valor comercial del oro
+     * Permite obtener el factor Alhaja vigente
      *
      * @param context El contexto de la invocación.
      * @return Lista de elementos
@@ -80,7 +80,7 @@ class modificadorTipoRango {
                 def elementos = getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fechaFormat)
                 mostrarTablaResultados(elementos)
             } catch (Exception e) {
-                out.println("No hay resultados para la fecha: [${fecha}]")
+                out.println("No existen resultados para la fecha: [${fecha}]")
                 e.printStackTrace()
             }
     }
@@ -98,7 +98,7 @@ class modificadorTipoRango {
                 label('Calidad')
                 label('Rango')
                 label('Factor')
-                label('Dezplazamiento')
+                label('Desplazamiento')
                 label('Limite Inferior')
                 label('Limite Superior')
             }
@@ -108,8 +108,9 @@ class modificadorTipoRango {
                     row {
                         label(rango.metal, foreground: white)
                         label(rango.calidad, foreground: white)
+                        label(rango.rango, foreground: white)
                         label(rango.factor, foreground: white)
-                        label(rango.dezplazamiento, foreground: white)
+                        label(rango.desplazamiento, foreground: white)
                         label(rango.limiteInferior, foreground: white)
                         label(rango.limiteSuperior, foreground: white)
                     }
@@ -139,7 +140,7 @@ class modificadorTipoRango {
         def nCalidad = "Calidad"
         def nRango = "Rango"
         def nFactor = "Factor"
-        def nDesplazamiento = "Dezplazamiento"
+        def nDesplazamiento = "Desplazamiento"
         def nLimiteInferior = "LimiteInferior"
         def nLimiteSuperior = "limiteSuperior"
 
@@ -185,25 +186,22 @@ class modificadorTipoRango {
             }
             try{
                 factorAlhaja = FactorAlhajaFactory.crear(metalRango, calidad, rango, factor, desplazamiento, limiteInferior, limiteSuperior, new DateTime())
-                out.println("Se creao el factor Alhaja")
+                //out.println("Se creao el factor Alhaja")
             }catch(Exception e){
                 out.println("No se pudo crear el Factor alhaja ")
                 e.stackTrace
             }
 
             factorAlhajaSet.add(factorAlhaja)
-            out.println("El tamanio del set es : "+ factorAlhajaSet.size())
+            //out.println("El tamanio del set es : "+ factorAlhajaSet.size())
         }
         ListadoRango listadoRango = null
-        ListadoRango listadoRango2 = null
             try {
                 listadoRango  = getListadoRangoFactory(context).crear(DateTime.now(), LocalDate.now(),factorAlhajaSet)
-                //listadoRango2 = ListadoRangoFactory.crear(factorAlhajaSet)
-                out.println("el tamaño del listado es : "+ listadoRango.getFactorAlhajas().size())
-                //out.println("el tamaño del listado1 es : "+ listadoRango2.getFactorAlhajas().size())
+                //out.println("el tamaño del listado es : "+ listadoRango.getFactorAlhajas().size())
             }catch(Exception e){
                 e.printStackTrace()
-                out.println("No se pudo crear el listadoFactory")
+                out.println("No es posible crear el listadoFactory")
             }
 
         return listadoRango
@@ -217,16 +215,6 @@ class modificadorTipoRango {
      */
     private static ModificadorRangoRepository getModificadorRangoRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ModificadorRangoRepository)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoRango.
-     */
-    private static ListadoRango getListadoRango(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ListadoRango)
     }
 
     /**

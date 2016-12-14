@@ -33,28 +33,28 @@ class valorComercialOro {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar el Valor del Oro mediante un archivo")
+    @Usage("Permite actualizar el Valor del Oro")
     @Command
     def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument String contenido) {
         ListadoValorComercialOro  listadoValorComercialOro= null
         if (ObjectUtils.isEmpty(contenido)) {
-            out.println("Se requiere el contenido a procesar ")
+            out.println("Se requiere el contenido a procesar")
         }else{
                 try {
                     listadoValorComercialOro = crearListado(contenido)
                 }catch(Exception e){
                     e.stackTrace
-                    out.println("No se creo el listado")
+                    out.println("No es posible crear listado ")
                 }
 
                 getConsultaListado(context).actualizarListado(listadoValorComercialOro)
-                out.println("Se actualizo correctamente ")
+                out.println("Se actualizó correctamente")
             }
     }
 
 
     /**
-     * Permite obtener el valor comercial del oro
+     * Permite obtener el valor Comercial del oro
      *
      * @param context El contexto de la invocación.
      * @return Lista de elementos
@@ -66,7 +66,7 @@ class valorComercialOro {
         if (ObjectUtils.isEmpty(fecha)) {
             out.println("Se requiere la fecha para consultar ")
         }else if(!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println("El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  ")
+            out.println("El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm")
         }else
             try {
                 LocalDate fechaFormat = new LocalDate(fecha)
@@ -107,7 +107,7 @@ class valorComercialOro {
     /**
      * Utilizado para listas
      *
-     * @param file archivp que se recibe
+     * @param contenido Contenido a procesar
      * @param context El contexto de la invocación
      * @return ListadoValorcomercialOroFactory
      */

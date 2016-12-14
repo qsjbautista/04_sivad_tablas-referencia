@@ -29,35 +29,34 @@ import org.springframework.util.ObjectUtils
 class valorComercialMetal {
 
     /**
-     * Permite obtener el valor comercial del oro
+     * Permite actualizar e lvalor comercial del Metal
      *
      * @param context El contexto de la invocación.
+     * @param contenido Contenido que con el que se va actualizar
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar el Valor del Oro mediante un archivo")
+    @Usage("Permite actualizar el Valor del Metal")
     @Command
     def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument  String contenido) {
         ListadoValorComercialMetal listadoValorComercialMetal = null
         if (ObjectUtils.isEmpty(contenido)) {
-            out.println("Se requiere ell contenido")
+            out.println("Se requiere el contenido a procesar")
         } else {
             try {
                 listadoValorComercialMetal = crearListado(contenido)
             } catch (Exception e){
                  e.printStackTrace()
-                out.println("no se creo e listdado hubi un error ")
+                out.println("No es posible crear listado ")
             }
-
                 try {
                     getValorComercialMetalRepository(context).actualizarListado(listadoValorComercialMetal)
-                    out.println("Se actualizo correctamente ")
+                    out.println("Se actualizó correctamente")
                 }catch(Exception e) {
                     e.printStackTrace()
-                    out.println("no se pudo actualizar ")
+                    out.println("No es posible actualizar ")
                 }
         }
     }
-
 
     /**
      * Permite obtener el valor comercial del oro
@@ -114,8 +113,7 @@ class valorComercialMetal {
     /**
      * Utilizado para listas
      *
-     * @param file archivp que se recibe
-     * @param context El contexto de la invocación
+     * @param contenido Contenido a procesar
      * @return ListadoValorcomercialMetalFactory
      */
     private def crearListado(String contenido) {
@@ -148,7 +146,6 @@ class valorComercialMetal {
             dataList << infoTxt
         }
 
-
         dataList.eachWithIndex { it, index ->
             out.println("Carga $index")
             it.each { k, v ->
@@ -163,15 +160,14 @@ class valorComercialMetal {
             try {
 
                 metal = MetalFactory.create(metalS, calidad, precio)
-                out.println(metal.toString())
+                //out.println(metal.toString())
             } catch (Exception e) {
                 out.println("No se pudo crear el Metal")
                 e.printStackTrace()
             }
             metalSet.add(metal)
-            out.println(metalSet.size())
+            //out.println(metalSet.size())
         }
-
 
         ListadoValorComercialMetal listadoValorComercialMetal = null
             try {
@@ -183,8 +179,6 @@ class valorComercialMetal {
         return listadoValorComercialMetal
     }
 
-
-
     /**
      * Permite obtener la instancia
      *
@@ -193,36 +187,6 @@ class valorComercialMetal {
      */
     private static ValorComercialMetalRepository getValorComercialMetalRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ValorComercialMetalRepository)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoValorComercialMetal.
-     */
-    private static ListadoValorComercialMetal getListadoValorComercialMetal(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ListadoValorComercialMetal)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoModificadorCertificadoFactory.
-     */
-    private static ListadoValorComercialMetalFactory getListadoValorComercialMetalFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ListadoValorComercialMetalFactory)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase MetalFactory
-     */
-    private static MetalFactory getMetalFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(MetalFactory)
     }
 
 }

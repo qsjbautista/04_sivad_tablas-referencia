@@ -29,30 +29,29 @@ import org.springframework.util.ObjectUtils
 class modificadorTipoCertificado {
 
     /**
-     * Permite obtener el valor comercial del oro
+     * Permite obtener tipo de certificado
      *
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar el Valor del Oro mediante un archivo")
+    @Usage("Permite actualizar los tipos de Certificados")
     @Command
     def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument String contenido) {
         ListadoModificadorCertificado listadoModificadorCertificado = null
             if (ObjectUtils.isEmpty(contenido)) {
-                out.println("Se requiere el contenido a procesar ")
+                out.println("Se requiere el contenido a procesar")
             }
 
             try{
                 listadoModificadorCertificado = crearListado(contenido, context)
-                out.println("Se imprimen el listado " + listadoModificadorCertificado.toString())
             } catch (Exception e) {
-                out.println("No se creo el listado")
+                out.println("No posible crear el listado")
                 e.printStackTrace()
             }
 
         try{
             getModificadorCertificadoRepository(context).actualizarListado(listadoModificadorCertificado)
-            out.println("Se actualizo correctamente ")
+            out.println("Se actualizó correctamente")
         }catch(Exception e ){
             out.println("No persitieron los Certificados")
             e.printStackTrace()
@@ -80,7 +79,7 @@ class modificadorTipoCertificado {
                 def elementos = getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fechaFormat)
                 mostrarTablaResultados(elementos)
             } catch (Exception e) {
-                out.println("No hay resultados para la fecha: [${fecha}]")
+                out.println("No existen resultados para la fecha: [${fecha}]")
                 e.printStackTrace()
             }
     }
@@ -183,30 +182,11 @@ class modificadorTipoCertificado {
      * Permite obtener la instancia
      *
      * @param context El contexto de la invocación.
-     * @return Referencia a la clase ListadoModificadorCertificado.
-     */
-    private static ListadoModificadorCertificado getListadoModificadorCertificado(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ListadoModificadorCertificado)
-    }
-
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
      * @return Referencia a la clase ListadoModificadorCertificadoFactory.
      */
     private static ListadoModificadorCertificadoFactory getListadoModificadorCertificadoFactory(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ListadoModificadorCertificadoFactory)
     }
 
-    /**
-     * Permite obtener la instancia
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia a la clase CertificadoFactory
-     */
-    private static CertificadoFactory getCertificadoFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(CertificadoFactory)
-    }
 }
 
