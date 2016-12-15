@@ -1,0 +1,7 @@
+---
+applications:
+- name: sivad-tablas-referencia
+  memory: 1G
+  timeout: 120
+  env:
+    spring.profiles.active: dev
