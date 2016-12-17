@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="d7a52585-8fb6-43ce-b83c-781892e6e4fc" activeEnvironment="Default" name="SivaD - Tablas Referencia" resourceRoot="" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="2214d08a-a980-47bd-9245-fd08f3c6ef0c" wsaVersion="NONE" name="ReferenciaListasDiamantesServiceEndpointServiceSoapBinding" type="wsdl" bindingName="{http://ws.adminapi.referencia.sivad.ms.nmp.com.mx/}ReferenciaListasDiamantesServiceEndpointServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService?wsdl"><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaListasDiamantesServiceEndpointService" targetNamespace="http://ws.adminapi.referencia.sivad.ms.nmp.com.mx/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.adminapi.referencia.sivad.ms.nmp.com.mx/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/">
+  <wsdl:import location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService?wsdl=ReferenciaListasDiamanteService.wsdl" namespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/"></wsdl:import>
+  <wsdl:binding name="ReferenciaListasDiamantesServiceEndpointServiceSoapBinding" type="ns1:ReferenciaListasDiamanteService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="actualizarListaValorComercial">
+      <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaValorComercial" style="document"/>
+      <wsdl:input name="actualizarListaValorComercial">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="actualizarListaValorComercialResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="actualizarListaFactor">
+      <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaFactor" style="document"/>
+      <wsdl:input name="actualizarListaFactor">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="actualizarListaFactorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReferenciaListasDiamantesServiceEndpointService">
+    <wsdl:port binding="tns:ReferenciaListasDiamantesServiceEndpointServiceSoapBinding" name="ReferenciaListasDiamantesServiceEndpointPort">
+      <soap:address location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService?wsdl=ReferenciaListasDiamanteService.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaListasDiamanteService" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/">
+      <xs:element name="actualizarListaFactorRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="factorDiamante" type="tns:FactorDiamante"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="actualizarListaFactorResponse" type="tns:Void"/>
+      <xs:element name="actualizarListaValorComercialRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="listado" type="tns:PreciosDiamante"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="actualizarListaValorComercialResponse" type="tns:Void"/>
+      <xs:complexType name="PreciosDiamante">
+        <xs:sequence>
+          <xs:element name="fecha" type="xs:date"/>
+          <xs:element maxOccurs="unbounded" name="preciosCorte" type="tns:PrecioCorte"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PrecioCorte">
+        <xs:sequence>
+          <xs:element name="corte" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" name="precioCorte" type="tns:PrecioCorteDetalle"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PrecioCorteDetalle">
+        <xs:sequence>
+          <xs:element name="color" type="xs:string"/>
+          <xs:element name="claridad" type="xs:string"/>
+          <xs:element name="tamanioInferior" type="xs:decimal"/>
+          <xs:element name="tamanioSuperior" type="xs:decimal"/>
+          <xs:element name="precio" type="xs:decimal"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Void">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="FactorDiamante">
+        <xs:sequence>
+          <xs:element name="factorMinimo" type="xs:decimal"/>
+          <xs:element name="factorMedio" type="xs:decimal"/>
+          <xs:element name="factorMaximo" type="xs:decimal"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="actualizarListaFactor">
+    <wsdl:part element="ns2:actualizarListaFactorRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="actualizarListaValorComercial">
+    <wsdl:part element="ns2:actualizarListaValorComercialRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="actualizarListaValorComercialResponse">
+    <wsdl:part element="ns2:actualizarListaValorComercialResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="actualizarListaFactorResponse">
+    <wsdl:part element="ns2:actualizarListaFactorResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ReferenciaListasDiamanteService">
+    <wsdl:operation name="actualizarListaValorComercial">
+      <wsdl:input message="ns1:actualizarListaValorComercial" name="actualizarListaValorComercial"></wsdl:input>
+      <wsdl:output message="ns1:actualizarListaValorComercialResponse" name="actualizarListaValorComercialResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="actualizarListaFactor">
+      <wsdl:input message="ns1:actualizarListaFactor" name="actualizarListaFactor"></wsdl:input>
+      <wsdl:output message="ns1:actualizarListaFactorResponse" name="actualizarListaFactorResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService</con:endpoint></con:endpoints><con:operation id="d6a234e1-3d34-4c2b-8037-5fc2503b327c" isOneWay="false" action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaFactor" name="actualizarListaFactor" bindingOperationName="actualizarListaFactor" type="Request-Response" outputName="actualizarListaFactorResponse" inputName="actualizarListaFactor" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="e47be836-43e6-44f8-bce6-3a51258f0361" name="Request Factores(0.9, 1.0, 1.5)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:actualizarListaFactorRequest>
+         <dat:factorDiamante>
+            <dat:factorMinimo>0.9</dat:factorMinimo>
+            <dat:factorMedio>1.0</dat:factorMedio>
+            <dat:factorMaximo>1.5</dat:factorMaximo>
+         </dat:factorDiamante>
+      </dat:actualizarListaFactorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaFactor"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="d14bf91a-3a5d-40b7-9604-4db5291e041c" isOneWay="false" action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaValorComercial" name="actualizarListaValorComercial" bindingOperationName="actualizarListaValorComercial" type="Request-Response" outputName="actualizarListaValorComercialResponse" inputName="actualizarListaValorComercial" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="94394f64-8649-44f4-951c-49c7fb2e9bb2" name="Request PEAR(4 valores)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:actualizarListaValorComercialRequest>
+         <dat:listado>
+            <dat:fecha>2016-12-01</dat:fecha>
+            <!--1 or more repetitions:-->
+            <dat:preciosCorte>
+               <dat:corte>PEAR</dat:corte>
+               <!--1 or more repetitions:-->
+               <dat:precioCorte>
+                  <dat:color>D</dat:color>
+                  <dat:claridad>IF</dat:claridad>
+                  <dat:tamanioInferior>0.18</dat:tamanioInferior>
+                  <dat:tamanioSuperior>0.22</dat:tamanioSuperior>
+                  <dat:precio>1320.0000</dat:precio>
+               </dat:precioCorte>
+               <dat:precioCorte>
+                  <dat:color>D</dat:color>
+                  <dat:claridad>VVS1</dat:claridad>
+                  <dat:tamanioInferior>0.18</dat:tamanioInferior>
+                  <dat:tamanioSuperior>0.22</dat:tamanioSuperior>
+                  <dat:precio>1320.0000</dat:precio>
+               </dat:precioCorte>
+               <dat:precioCorte>
+                  <dat:color>D</dat:color>
+                  <dat:claridad>VVS2</dat:claridad>
+                  <dat:tamanioInferior>0.18</dat:tamanioInferior>
+                  <dat:tamanioSuperior>0.22</dat:tamanioSuperior>
+                  <dat:precio>1320.0000</dat:precio>
+               </dat:precioCorte>
+               <dat:precioCorte>
+                  <dat:color>D</dat:color>
+                  <dat:claridad>VS1</dat:claridad>
+                  <dat:tamanioInferior>0.18</dat:tamanioInferior>
+                  <dat:tamanioSuperior>0.22</dat:tamanioSuperior>
+                  <dat:precio>1130.0000</dat:precio>
+               </dat:precioCorte>
+            </dat:preciosCorte>
+         </dat:listado>
+      </dat:actualizarListaValorComercialRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaValorComercial"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="f826bcc5-d4d0-4345-8675-eaaac7568e99" wsaVersion="NONE" name="ReferenciaDiamantesServiceEndpointServiceSoapBinding" type="wsdl" bindingName="{http://ws.api.referencia.sivad.ms.nmp.com.mx/}ReferenciaDiamantesServiceEndpointServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService?wsdl"><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaDiamantesServiceEndpointService" targetNamespace="http://ws.api.referencia.sivad.ms.nmp.com.mx/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.api.referencia.sivad.ms.nmp.com.mx/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/">
+  <wsdl:import location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService?wsdl=ReferenciaDiamanteService.wsdl" namespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/"></wsdl:import>
+  <wsdl:binding name="ReferenciaDiamantesServiceEndpointServiceSoapBinding" type="ns1:ReferenciaDiamanteService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="obtenerModificador">
+      <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerModificador" style="document"/>
+      <wsdl:input name="obtenerModificador">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerModificadorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerValorComercial">
+      <soap:operation soapAction="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerValorComercial" style="document"/>
+      <wsdl:input name="obtenerValorComercial">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerValorComercialResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReferenciaDiamantesServiceEndpointService">
+    <wsdl:port binding="tns:ReferenciaDiamantesServiceEndpointServiceSoapBinding" name="ReferenciaDiamantesServiceEndpointPort">
+      <soap:address location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService?wsdl=ReferenciaDiamanteService.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaDiamanteService" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/">
+      <xs:element name="obtenerModificadorRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="certificadoDiamante" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerModificadorResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="factor" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorComercialRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="corte" type="xs:string"/>
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="claridad" type="xs:string"/>
+            <xs:element name="quilates_ct" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorComercialResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="valorComercial" type="tns:ValorComercial"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ValorComercial">
+        <xs:sequence>
+          <xs:element name="valorMinimo" type="xs:decimal"/>
+          <xs:element name="valorMedio" type="xs:decimal"/>
+          <xs:element name="valorMaximo" type="xs:decimal"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="obtenerValorComercialResponse">
+    <wsdl:part element="ns2:obtenerValorComercialResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerModificador">
+    <wsdl:part element="ns2:obtenerModificadorRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerValorComercial">
+    <wsdl:part element="ns2:obtenerValorComercialRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerModificadorResponse">
+    <wsdl:part element="ns2:obtenerModificadorResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ReferenciaDiamanteService">
+    <wsdl:operation name="obtenerModificador">
+      <wsdl:input message="ns1:obtenerModificador" name="obtenerModificador"></wsdl:input>
+      <wsdl:output message="ns1:obtenerModificadorResponse" name="obtenerModificadorResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerValorComercial">
+      <wsdl:input message="ns1:obtenerValorComercial" name="obtenerValorComercial"></wsdl:input>
+      <wsdl:output message="ns1:obtenerValorComercialResponse" name="obtenerValorComercialResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService</con:endpoint></con:endpoints><con:operation id="b96849f1-d7af-4221-8e9d-0f0613f07352" isOneWay="false" action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerModificador" name="obtenerModificador" bindingOperationName="obtenerModificador" type="Request-Response" outputName="obtenerModificadorResponse" inputName="obtenerModificador" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a0e37cc0-90bf-439d-a0ae-93379d902519" name="Request ABC"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerModificadorRequest>
+         <dat:certificadoDiamante>ABC</dat:certificadoDiamante>
+      </dat:obtenerModificadorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerModificador"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="84ff9339-1772-42a9-aa97-cbd0ba9cf7f9" isOneWay="false" action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerValorComercial" name="obtenerValorComercial" bindingOperationName="obtenerValorComercial" type="Request-Response" outputName="obtenerValorComercialResponse" inputName="obtenerValorComercial" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="c5498c0f-4884-4c61-8cc0-0aa27f15552d" name="Request PEAR (D, IF, 0.20)"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorComercialRequest>
+         <dat:corte>PEAR</dat:corte>
+         <dat:color>D</dat:color>
+         <dat:claridad>IF</dat:claridad>
+         <dat:quilates_ct>0.20</dat:quilates_ct>
+      </dat:obtenerValorComercialRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerValorComercial"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="62310dbe-8057-4661-b713-da1258460d86" wsaVersion="NONE" name="ReferenciaAlhajaServiceEndpointServiceSoapBinding" type="wsdl" bindingName="{http://ws.api.referencia.sivad.ms.nmp.com.mx/}ReferenciaAlhajaServiceEndpointServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService?wsdl"><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaAlhajaServiceEndpointService" targetNamespace="http://ws.api.referencia.sivad.ms.nmp.com.mx/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.api.referencia.sivad.ms.nmp.com.mx/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/">
+  <wsdl:import location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService?wsdl=ReferenciaAlhajaService.wsdl" namespace="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/"></wsdl:import>
+  <wsdl:binding name="ReferenciaAlhajaServiceEndpointServiceSoapBinding" type="ns1:ReferenciaAlhajaService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="obtenerValorGramoOro">
+      <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoOro" style="document"/>
+      <wsdl:input name="obtenerValorGramoOro">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerValorGramoOroResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerDesplazamiento">
+      <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerDesplazamiento" style="document"/>
+      <wsdl:input name="obtenerDesplazamiento">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerDesplazamientoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLimitesIncremento">
+      <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento" style="document"/>
+      <wsdl:input name="obtenerLimitesIncremento">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerLimitesIncrementoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerFactor">
+      <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerFactor" style="document"/>
+      <wsdl:input name="obtenerFactor">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerFactorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerValorGramoMetal">
+      <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoMetal" style="document"/>
+      <wsdl:input name="obtenerValorGramoMetal">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerValorGramoMetalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReferenciaAlhajaServiceEndpointService">
+    <wsdl:port binding="tns:ReferenciaAlhajaServiceEndpointServiceSoapBinding" name="ReferenciaAlhajaServiceEndpointPort">
+      <soap:address location="https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService?wsdl=ReferenciaAlhajaService.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="ReferenciaAlhajaService" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/" xmlns:ns1="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+      <xs:element name="obtenerDesplazamientoRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="metal" type="xs:string"/>
+            <xs:element name="calidad" type="xs:string"/>
+            <xs:element name="rango" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerDesplazamientoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="desplazamiento" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerFactorRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="metal" type="xs:string"/>
+            <xs:element name="calidad" type="xs:string"/>
+            <xs:element name="rango" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerFactorResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="factor" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerLimitesIncrementoRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="metal" type="xs:string"/>
+            <xs:element name="calidad" type="xs:string"/>
+            <xs:element name="rango" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerLimitesIncrementoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="limitesIncremento" type="tns:RangoLimite"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorGramoMetalRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="metal" type="xs:string"/>
+            <xs:element name="calidad" type="xs:string"/>
+            <xs:element name="rango" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorGramoMetalResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="precioPorGramo" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorGramoOroRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="color" type="xs:string"/>
+            <xs:element name="calidad" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="obtenerValorGramoOroResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="precioPorGramo" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="RangoLimite">
+        <xs:sequence>
+          <xs:element name="limiteInferior" type="xs:decimal"/>
+          <xs:element name="limiteSuperior" type="xs:decimal"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="obtenerValorGramoOroResponse">
+    <wsdl:part element="ns2:obtenerValorGramoOroResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLimitesIncrementoResponse">
+    <wsdl:part element="ns2:obtenerLimitesIncrementoResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerValorGramoMetal">
+    <wsdl:part element="ns2:obtenerValorGramoMetalRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerValorGramoMetalResponse">
+    <wsdl:part element="ns2:obtenerValorGramoMetalResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerValorGramoOro">
+    <wsdl:part element="ns2:obtenerValorGramoOroRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerDesplazamiento">
+    <wsdl:part element="ns2:obtenerDesplazamientoRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerLimitesIncremento">
+    <wsdl:part element="ns2:obtenerLimitesIncrementoRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerFactor">
+    <wsdl:part element="ns2:obtenerFactorRequest" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerFactorResponse">
+    <wsdl:part element="ns2:obtenerFactorResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerDesplazamientoResponse">
+    <wsdl:part element="ns2:obtenerDesplazamientoResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ReferenciaAlhajaService">
+    <wsdl:operation name="obtenerValorGramoOro">
+      <wsdl:input message="ns1:obtenerValorGramoOro" name="obtenerValorGramoOro"></wsdl:input>
+      <wsdl:output message="ns1:obtenerValorGramoOroResponse" name="obtenerValorGramoOroResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerDesplazamiento">
+      <wsdl:input message="ns1:obtenerDesplazamiento" name="obtenerDesplazamiento"></wsdl:input>
+      <wsdl:output message="ns1:obtenerDesplazamientoResponse" name="obtenerDesplazamientoResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerLimitesIncremento">
+      <wsdl:input message="ns1:obtenerLimitesIncremento" name="obtenerLimitesIncremento"></wsdl:input>
+      <wsdl:output message="ns1:obtenerLimitesIncrementoResponse" name="obtenerLimitesIncrementoResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerFactor">
+      <wsdl:input message="ns1:obtenerFactor" name="obtenerFactor"></wsdl:input>
+      <wsdl:output message="ns1:obtenerFactorResponse" name="obtenerFactorResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerValorGramoMetal">
+      <wsdl:input message="ns1:obtenerValorGramoMetal" name="obtenerValorGramoMetal"></wsdl:input>
+      <wsdl:output message="ns1:obtenerValorGramoMetalResponse" name="obtenerValorGramoMetalResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint></con:endpoints><con:operation id="c4ede33d-c27f-4f1c-b46f-5e75cf53bcd4" isOneWay="false" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerDesplazamiento" name="obtenerDesplazamiento" bindingOperationName="obtenerDesplazamiento" type="Request-Response" outputName="obtenerDesplazamientoResponse" inputName="obtenerDesplazamiento" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="02acc02d-3f48-435f-b36e-d040e1c1dbf5" name="Request Dummy"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerDesplazamientoRequest>
+         <dat:metal>AU</dat:metal>
+         <dat:calidad>10</dat:calidad>
+         <dat:rango>1</dat:rango>
+      </dat:obtenerDesplazamientoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerDesplazamiento"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="815abb59-407c-4c39-a612-a3b62d50b0ec" isOneWay="false" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerFactor" name="obtenerFactor" bindingOperationName="obtenerFactor" type="Request-Response" outputName="obtenerFactorResponse" inputName="obtenerFactor" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="11375c33-26be-4f8e-89be-c2710a97d69a" name="Request Dummy"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerFactorRequest>
+         <dat:metal>Plata</dat:metal>
+         <dat:calidad>0.925</dat:calidad>
+         <dat:rango>0</dat:rango>
+      </dat:obtenerFactorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerFactor"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="556863b7-5610-4377-9aab-6e2ea69d6f71" isOneWay="false" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento" name="obtenerLimitesIncremento" bindingOperationName="obtenerLimitesIncremento" type="Request-Response" outputName="obtenerLimitesIncrementoResponse" inputName="obtenerLimitesIncremento" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="0e42175a-86cf-48c1-b768-75f105a65ca7" name="Request Dummy"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerLimitesIncrementoRequest>
+         <dat:metal>Plata</dat:metal>
+         <dat:calidad>0.925</dat:calidad>
+         <dat:rango>0</dat:rango>
+      </dat:obtenerLimitesIncrementoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="42247fc5-f4fa-4ad2-a266-e540042e8775" isOneWay="false" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoMetal" name="obtenerValorGramoMetal" bindingOperationName="obtenerValorGramoMetal" type="Request-Response" outputName="obtenerValorGramoMetalResponse" inputName="obtenerValorGramoMetal" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="675bf598-3735-4b95-ad77-c9f25cde8503" name="Request Plata, 0.925"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorGramoMetalRequest>
+         <dat:metal>Plata</dat:metal>
+         <dat:calidad>0.925</dat:calidad>
+         <dat:rango></dat:rango>
+      </dat:obtenerValorGramoMetalRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoMetal"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="a22dd26b-a56c-4ca2-b19e-8760588e4a7d" isOneWay="false" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoOro" name="obtenerValorGramoOro" bindingOperationName="obtenerValorGramoOro" type="Request-Response" outputName="obtenerValorGramoOroResponse" inputName="obtenerValorGramoOro" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="55965a00-22b8-4768-aae4-f6f66be248bd" name="Request Oro Amarillo 10K"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorGramoOroRequest>
+         <dat:color>Amarillo</dat:color>
+         <dat:calidad>10</dat:calidad>
+      </dat:obtenerValorGramoOroRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoOro"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite id="2c0ee157-dcaa-4ebe-ad51-d3e2b2a9c5e4" name="ReferenciaListasDiamantesServiceEndpointServiceSoapBinding TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="4c6bfbd0-90cc-4c5c-b1fa-d2aea0ba62a1" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="actualizarListaFactor TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="f208b181-e4ee-4bb5-b8f9-4dbf866da5f1" name="actualizarListaFactor"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaListasDiamantesServiceEndpointServiceSoapBinding</con:interface><con:operation>actualizarListaFactor</con:operation><con:request name="actualizarListaFactor" id="7dca3ffa-e45d-4f0a-b509-dbab73dd7a6f"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:actualizarListaFactorRequest>
+         <dat:factorDiamante>
+            <dat:factorMinimo>?</dat:factorMinimo>
+            <dat:factorMedio>?</dat:factorMedio>
+            <dat:factorMaximo>?</dat:factorMaximo>
+         </dat:factorDiamante>
+      </dat:actualizarListaFactorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaFactor"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="108c2e08-1562-4758-aaaf-1950cd7ff00c" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="actualizarListaValorComercial TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="614484b9-a13d-4c12-8472-fa80052bbc09" name="actualizarListaValorComercial"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaListasDiamantesServiceEndpointServiceSoapBinding</con:interface><con:operation>actualizarListaValorComercial</con:operation><con:request name="actualizarListaValorComercial" id="e6c0f40c-699d-41f3-b7ba-9bc66b1c58e6"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaListasDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/listas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:actualizarListaValorComercialRequest>
+         <dat:listado>
+            <dat:fecha>?</dat:fecha>
+            <!--1 or more repetitions:-->
+            <dat:preciosCorte>
+               <dat:corte>?</dat:corte>
+               <!--1 or more repetitions:-->
+               <dat:precioCorte>
+                  <dat:color>?</dat:color>
+                  <dat:claridad>?</dat:claridad>
+                  <dat:tamanioInferior>?</dat:tamanioInferior>
+                  <dat:tamanioSuperior>?</dat:tamanioSuperior>
+                  <dat:precio>?</dat:precio>
+               </dat:precioCorte>
+            </dat:preciosCorte>
+         </dat:listado>
+      </dat:actualizarListaValorComercialRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/referencia/ws/diamantes/listas/actualizarListaValorComercial"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite id="d980c47f-07a1-40b0-a663-b8352516cc28" name="ReferenciaDiamantesServiceEndpointServiceSoapBinding TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="b343a56f-17ab-4a09-9a88-53955e8f07f9" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerModificador TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="4a1fb51e-f7ad-483c-a4fe-a77d0bf4b72b" name="obtenerModificador"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaDiamantesServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerModificador</con:operation><con:request name="obtenerModificador" id="abf8c4b9-b426-40a4-9481-dc515376bfc4"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerModificadorRequest>
+         <dat:certificadoDiamante>?</dat:certificadoDiamante>
+      </dat:obtenerModificadorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerModificador"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="82e7da04-b0b5-4347-a868-c7cdee832107" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerValorComercial TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="f13a724c-5ed0-4c6a-a3b1-c5287f1edc0e" name="obtenerValorComercial"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaDiamantesServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerValorComercial</con:operation><con:request name="obtenerValorComercial" id="93867c1c-f2e5-4f7f-880e-985b1e96ab2e"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaDiamanteService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/diamantes/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorComercialRequest>
+         <dat:corte>?</dat:corte>
+         <dat:color>?</dat:color>
+         <dat:claridad>?</dat:claridad>
+         <dat:quilates_ct>?</dat:quilates_ct>
+      </dat:obtenerValorComercialRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/referencia/ws/diamantes/obtenerValorComercial"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite id="9047aba0-ce83-4ada-badc-b76c6e62b7e7" name="ReferenciaAlhajaServiceEndpointServiceSoapBinding TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="2090200b-73ba-4518-b3df-bfdfb11e2878" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerDesplazamiento TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="fdfb1da3-654d-48f5-afd3-c289c4a0a7c7" name="obtenerDesplazamiento"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaAlhajaServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerDesplazamiento</con:operation><con:request name="obtenerDesplazamiento" id="c398280e-950b-43a8-858e-70cc1b4141a5"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerDesplazamientoRequest>
+         <dat:metal>?</dat:metal>
+         <dat:calidad>?</dat:calidad>
+         <dat:rango>?</dat:rango>
+      </dat:obtenerDesplazamientoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerDesplazamiento"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="14020b51-ba05-41c8-a4df-7f9db085625c" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerFactor TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="bdf46ffb-40e9-4b5d-a5a5-01dcc20b8f49" name="obtenerFactor"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaAlhajaServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerFactor</con:operation><con:request name="obtenerFactor" id="02c83f8e-3f6f-4483-8fa4-1650797f8256"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerFactorRequest>
+         <dat:metal>?</dat:metal>
+         <dat:calidad>?</dat:calidad>
+         <dat:rango>?</dat:rango>
+      </dat:obtenerFactorRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerFactor"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="c111c8fb-0864-41ff-974b-b28fa8f77c8f" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerLimitesIncremento TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="3200f145-822b-4ffc-bbc9-5b241a425343" name="obtenerLimitesIncremento"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaAlhajaServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerLimitesIncremento</con:operation><con:request name="obtenerLimitesIncremento" id="2d73ff23-fe9e-4834-8990-39b0a201c25c"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerLimitesIncrementoRequest>
+         <dat:metal>?</dat:metal>
+         <dat:calidad>?</dat:calidad>
+         <dat:rango>?</dat:rango>
+      </dat:obtenerLimitesIncrementoRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="60803689-de54-459c-a94f-25a5af9e15c7" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerValorGramoMetal TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="78172e37-72d6-4f93-98d6-44255ba166dd" name="obtenerValorGramoMetal"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaAlhajaServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerValorGramoMetal</con:operation><con:request name="obtenerValorGramoMetal" id="97bea05f-b7e9-4a0f-818b-6dc09d8193b2"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorGramoMetalRequest>
+         <dat:metal>?</dat:metal>
+         <dat:calidad>?</dat:calidad>
+         <dat:rango>?</dat:rango>
+      </dat:obtenerValorGramoMetalRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoMetal"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="5d5b0cab-5af1-4573-89bd-63ff3ba9bb8d" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="obtenerValorGramoOro TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="607baa64-c12b-4900-aa6b-008d5bb6337a" name="obtenerValorGramoOro"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ReferenciaAlhajaServiceEndpointServiceSoapBinding</con:interface><con:operation>obtenerValorGramoOro</con:operation><con:request name="obtenerValorGramoOro" id="cced416c-7a0d-4880-94a4-da2c1a1baa1b"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>https://sivad-tablas-referencia.cfapps.io/soap-api/ReferenciaAlhajaService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/datatypes/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dat:obtenerValorGramoOroRequest>
+         <dat:color>?</dat:color>
+         <dat:calidad>?</dat:calidad>
+      </dat:obtenerValorGramoOroRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerValorGramoOro"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
