@@ -12,5 +12,41 @@
         overflowToDisk="false"
         />
 
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialMetalJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialMetalJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialMetalJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialDiamanteJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialOroJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialOroJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialMetalJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialOroJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialOroJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialDiamanteJPA"
+           timeToLiveSeconds="3600">
+    </cache>
 
 </ehcache>
