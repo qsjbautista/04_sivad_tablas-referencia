@@ -32,6 +32,7 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -294,6 +295,22 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         listadoNuevo.setFechaCarga(DateTime.now());
 
         return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void actualizarListadoSinHist(@NotNull ListadoValorComercialDiamante listado) {
+        LOGGER.info(">> actualizarListadoSinHist({})", listado);
+
+        ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
+
+        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
+        ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
+        listadoVigente.getValoresComerciales().addAll(listadoNuevo.getValoresComerciales());
+        listadoJpaRepository.save(listadoVigente);
     }
 
 }

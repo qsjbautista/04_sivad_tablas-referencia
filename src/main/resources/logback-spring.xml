@@ -24,8 +24,11 @@
 
     <logger name="mx.com.nmp.ms.sivad.referencia" level="#logback.loglevel#"/>
 
+    <logger name="com.sun.xml" level="WARN" />
     <logger name="com.zaxxer" level="WARN" />
     <logger name="io.undertow" level="WARN" />
+    <logger name="javax.activation" level="WARN" />
+    <logger name="javax.xml" level="WARN" />
     <logger name="net.sf" level="INFO" />
     <logger name="org.apache" level="WARN" />
     <logger name="org.crsh" level="WARN" />

@@ -47,7 +47,7 @@ public final class ListadoValorComercialDiamanteFactory {
     public static ListadoValorComercialDiamante create(LocalDate fechaListado, Set<Diamante> valoresComerciales) {
         Assert.notNull(fechaListado, FECHA_LISTADO_NULA);
         Assert.notNull(valoresComerciales, VALORES_COMERCIALES_NULOS);
-        Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
+        //Assert.notEmpty(valoresComerciales, VALORES_COMERCIALES_VACIO);
 
         ValidadorFecha.validarFechaFutura(fechaListado, FECHA_LISTADO_FUTURA);
         return new ListadoValorComercialDiamante(fechaListado, valoresComerciales, getRepositorio());
