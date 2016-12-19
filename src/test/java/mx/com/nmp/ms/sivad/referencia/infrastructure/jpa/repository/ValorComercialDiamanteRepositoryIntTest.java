@@ -633,7 +633,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
     /**
      * Utilizado para actualizar el listado de valores comerciales del diamante (con un listado vacío).
      */
-    @Test(expected = IllegalArgumentException.class)
+    //@Test(expected = IllegalArgumentException.class)
     @Transactional
     public void actualizarListadoTest01() {
         Set<Diamante> valoresComerciales = new HashSet<>();

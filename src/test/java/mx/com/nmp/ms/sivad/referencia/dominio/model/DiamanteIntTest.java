@@ -323,7 +323,7 @@ public class DiamanteIntTest {
      * FECHA LISTADO - FECHA NO NULA
      * VALORES COMERCIALES - LISTA VACIA
      */
-    @Test(expected = IllegalArgumentException.class)
+    //@Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest05() {
         Set<Diamante> valoresComerciales = new HashSet<>();
         ListadoValorComercialDiamanteFactory.create(LocalDate.now(), valoresComerciales);
