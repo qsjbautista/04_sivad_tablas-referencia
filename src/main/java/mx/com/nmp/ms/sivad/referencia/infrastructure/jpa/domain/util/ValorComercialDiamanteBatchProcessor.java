@@ -53,18 +53,19 @@ public class ValorComercialDiamanteBatchProcessor {
      * @param parameters Contiene la informacion de los valores comerciales de los diamantes.
      */
     public void procesa(ActualizarListaValorComercialRequest parameters) {
+        LOGGER.info(">> procesa({})", parameters);
         int i = 1;
-        int j= 1;
-        if( parameters.getListado() != null) {
+        int j = 1;
+        if (parameters.getListado() != null) {
             try {
                 LocalDate fechaListado = new LocalDate(parameters.getListado().getFecha().toGregorianCalendar().getTime());
                 Set<Diamante> diamantes = new HashSet<>();
-                if(parameters.getListado().getPreciosCorte() != null || !parameters.getListado().getPreciosCorte().isEmpty()) {
+                if (parameters.getListado().getPreciosCorte() != null || !parameters.getListado().getPreciosCorte().isEmpty()) {
                     for (PrecioCorte precioCorte : parameters.getListado().getPreciosCorte()) {
-                        System.out.println("precioCorte: "+precioCorte.getCorte());
+                        LOGGER.debug("precioCorte: {}", precioCorte.getCorte());
                         if (precioCorte != null) {
                             for (PrecioCorteDetalle precioCorteDetalle : precioCorte.getPrecioCorte()) {
-                                if(precioCorteDetalle != null) {
+                                if (precioCorteDetalle != null) {
                                     try {
                                         Diamante diamante = DiamanteFactory.create(validaString(precioCorte.getCorte(), _SHAPE),
                                             validaString(precioCorteDetalle.getColor(), _COLOR),
@@ -72,48 +73,46 @@ public class ValorComercialDiamanteBatchProcessor {
                                             precioCorteDetalle.getTamanioInferior(),
                                             precioCorteDetalle.getTamanioSuperior(),
                                             precioCorteDetalle.getPrecio());
-                                        if(diamantes.contains(diamante)) {
-                                            LOGGER.info("<< " + "El Corte:" +precioCorte.getCorte()+
-                                                ". El elemento "+ j + " ya existe en el listado.");
-                                            throw new RegistroDiamanteBatchProcessorException("El Corte:" +precioCorte.getCorte()+
-                                                ". El elemento "+ j + " ya existe en el listado.",
-                                                Diamante.class);
+                                        if (diamantes.contains(diamante)) {
+                                            final String mensaje = "El Corte:" + precioCorte.getCorte() +
+                                                ". El elemento " + j + " ya existe en el listado.";
+                                            LOGGER.info("<< " + mensaje);
+                                            throw new RegistroDiamanteBatchProcessorException(mensaje, Diamante.class);
                                         }
                                         diamantes.add(diamante);
-                                    } catch(IllegalArgumentException e) {
-                                        LOGGER.info("<< " + "El Corte:" +precioCorte.getCorte()+
-                                            ". En el elemento "+ j + " contiene elementos no validos." + e.getMessage());
-                                        throw new RegistroDiamanteBatchProcessorException("El Corte:" +precioCorte.getCorte()+
-                                            ". En el elemento "+ j + " contiene elementos no validos." + e.getMessage(),
+                                    } catch (IllegalArgumentException e) {
+                                        final String mensaje = "El Corte:" + precioCorte.getCorte() +
+                                            ". En el elemento " + j + " contiene elementos no validos.";
+                                        LOGGER.info("<< {}", mensaje, e);
+                                        throw new RegistroDiamanteBatchProcessorException(mensaje,
                                             Diamante.class);
                                     }
 
                                 } else {
-                                    LOGGER.info("<< " + "El Corte:" +precioCorte.getCorte()+
-                                        ". En el elemento "+ j + " no contiene datos.");
-                                    throw new RegistroDiamanteBatchProcessorException("El Corte:" +precioCorte.getCorte()+
-                                        ". En el elemento "+ j + " no contiene datos.",
-                                        Diamante.class);
+                                    final String mensaje = "El Corte:" + precioCorte.getCorte() +
+                                        ". En el elemento " + j + " no contiene datos.";
+                                    LOGGER.info("<< " + mensaje);
+                                    throw new RegistroDiamanteBatchProcessorException(mensaje, Diamante.class);
                                 }
                                 j++;
                             }
                         } else {
-                            LOGGER.info("<< " + "El elemento "+ i + " no contiene datos.");
-                            throw new RegistroDiamanteBatchProcessorException("El elemento "+ i + " no contiene datos.",
-                                Diamante.class);
+                            final String mensaje = "El elemento " + i + " no contiene datos.";
+                            LOGGER.info("<< " + mensaje);
+                            throw new RegistroDiamanteBatchProcessorException(mensaje, Diamante.class);
                         }
                         i++;
                     }
                 } else {
-                    LOGGER.info("<< " + "La Lista de Precios esta vacia o es nulla.");
-                    throw new RegistroDiamanteBatchProcessorException("La Lista de Precios esta vacia o es nulla.",
-                        Diamante.class);
+                    final String mensaje = "La Lista de Precios esta vacia o es nula.";
+                    LOGGER.info("<< {}", mensaje);
+                    throw new RegistroDiamanteBatchProcessorException(mensaje, Diamante.class);
                 }
                 ListadoValorComercialDiamante listadoValorComercialDiamante = ListadoValorComercialDiamanteFactory.create(fechaListado,
                     diamantes);
                 listadoValorComercialDiamante.actualizar();
             } catch (Exception e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "."+ e.getMessage());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
             }
         }
@@ -123,25 +122,24 @@ public class ValorComercialDiamanteBatchProcessor {
      * Se encarga de validar que la informacion de los campos sean correctos y tengan la longitud adecuada.
      *
      * @param cadena Contiene la informacion del campo a validar.
-     * @param field Contiene el nombre del campo que se va a validar
-     *
+     * @param field  Contiene el nombre del campo que se va a validar
      * @return Regresa la cadena que fue validada.
      */
-    private String validaString(String cadena, String field ) {
+    private String validaString(String cadena, String field) {
         int tamanio;
-        if(!cadena.isEmpty()) {
-            if(field.equalsIgnoreCase(_COLOR)) {
+        if (!cadena.isEmpty()) {
+            if (field.equalsIgnoreCase(_COLOR)) {
                 tamanio = 1;
-            } else if ( field.equalsIgnoreCase(_CLARITY)){
+            } else if (field.equalsIgnoreCase(_CLARITY)) {
                 tamanio = 4;
             } else {
                 tamanio = 60;
             }
-            if(cadena.length() > tamanio) {
+            if (cadena.length() > tamanio) {
                 throw new IllegalArgumentException("El campo=" +
                     field + " contiene un tamaño superior al permitido.");
             }
-        } else{
+        } else {
             throw new IllegalArgumentException("El campo=" +
                 field + " no contiene un valor.");
         }

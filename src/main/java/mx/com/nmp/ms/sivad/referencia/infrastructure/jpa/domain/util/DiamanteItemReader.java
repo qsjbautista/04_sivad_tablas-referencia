@@ -1,4 +1,5 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util;
+
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.PrecioCorte;
 
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.PrecioCorteDetalle;
@@ -22,7 +23,7 @@ public class DiamanteItemReader implements ItemReader<Map<String, PrecioCorteDet
     private int nextPrecioDetalleIndex;
 
     public DiamanteItemReader(List<PrecioCorte> listaPrecioCorte) {
-        LOGGER.info(">> DiamanteItemReader.size({", listaPrecioCorte.size());
+        LOGGER.info(">> DiamanteItemReader.size({})", listaPrecioCorte.size());
         this.listaPrecioCorte = listaPrecioCorte;
     }
 
@@ -36,7 +37,7 @@ public class DiamanteItemReader implements ItemReader<Map<String, PrecioCorteDet
         if (nextPrecioIndex < listaPrecioCorte.size()) {
             mapListaPrecioCorteDetalle = new HashMap<>();
             PrecioCorte precioCorte = listaPrecioCorte.get(nextPrecioIndex);
-            if(nextPrecioDetalleIndex < precioCorte.getPrecioCorte().size() ) {
+            if (nextPrecioDetalleIndex < precioCorte.getPrecioCorte().size()) {
                 mapListaPrecioCorteDetalle.put(precioCorte.getCorte(), precioCorte.getPrecioCorte().get(nextPrecioDetalleIndex));
                 nextPrecioDetalleIndex++;
             } else {

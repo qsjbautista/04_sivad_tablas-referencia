@@ -34,6 +34,8 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
+        LOGGER.info(">> beforeJob({})", jobExecution);
+
         jobExecution.getJobParameters().getDate("fechaListado");
 
         //Se crea la lista con la fecha de listado vacia, solo para que pase a historico y crear nueva lista
@@ -48,9 +50,9 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
     public void afterJob(JobExecution jobExecution) {
         LOGGER.info(">> afterJob({})", jobExecution);
 
-            if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-                LOGGER.info("!!! El Procesamiento de Información termino con Exito");
-            }
+        if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
+            LOGGER.info("!!! El Procesamiento de Información termino con Exito");
+        }
     }
 
 }
