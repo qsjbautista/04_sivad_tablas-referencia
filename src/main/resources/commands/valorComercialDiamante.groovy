@@ -4,6 +4,7 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
@@ -33,20 +34,22 @@ class valorComercialDiamante {
     @Command
     def consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+        LocalDate fechaFormat
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println(/El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  /)
-        } else
-            try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                def elementos = getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
-                mostrarTablaResultados(elementos)
-            } catch (Exception e) {
-                out.println("No existen resultados para la fecha: [${fecha}]")
-                e.printStackTrace()
-            }
+        try {
+            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
+
+        try {
+            def elementos = getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
+            mostrarTablaResultados(elementos)
+        } catch (ListadoValorComercialNoEncontradoException e) {
+            e.printStackTrace()
+            "No existe un Listado de Valor Comercial Diamante para la fecha solicitada."
+        }
     }
 
     /**

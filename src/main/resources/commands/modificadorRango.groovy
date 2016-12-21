@@ -4,6 +4,7 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoRangoFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhajaFactory
@@ -69,20 +70,22 @@ class modificadorTipoRango {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+        LocalDate fechaFormat
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        }else if(!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println("El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  ")
-        }else
-            try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                def elementos = getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fechaFormat)
-                mostrarTablaResultados(elementos)
-            } catch (Exception e) {
-                out.println("No existen resultados para la fecha: [${fecha}]")
-                e.printStackTrace()
-            }
+        try {
+            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
+
+        try {
+            def elementos = getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fechaFormat)
+            mostrarTablaResultados(elementos)
+        } catch (FactorAlhajaNoEncontradoException e) {
+            e.printStackTrace()
+            "No existe un Listado de Factores de Rango para la fecha solicitada."
+        }
     }
 
     /**

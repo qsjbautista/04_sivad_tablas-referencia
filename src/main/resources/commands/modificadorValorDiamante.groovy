@@ -4,14 +4,12 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ModificadorValorDiamanteFactory
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository
-import mx.com.nmp.ms.sivad.referencia.infrastructure.factory.FactorValorDiamanteFactoryImpl
-import mx.com.nmp.ms.sivad.referencia.infrastructure.factory.ModificadorValorDiamanteFactoryImpl
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Required
@@ -21,8 +19,6 @@ import org.crsh.text.ui.Overflow
 import org.crsh.text.ui.UIBuilder
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import org.springframework.util.ObjectUtils
 
 /**
@@ -67,22 +63,22 @@ class modificadorValorDiamante {
     @Usage("Permite recuperar los Modificador Valor Diamante vigentes de la fecha dada")
     @Command
     def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-mm-dd:") @Required @Argument String fecha) {
+        LocalDate fechaFormat
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        }else if(!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println("El formato de la fecha no es correcto debe de cumplir YYYY-mm-dd  ")
-        }else
-            try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                out.println("Fecha"+ fechaFormat.toDateTimeAtStartOfDay().toString())
-                def elementos = getModificadorValorDiamanteRepository(context).consultar(fechaFormat.toDateTimeAtStartOfDay())
-                out.println("elementos"+elementos.toString())
-                mostrarTablaResultados(elementos)
-            } catch (Exception e) {
-                out.println("La fecha: [${fecha}] no regresa resultados ")
-                e.printStackTrace()
-            }
+        try {
+            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
+
+        try {
+            def elementos = getModificadorValorDiamanteRepository(context).consultar(fechaFormat.toDateTimeAtStartOfDay())
+            mostrarTablaResultados(elementos)
+        } catch (ValorComercialNoEncontradoException e) {
+            e.printStackTrace()
+            "No existe un Listado de Factores de Valor Diamante para la fecha solicitada."
+        }
     }
 
 

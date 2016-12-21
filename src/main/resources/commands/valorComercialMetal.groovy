@@ -4,7 +4,7 @@
  */
 package commands
 
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamanteFactory
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal
@@ -18,7 +18,6 @@ import org.crsh.command.InvocationContext
 import org.crsh.text.ui.Overflow
 import org.crsh.text.ui.UIBuilder
 import org.joda.time.LocalDate
-import org.springframework.util.ObjectUtils
 
 /**
  * Utilizada por la consola CRaSH para la administración del valor comercial del oro
@@ -27,7 +26,6 @@ import org.springframework.util.ObjectUtils
  */
 @Usage("Administración del Valor Comercial del Metal")
 class valorComercialMetal {
-
     /**
      * Permite actualizar e lvalor comercial del Metal
      *
@@ -39,22 +37,20 @@ class valorComercialMetal {
     @Command
     def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument  String contenido) {
         ListadoValorComercialMetal listadoValorComercialMetal = null
-        if (ObjectUtils.isEmpty(contenido)) {
-            out.println("Se requiere el contenido a procesar")
-        } else {
-            try {
-                listadoValorComercialMetal = crearListado(contenido)
-            } catch (Exception e){
-                 e.printStackTrace()
-                out.println("No es posible crear listado ")
-            }
-                try {
-                    getValorComercialMetalRepository(context).actualizarListado(listadoValorComercialMetal)
-                    out.println("Se actualizó correctamente")
-                }catch(Exception e) {
-                    e.printStackTrace()
-                    out.println("No es posible actualizar ")
-                }
+
+        try {
+            listadoValorComercialMetal = crearListado(contenido)
+        } catch (Exception e){
+             e.printStackTrace()
+            out.println("No es posible crear listado ")
+        }
+
+        try {
+            getValorComercialMetalRepository(context).actualizarListado(listadoValorComercialMetal)
+            out.println("Se actualizó correctamente")
+        }catch(Exception e) {
+            e.printStackTrace()
+            out.println("No es posible actualizar ")
         }
     }
 
@@ -68,20 +64,22 @@ class valorComercialMetal {
     @Command
     def consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+        LocalDate fechaFormat
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println(/El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  /)
-        } else
-            try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                def elementos = getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
-                mostrarTablaResultados(elementos)
-            } catch (Exception e) {
-                out.println("No hay resultados para la fecha: [${fecha}]")
-                e.printStackTrace()
-            }
+        try {
+            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
+
+        try {
+            def elementos = getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
+            mostrarTablaResultados(elementos)
+        } catch (ListadoValorGramoNoEncontradoException e) {
+            e.printStackTrace()
+            "No existe un Listado Valor Comercial Metal para la fecha solicitada."
+        }
     }
 
     /**
@@ -188,5 +186,4 @@ class valorComercialMetal {
     private static ValorComercialMetalRepository getValorComercialMetalRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ValorComercialMetalRepository)
     }
-
 }

@@ -4,6 +4,7 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertificadoFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.CertificadoFactory
@@ -68,20 +69,22 @@ class modificadorTipoCertificado {
     @Command
     def consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+        LocalDate fechaFormat
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println("El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  ")
-        } else
-            try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                def elementos = getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fechaFormat)
-                mostrarTablaResultados(elementos)
-            } catch (Exception e) {
-                out.println("No existen resultados para la fecha: [${fecha}]")
-                e.printStackTrace()
-            }
+        try {
+            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
+
+        try {
+            def elementos = getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fechaFormat)
+            mostrarTablaResultados(elementos)
+        } catch (CertificadoNoEncontradoException e) {
+            e.printStackTrace()
+            "No existe un Listado de Certificados para la fecha solicitada."
+        }
     }
 
     /**
