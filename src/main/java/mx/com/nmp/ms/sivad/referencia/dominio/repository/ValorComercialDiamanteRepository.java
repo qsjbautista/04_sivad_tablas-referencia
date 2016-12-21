@@ -72,4 +72,10 @@ public interface ValorComercialDiamanteRepository {
      */
     void actualizarListadoSinHist(ListadoValorComercialDiamante listado);
 
+    /**
+     * Si existe un error en el procesamiento batch se eliminan los registros insertados.
+     *
+     */
+    void rollBackBatch();
+
 }

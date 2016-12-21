@@ -193,8 +193,11 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
             listadoJpaRepository.delete(listadoVigente.getId());
         }
 
+
         // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
+        Set<ValorComercialDiamanteJPA> listadoVCD = valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch();
+        listadoNuevo.setValoresComerciales(valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch());
         listadoNuevo.setFechaCarga(DateTime.now());
         listadoJpaRepository.save(listadoNuevo);
     }
@@ -239,7 +242,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         ListadoValorComercialDiamanteJPA listadoNuevo =
             ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listadoAnterior);
         listadoNuevo.setFechaCarga(DateTime.now());
-
         return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
     }
 
@@ -305,12 +307,20 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     public void actualizarListadoSinHist(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListadoSinHist({})", listado);
 
-        ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
-
         // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
-        listadoVigente.getValoresComerciales().addAll(listadoNuevo.getValoresComerciales());
-        listadoJpaRepository.save(listadoVigente);
+        valorComercialDiamanteJPARepository.save(listadoNuevo.getValoresComerciales());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void rollBackBatch() {
+        Set<ValorComercialDiamanteJPA> listadoVCD = valorComercialDiamanteJPARepository
+            .obtenerValoresComercialesDiamanteBatch();
+        valorComercialDiamanteJPARepository.delete(listadoVCD);
     }
 
 }

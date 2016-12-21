@@ -96,7 +96,6 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
     @Override
-    @Transactional()
     public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
         LOGGER.info(">> actualizarListaValorComercial({})", parameters);
 
@@ -137,7 +136,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
             LOGGER.info("Codigo de salida: {}", execution.getStatus());
            //}
         } catch (Exception e) {
-            LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+            LOGGER.info("<< Error" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
             throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
         }
 

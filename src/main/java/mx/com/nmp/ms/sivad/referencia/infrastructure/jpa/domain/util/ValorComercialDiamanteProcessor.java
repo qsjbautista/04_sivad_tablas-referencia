@@ -29,6 +29,7 @@ public class ValorComercialDiamanteProcessor
     private final String _COLOR = "Color";
     private final String _CLARITY = "Clarity";
     private final String _SHAPE = "Shape";
+    private int contador = 1;
 
     @Override
     public Diamante process(final Map<String, PrecioCorteDetalle> precioCortes) throws Exception {
@@ -45,10 +46,13 @@ public class ValorComercialDiamanteProcessor
                             precioCorteDetalle.getTamanioSuperior(),
                             precioCorteDetalle.getPrecio());
                 }
+                contador++;
             }
         } catch (Exception e) {
-            LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
+            String mensaje ="<< " + e.getMessage() + ". "
+                + "Registor numero: " + contador ;
+            LOGGER.info(WebServiceExceptionCodes.NMPR004.getMessageException() + "." +mensaje);
+            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), mensaje);
         }
         LOGGER.debug("<< process(): {}", diamante);
         return diamante;
@@ -74,7 +78,7 @@ public class ValorComercialDiamanteProcessor
             }
             if(cadena.length() > tamanio) {
                 throw new IllegalArgumentException("El campo=" +
-                    field + " contiene un tamaño superior al permitido.");
+                    field + " contiene un tamanio superior al permitido.");
             }
         } else{
             throw new IllegalArgumentException("El campo=" +

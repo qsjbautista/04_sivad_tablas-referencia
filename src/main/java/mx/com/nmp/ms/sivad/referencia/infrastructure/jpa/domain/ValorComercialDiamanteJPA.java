@@ -4,9 +4,12 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -19,7 +22,17 @@ import javax.persistence.Table;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ValorComercialDiamanteJPA extends AbstractValorComercialDiamanteJPA {
 
+    @ManyToOne
+    @JoinColumn(name = "listado")
+    private ListadoValorComercialDiamanteJPA listado;
 
+    public ListadoValorComercialDiamanteJPA getListado() {
+        return listado;
+    }
+
+    public void setListado(ListadoValorComercialDiamanteJPA listado) {
+        this.listado = listado;
+    }
 
     // METODOS
 

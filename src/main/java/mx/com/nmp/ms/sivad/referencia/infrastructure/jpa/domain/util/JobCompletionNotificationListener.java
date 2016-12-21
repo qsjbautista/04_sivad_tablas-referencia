@@ -1,5 +1,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util;
 
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
@@ -34,24 +36,34 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        LOGGER.info(">> beforeJob({})", jobExecution);
-
-        jobExecution.getJobParameters().getDate("fechaListado");
-
-        //Se crea la lista con la fecha de listado vacia, solo para que pase a historico y crear nueva lista
-        ListadoValorComercialDiamante listadoValorComercialDiamante = ListadoValorComercialDiamanteFactory
-            .create(new LocalDate(jobExecution.getJobParameters().getDate("fechaListado")), new HashSet());
-        valorComercialDiamanteRepository.actualizarListado(listadoValorComercialDiamante);
-
+        //Se eliminan con esto, los valores comerciales que pudieran haber quedado sin eliminar despues de un procesamiento
+        //fallido.
+        valorComercialDiamanteRepository.rollBackBatch();
         LOGGER.info("Se crea la lista y se guarda en historico la anterior");
     }
 
     @Override
     public void afterJob(JobExecution jobExecution) {
         LOGGER.info(">> afterJob({})", jobExecution);
+        try {
+            if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
+                jobExecution.getJobParameters().getDate("fechaListado");
 
-        if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            LOGGER.info("!!! El Procesamiento de Información termino con Exito");
+                //Se crea la lista con la fecha de listado vacia, solo para que pase a historico y crear nueva lista
+                ListadoValorComercialDiamante listadoValorComercialDiamante = ListadoValorComercialDiamanteFactory
+                    .create(new LocalDate(jobExecution.getJobParameters().getDate("fechaListado")), new HashSet());
+                valorComercialDiamanteRepository.actualizarListado(listadoValorComercialDiamante);
+
+                LOGGER.info("Se crea la lista y se guarda en historico la anterior");
+                LOGGER.info("!!! El Procesamiento de Información termino con Exito");
+            } else {
+                LOGGER.info("!!! Se realiza el rollback de la información.");
+                valorComercialDiamanteRepository.rollBackBatch();
+            }
+        }catch (Exception e) {
+            valorComercialDiamanteRepository.rollBackBatch();
+            LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
         }
     }
 
