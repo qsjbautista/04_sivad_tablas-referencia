@@ -29,15 +29,16 @@ public class ValorComercialDiamanteProcessor
     private final String _COLOR = "Color";
     private final String _CLARITY = "Clarity";
     private final String _SHAPE = "Shape";
-    private int contador = 1;
+
 
     @Override
     public Diamante process(final Map<String, PrecioCorteDetalle> precioCortes) throws Exception {
         Diamante diamante = null;
+        PrecioCorteDetalle precioCorteDetalle = null;
         try {
             for (Map.Entry<String, PrecioCorteDetalle> corteDiamante : precioCortes.entrySet()) {
                 String corte = corteDiamante.getKey();
-                PrecioCorteDetalle precioCorteDetalle = corteDiamante.getValue();
+                precioCorteDetalle = corteDiamante.getValue();
                 if (precioCorteDetalle != null) {
                         diamante = DiamanteFactory.create(validaString(corte, _SHAPE),
                             validaString(precioCorteDetalle.getColor(), _COLOR),
@@ -46,11 +47,14 @@ public class ValorComercialDiamanteProcessor
                             precioCorteDetalle.getTamanioSuperior(),
                             precioCorteDetalle.getPrecio());
                 }
-                contador++;
             }
         } catch (Exception e) {
-            String mensaje ="<< " + e.getMessage() + ". "
-                + "Registor numero: " + contador ;
+            String mensaje ="<< " + e.getMessage() + " "
+                + "Registor: {" + precioCorteDetalle.getColor()+", " +
+                    precioCorteDetalle.getClaridad() +", " +
+                    precioCorteDetalle.getTamanioInferior() +", " +
+                    precioCorteDetalle.getTamanioSuperior() +", " +
+                    precioCorteDetalle.getPrecio()+"}";
             LOGGER.info(WebServiceExceptionCodes.NMPR004.getMessageException() + "." +mensaje);
             throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), mensaje);
         }
@@ -86,6 +90,6 @@ public class ValorComercialDiamanteProcessor
         }
         return cadena;
     }
-
+ 
 }
 
