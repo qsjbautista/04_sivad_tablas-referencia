@@ -62,8 +62,8 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 Oro oroResult = valorComercialOroRepository.consultarOroVigente(oroVO);
                 response.setPrecioPorGramo(oroResult.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: calidad({}), color: ({})", parameters.getCalidad(), parameters.getColor());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR008.getMessageException() + " Para las entradas: calidad({}), color: ({})", parameters.getCalidad(), parameters.getColor());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR008.getCodeException(), WebServiceExceptionCodes.NMPR008.getMessageException());
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), calidad: ({}), color: ({}) ", parameters, parameters.getCalidad(), parameters.getColor());
@@ -92,8 +92,8 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 Metal metal = valorComercialMetalRepository.consultarMetalVigente(metalVO);
                 response.setPrecioPorGramo(metal.obtenerValorGramo());
             } catch (ValorGramoNoEncontradoException e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: metal({}), calidad: ({})", parameters.getMetal(), parameters.getCalidad());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR011.getMessageException() + " Para las entradas: metal({}), calidad: ({})", parameters.getMetal(), parameters.getCalidad());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR011.getCodeException(), WebServiceExceptionCodes.NMPR011.getMessageException());
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}) ", parameters, parameters.getMetal(), parameters.getCalidad());

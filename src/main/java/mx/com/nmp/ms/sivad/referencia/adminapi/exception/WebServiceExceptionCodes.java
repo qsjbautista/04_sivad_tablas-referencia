@@ -6,12 +6,12 @@ package mx.com.nmp.ms.sivad.referencia.adminapi.exception;
  * @author jbautista
  */
 public enum WebServiceExceptionCodes {
-    NMPR004("NMP-TR-004", "Error en datos de entrada"),
-    NMPR007("NMP-TR-007","No existe el rango solicitado"),
-    NMPR008("NMP-TR-008", "No existe un valor gramo para las características de oro solicitadas"),
-    NMPR009("NMP-TR-009","No existe el certificado solicitado"),
-    NMPR010("NMP-TR-010","No existe un valor comercial para las características de diamante solicitadas"),
-    NMPR011("NMP-TR-011", "No existe el metal solicitado");
+    NMPR004("NMP-TR-004", "Error en datos de entrada."),
+    NMPR007("NMP-TR-007", "No existe el rango solicitado."),
+    NMPR008("NMP-TR-008", "No existe un valor gramo para las características de oro solicitadas."),
+    NMPR009("NMP-TR-009", "No existe el certificado solicitado."),
+    NMPR010("NMP-TR-010", "No existe un valor comercial para las características de diamante solicitadas."),
+    NMPR011("NMP-TR-011", "No existe un valor gramo para las características de metal solicitadas.");
 
     private String codeException;
     private String messageException;
