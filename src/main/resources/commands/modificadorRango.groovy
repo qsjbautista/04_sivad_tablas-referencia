@@ -51,7 +51,7 @@ class modificadorTipoRango {
 
                 try{
                     getModificadorRangoRepository(context).actualizarListado(listadoRango)
-                    out.println("Se actualizó correctamente")
+                    out.println("El Listado de Factores de Rango fue actualizado correctamente.")
                 }catch(Exception e){
                     e.stackTrace
                     out.println("No se pudo crear la lista")
@@ -69,7 +69,7 @@ class modificadorTipoRango {
      */
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
-    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {

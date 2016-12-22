@@ -52,7 +52,7 @@ class modificadorTipoCertificado {
 
         try{
             getModificadorCertificadoRepository(context).actualizarListado(listadoModificadorCertificado)
-            out.println("Se actualizó correctamente")
+            out.println("El Listado de Certificados fue actualizado correctamente.")
         }catch(Exception e ){
             out.println("No persitieron los Certificados")
             e.printStackTrace()
@@ -68,7 +68,7 @@ class modificadorTipoCertificado {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {

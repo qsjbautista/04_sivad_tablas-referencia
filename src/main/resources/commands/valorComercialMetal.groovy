@@ -47,7 +47,7 @@ class valorComercialMetal {
 
         try {
             getValorComercialMetalRepository(context).actualizarListado(listadoValorComercialMetal)
-            out.println("Se actualizó correctamente")
+            out.println("El Listado Valor Comercial Metal fue actualizado correctamente.")
         }catch(Exception e) {
             e.printStackTrace()
             out.println("No es posible actualizar ")
@@ -63,7 +63,7 @@ class valorComercialMetal {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {

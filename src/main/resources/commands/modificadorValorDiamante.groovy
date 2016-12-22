@@ -45,7 +45,7 @@ class modificadorValorDiamante {
             try {
                 modificadorValorDiamante = crearModificador(contenido)
                 getModificadorValorDiamanteRepository(context).actualizar(modificadorValorDiamante)
-                out.println("Se actualizo correctamente ")
+                out.println("El Listado de Factores de Valor Diamante fue actualizado correctamente.")
             }catch(Exception e) {
                 e.printStackTrace()
                 out.println("no se pudo actualizar ")

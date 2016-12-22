@@ -33,7 +33,7 @@ class valorComercialDiamante {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {
@@ -63,10 +63,10 @@ class valorComercialDiamante {
     def restaurarAnterior(InvocationContext context) {
         try {
             def elementos = getValorComercialDiamanteRepository(context).restaurarListadoAnterior()
-            out.println("Se restauró exitosamente\n")
+            out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha anterior.\n")
             mostrarTablaResultados(elementos)
         } catch (Exception e) {
-            out.println("No es posible restaurar a la fecha Anterior")
+            out.println("No es posible restaurar el Listado de Valor Comercial Diamante a la fecha anterior.")
             e.printStackTrace()
         }
     }
@@ -80,20 +80,20 @@ class valorComercialDiamante {
     @Usage("Permite restaurar el listado de precios de diamantes de la fecha de vigencia indicada.")
     @Command
     def restaurarPorFecha(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
 
         if (ObjectUtils.isEmpty(fecha)) {
             out.println("Se requiere la fecha para consultar ")
         } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println(/El formato de la fecha no es correcto debe de cumplir YYYY-dd-mm  /)
+            out.println(/El formato de la fecha no es correcto debe de cumplir yyyy-mm-dd  /)
         } else
             try {
                 LocalDate fechaFormat = new LocalDate(fecha)
                 def elementos = getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
-                out.println("Se restauró exitosamente\n")
+                out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha: [${fecha}].\n")
                 mostrarTablaResultados(elementos)
             } catch (Exception e) {
-                out.println("No es posible resturar a la fecha: [${fecha}]")
+                out.println("No es posible restaurar el Listado de Valor Comercial Diamante a la fecha: [${fecha}].")
                 e.printStackTrace()
             }
     }

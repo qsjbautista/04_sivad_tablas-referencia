@@ -49,7 +49,7 @@ class valorComercialOro {
                 }
 
                 getConsultaListado(context).actualizarListado(listadoValorComercialOro)
-                out.println("Se actualizó correctamente")
+                out.println("El Listado Valor Comercial Oro fue actualizado correctamente.")
             }
     }
 
@@ -62,7 +62,7 @@ class valorComercialOro {
      */
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
-    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-dd-mm:") @Required @Argument String fecha) {
+    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {
