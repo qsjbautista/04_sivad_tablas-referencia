@@ -55,7 +55,7 @@ final class MostrarResultadosUtil {
             elementos.each { elemento ->
                 row {
                     propiedades.each {
-                        label(elemento."$it", foreground: white)
+                        label(elemento."$it" ? elemento."$it" : "", foreground: white)
                     }
                 }
             }
@@ -77,7 +77,7 @@ final class MostrarResultadosUtil {
                 headers.eachWithIndex { String h, int i ->
                     row {
                         label("$h: ", foreground: white)
-                        label(elemento."${propiedades[i]}", foreground: white)
+                        label(elemento."${propiedades[i]}" ? elemento."${propiedades[i]}" : "", foreground: white)
                     }
                 }
                 row {

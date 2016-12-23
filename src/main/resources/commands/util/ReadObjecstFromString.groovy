@@ -107,7 +107,7 @@ final class ReadObjecstFromString {
     private Map<String, String> readObject(List<String> properties, int elemento) {
         Map<String, String> mapObject = [:]
         properties.eachWithIndex { String entry, int i ->
-            String[] property = entry.split(PROPERTY_SEPARATOR)
+            String[] property = entry.trim().split(PROPERTY_SEPARATOR)
 
             if (property.size() < PROPERTY_SIZE) {
                 throw new IllegalArgumentException("""Final inesperado, propiedad no valida [$entry]
