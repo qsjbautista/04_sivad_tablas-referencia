@@ -54,10 +54,10 @@ CREATE TABLE CFG_FACTOR_ALHAJA
     METAL VARCHAR(5) NOT NULL,
     CALIDAD VARCHAR(5),
     RANGO VARCHAR(5) NOT NULL,
-    FACTOR DECIMAL(10, 3) NOT NULL,
-    DESPLAZAMIENTO DECIMAL(10, 3) NOT NULL,
-    LIMITE_INFERIOR DECIMAL(10, 3) NOT NULL,
-    LIMITE_SUPERIOR DECIMAL(10, 3) NOT NULL,
+    FACTOR DECIMAL(8, 2) NOT NULL,
+    DESPLAZAMIENTO DECIMAL(8, 2) NOT NULL,
+    LIMITE_INFERIOR DECIMAL(8, 2) NOT NULL,
+    LIMITE_SUPERIOR DECIMAL(8, 2) NOT NULL,
     ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
     LISTADO BIGINT,
     PRIMARY KEY (ID)
@@ -79,10 +79,10 @@ CREATE TABLE HIST_CFG_FACTOR_ALHAJA
     METAL VARCHAR(5) NOT NULL,
     CALIDAD VARCHAR(5),
     RANGO VARCHAR(5) NOT NULL,
-    FACTOR DECIMAL(10, 3) NOT NULL,
-    DESPLAZAMIENTO DECIMAL(10, 3) NOT NULL,
-    LIMITE_INFERIOR DECIMAL(10, 3) NOT NULL,
-    LIMITE_SUPERIOR DECIMAL(10, 3) NOT NULL,
+    FACTOR DECIMAL(8, 2) NOT NULL,
+    DESPLAZAMIENTO DECIMAL(8, 2) NOT NULL,
+    LIMITE_INFERIOR DECIMAL(8, 2) NOT NULL,
+    LIMITE_SUPERIOR DECIMAL(8, 2) NOT NULL,
     ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
     LISTADO BIGINT,
     PRIMARY KEY (ID)
@@ -135,9 +135,9 @@ CREATE TABLE HIST_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO
     PRIMARY KEY (ID)
 );
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- INICIA - TABLAS: VALOR COMERCIAL 'DIAMANTE'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 --
 -- HISTÓRICOS
@@ -148,7 +148,7 @@ CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
 (
     ID BIGINT AUTO_INCREMENT NOT NULL,
     CORTE VARCHAR(50) NOT NULL,
-    COLOR CHAR(1) NOT NULL,
+    COLOR VARCHAR(20) NOT NULL,
     CLARIDAD VARCHAR(4) NOT NULL,
     TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE CFG_DIAMANTE_VALOR_COMERCIAL
 (
     ID BIGINT AUTO_INCREMENT NOT NULL,
     CORTE VARCHAR(50) NOT NULL,
-    COLOR CHAR(1) NOT NULL,
+    COLOR VARCHAR(20) NOT NULL,
     CLARIDAD VARCHAR(4) NOT NULL,
     TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
@@ -193,15 +193,15 @@ CREATE TABLE CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL
     PRIMARY KEY (ID)
 );
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - TABLAS: VALOR COMERCIAL 'DIAMANTE'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- INICIA - TABLAS: VALOR COMERCIAL 'ORO'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 --
 -- HISTÓRICOS
@@ -249,15 +249,15 @@ CREATE TABLE CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO
     PRIMARY KEY (ID)
 );
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - TABLAS: VALOR COMERCIAL 'ORO'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- INICIA - TABLAS: VALOR COMERCIAL 'METAL'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 --
 -- HISTÓRICOS
@@ -305,9 +305,9 @@ CREATE TABLE CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL
     PRIMARY KEY (ID)
 );
 
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - TABLAS: VALOR COMERCIAL 'METAL'
-------------------------------------------------------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------------------------------------------------
 
 ALTER TABLE JOURNAL_ENTITY_EVENT ADD FOREIGN KEY (ID) REFERENCES JOURNAL_EVENT (ID);
 ALTER TABLE JOURNAL_CUSTOM_EVENT ADD FOREIGN KEY (ID) REFERENCES JOURNAL_EVENT (ID);
