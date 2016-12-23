@@ -5,16 +5,15 @@
 package commands
 
 import commands.util.ConvertirAFechaUtil
+import commands.util.MostrarResultadosUtil
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository
-import org.crsh.cli.Argument
 import org.crsh.cli.Command
-import org.crsh.cli.Required
+import org.crsh.cli.Option
 import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
-import org.crsh.text.ui.Overflow
-import org.crsh.text.ui.UIBuilder
-import org.joda.time.LocalDate
+import org.joda.time.DateTime
 
 /**
  * Utilizada por la consola CRaSH para la administración del Modificador Valor Diamante
@@ -23,6 +22,10 @@ import org.joda.time.LocalDate
  */
 @Usage("Administración del Modificador Valor Diamante")
 class modificadorValorDiamante {
+    private static final List<String>  PROPIEDADES_FACTOR_VALOR_DIAMANTE =
+        ["minimo", "medio", "maximo"]
+    private static final List<String>  HEADERS = ["Minimo", "Medio", "Máximo"]
+
     /**
      * Permite obtener el Modificador Valor Diamante
      *
@@ -31,48 +34,80 @@ class modificadorValorDiamante {
      */
     @Usage("Permite recuperar los Modificador Valor Diamante vigentes de la fecha dada")
     @Command
-    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-mm-dd") @Required @Argument String fecha) {
-        LocalDate fechaFormat
+    def consultar(InvocationContext context,
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Indica si el resultado se muestra en formato de lista")
+                  @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
+        DateTime fechaFormat = null
 
-        try {
-            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
-        } catch (IllegalArgumentException e) {
-            out.println("${e.getMessage()}")
-            return
+        if (fecha) {
+            try {
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha).toDateTimeAtStartOfDay()
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
+            }
         }
 
         try {
-            def elementos = getModificadorValorDiamanteRepository(context).consultar(fechaFormat.toDateTimeAtStartOfDay())
-            mostrarTablaResultados(elementos)
+            def elementos = recuperarElementos(context, fechaFormat)
+            mostrarResultados(elementos, mostrarEnLista)
         } catch (ValorComercialNoEncontradoException e) {
             e.printStackTrace()
-            "No existe un Listado de Factores de Valor Diamante para la fecha solicitada."
+            procesarMensajeError(fechaFormat)
         }
     }
 
+    /**
+     * Recupera los elemtos del catálogo vigentes o por fecha especificada.
+     *
+     context El contexto de la invocación.
+     * @param fecha Fecha de consulta.
+     *
+     * @return Lista de elemetos
+     */
+    private static def recuperarElementos(InvocationContext context, DateTime fecha) {
+        if (fecha) {
+            Set<FactorValorDiamante> factorValorDiamante  = new HashSet<>()
+            getModificadorValorDiamanteRepository(context).consultar(fecha).each {
+                factorValorDiamante.addAll(it.factor)
+            }
+
+            factorValorDiamante
+        } else {
+            getModificadorValorDiamanteRepository(context).consultar().factor
+        }
+    }
 
     /**
-     * Utilizado para representar los elementos del catálogo en un formato de tabla.
+     * Muestra los resultados de la consulta según el formato especificado.
      *
-     * @param elementos Lista de elementos del catálogo.
-     * @return Despliegue visual en la consola con los elementos del catálogo.
+     * @param elementos Elementos a mostrar.
+     * @param mostrarEnLista Indica el formato de salida.
+     *
+     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private def mostrarTablaResultados(elementos) {
-        new UIBuilder().table(separator: dashed, overflow: Overflow.HIDDEN, rightCellPadding: 1) {
-            header(decoration: bold, foreground: black, background: white) {
-                label('Minimo')
-                label('Medio')
-                label('Máximo')
-            }
+    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
+        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_FACTOR_VALOR_DIAMANTE, mostrarEnLista)
+    }
 
-            elementos.each { elemento ->
-                row {
-                    label(elemento.factor.minimo, foreground: green)
-                    label(elemento.factor.medio, foreground: red)
-                    label(elemento.factor.maximo, foreground: blue)
-                }
-            }
+    /**
+     * Crea el mensaje cuando se presenta un error en la consulta del catálogo
+     *
+     * @param fecha Fecha de consulta.
+     *
+     * @return Mesaje de error.
+     */
+    private static def procesarMensajeError(DateTime fecha) {
+        String msj
+
+        if (fecha) {
+            msj = "para la fecha solicitada."
+        } else {
+            msj = "vigente."
         }
+
+        "No existe un Listado de Factores de Valor Diamante $msj"
     }
 
     /**

@@ -9,6 +9,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoE
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
+import org.crsh.cli.Option
 import org.crsh.cli.Required
 import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
@@ -34,18 +35,20 @@ class valorComercialDiamante {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Required @Argument String fecha) {
-        LocalDate fechaFormat
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha) {
+        LocalDate fechaFormat = null
 
-        try {
-            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
-        } catch (IllegalArgumentException e) {
-            out.println("${e.getMessage()}")
-            return
+        if (fecha) {
+            try {
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
+            }
         }
 
         try {
-            def elementos = getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
+            def elementos = recuperarElementos(context, fechaFormat)
             mostrarTablaResultados(elementos)
         } catch (ListadoValorComercialNoEncontradoException e) {
             e.printStackTrace()
@@ -130,6 +133,22 @@ class valorComercialDiamante {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Recupera los elemtos del catálogo vigentes o por fecha especificada.
+     *
+     context El contexto de la invocación.
+     * @param fecha Fecha de consulta.
+     *
+     * @return Lista de elemetos
+     */
+    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+        if (fecha) {
+            getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fecha)
+        } else {
+            getValorComercialDiamanteRepository(context).consultarListadoVigente()
         }
     }
 

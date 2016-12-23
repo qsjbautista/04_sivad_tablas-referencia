@@ -55,7 +55,7 @@ final class MostrarResultadosUtil {
             elementos.each { elemento ->
                 row {
                     propiedades.each {
-                        label(elemento."$it" ? elemento."$it" : "", foreground: white)
+                        label(elemento."$it" == null ? "" : elemento."$it", foreground: white)
                     }
                 }
             }
@@ -75,9 +75,11 @@ final class MostrarResultadosUtil {
         new UIBuilder().table(separator: null, overflow: 'hidden', rightCellPadding: 1) {
             elementos.each { elemento ->
                 headers.eachWithIndex { String h, int i ->
-                    row {
-                        label("$h: ", foreground: white)
-                        label(elemento."${propiedades[i]}" ? elemento."${propiedades[i]}" : "", foreground: white)
+                    if (elemento."${propiedades[i]}" != null) {
+                        row {
+                            label("$h: ", foreground: white)
+                            label(elemento."${propiedades[i]}", foreground: white)
+                        }
                     }
                 }
                 row {
