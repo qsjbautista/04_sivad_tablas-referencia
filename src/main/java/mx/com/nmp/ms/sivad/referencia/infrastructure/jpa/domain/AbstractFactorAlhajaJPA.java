@@ -33,16 +33,16 @@ public abstract class AbstractFactorAlhajaJPA {
     @Column(name = "rango", nullable = false)
     private String rango;
 
-    @Column(name = "factor", nullable = false)
+    @Column(name = "factor", precision = 8, scale = 2, nullable = false)
     private BigDecimal factor;
 
-    @Column(name = "desplazamiento", nullable = false)
+    @Column(name = "desplazamiento", precision = 8, scale = 2, nullable = false)
     private BigDecimal desplazamiento;
 
-    @Column(name = "limite_inferior", nullable = false)
+    @Column(name = "limite_inferior", precision = 8, scale = 2, nullable = false)
     private BigDecimal limiteInferior;
 
-    @Column(name = "limite_superior", nullable = false)
+    @Column(name = "limite_superior", precision = 8, scale = 2, nullable = false)
     private BigDecimal limiteSuperior;
 
     @Column(name = "ultima_actualizacion", nullable = false)

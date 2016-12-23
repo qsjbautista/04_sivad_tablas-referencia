@@ -119,7 +119,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
-                response.setDesplazamiento(factorAlhaja.getFactor());
+                response.setDesplazamiento(factorAlhaja.getDesplazamiento());
             } catch (FactorAlhajaNoEncontradoException e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
