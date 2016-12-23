@@ -55,7 +55,6 @@
 
         <!-- variables para profiles -->
         <metrics.profile/>
-        <profile.swagger />
 	</properties>
 
 	<dependencyManagement>
@@ -503,9 +502,6 @@
         <!-- Perfil de ensamble -->
         <profile>
             <id>ensamble</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
@@ -538,9 +534,6 @@
         <!-- Perfil de testing @ cloud -->
         <profile>
             <id>testing</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
