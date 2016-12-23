@@ -1,3 +1,10 @@
+/*
+ *
+ * Microservicios - Tablas de Referencia
+ *
+ * <p><b>Quarksoft Copyrigth © 2016</b></p>
+ *
+ */
 package mx.com.nmp.ms.sivad.referencia.dominio.factory;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;

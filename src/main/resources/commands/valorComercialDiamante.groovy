@@ -4,6 +4,7 @@
  */
 package commands
 
+import commands.util.ConvertirAFechaUtil
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository
 import org.crsh.cli.Argument
@@ -33,7 +34,7 @@ class valorComercialDiamante {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {

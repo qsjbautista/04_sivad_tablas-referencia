@@ -4,11 +4,8 @@
  */
 package commands
 
+import commands.util.ConvertirAFechaUtil
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException
-import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory
-import mx.com.nmp.ms.sivad.referencia.dominio.factory.ModificadorValorDiamanteFactory
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
@@ -17,9 +14,7 @@ import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
 import org.crsh.text.ui.Overflow
 import org.crsh.text.ui.UIBuilder
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.springframework.util.ObjectUtils
 
 /**
  * Utilizada por la consola CRaSH para la administración del Modificador Valor Diamante
@@ -28,32 +23,6 @@ import org.springframework.util.ObjectUtils
  */
 @Usage("Administración del Modificador Valor Diamante")
 class modificadorValorDiamante {
-
-    /**
-     * Permite actualizar el Modificador Valor Diamante mediante un archivo
-     *
-     * @param context El contexto de la invocación.
-     * @return Lista de elementos
-     */
-    @Usage("Permite actualizar el Modificador Valor Diamante mediante un archivo. Factor Minimo: ? Factor Medio: ? Factor Maximo: ?")
-    @Command
-    def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument  String contenido) {
-        ModificadorValorDiamante modificadorValorDiamante = null
-        if (ObjectUtils.isEmpty(contenido)) {
-            out.println("Se requiere el contenido")
-        } else {
-            try {
-                modificadorValorDiamante = crearModificador(contenido)
-                getModificadorValorDiamanteRepository(context).actualizar(modificadorValorDiamante)
-                out.println("El Listado de Factores de Valor Diamante fue actualizado correctamente.")
-            }catch(Exception e) {
-                e.printStackTrace()
-                out.println("no se pudo actualizar ")
-            }
-        }
-    }
-
-
     /**
      * Permite obtener el Modificador Valor Diamante
      *
@@ -62,7 +31,7 @@ class modificadorValorDiamante {
      */
     @Usage("Permite recuperar los Modificador Valor Diamante vigentes de la fecha dada")
     @Command
-    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-mm-dd:") @Required @Argument String fecha) {
+    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar YYYY-mm-dd") @Required @Argument String fecha) {
         LocalDate fechaFormat
 
         try {
@@ -106,68 +75,6 @@ class modificadorValorDiamante {
         }
     }
 
-
-/**
- * Utilizado para listas
- *
- * @param file archivp que se recibe
- * @param context El contexto de la invocación
- * @return ListadoValorcomercialMetalFactory
- */
-    private def crearModificador(String contenido) {
-
-        BigDecimal factorMinimo
-        BigDecimal factorMedio
-        BigDecimal factorMaximo
-        FactorValorDiamante factorValorDiamante;
-        ModificadorValorDiamante modificadorValorDiamante
-        def dataList = []
-        def infoTxt = [:]
-        def fMin = "Factor Minimo"
-        def fMed = "Factor Medio"
-        def fMax = "Factor Maximo"
-
-        contenido.eachLine { line ->
-            if (line.trim()) {
-                def (key, value) = line.split(':').collect() { it.trim() }
-                infoTxt."$key" = value
-            } else {
-                if (infoTxt) {
-                    dataList << infoTxt
-                    infoTxt = [:]
-                }
-            }
-        }
-
-        if (infoTxt) {
-            dataList << infoTxt
-        }
-
-        dataList.eachWithIndex { it, index ->
-            out.println("Carga $index")
-            it.each { k, v ->
-                out.println("$k": "$v")
-                if (fMin == k)
-                    factorMinimo = new BigDecimal(v.toString())
-                if (fMed == k)
-                    factorMedio = new BigDecimal(v.toString())
-                if (fMax == k)
-                    factorMaximo = new BigDecimal(v.toString())
-            }
-            try {
-                factorValorDiamante = getFactorValorDiamanteFactory(context).crearCon(factorMinimo, factorMedio, factorMaximo)
-                modificadorValorDiamante = getModificadorValorDiamanteFactory(context).crearCon(DateTime.now(), LocalDate.now(),
-                    factorValorDiamante)
-            } catch (Exception e) {
-                out.println("No se pudo crear el Modificador Valor del Diamante")
-                e.printStackTrace()
-            }
-        }
-
-        return modificadorValorDiamante
-    }
-
-
     /**
      * Permite obtener la instancia
      *
@@ -177,25 +84,4 @@ class modificadorValorDiamante {
     private static ModificadorValorDiamanteRepository getModificadorValorDiamanteRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ModificadorValorDiamanteRepository)
     }
-
-    /**
-     * Permite obtener la instancia del factory
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia al repository ModificadorValorDiamanteFactory
-     */
-    private static ModificadorValorDiamanteFactory getModificadorValorDiamanteFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(ModificadorValorDiamanteFactory)
-    }
-
-    /**
-     * Permite obtener la instancia del factory
-     *
-     * @param context El contexto de la invocación.
-     * @return Referencia al repository FactorValorDiamanteFactory
-     */
-    private static FactorValorDiamanteFactory getFactorValorDiamanteFactory(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(FactorValorDiamanteFactory)
-    }
-
 }

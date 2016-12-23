@@ -4,6 +4,9 @@
  */
 package commands
 
+import commands.util.ConvertirAFechaUtil
+import commands.util.MostrarResultadosUtil
+import commands.util.ReadObjecstFromString
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoRangoFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja
@@ -12,14 +15,12 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
+import org.crsh.cli.Option
 import org.crsh.cli.Required
 import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
-import org.crsh.text.ui.Overflow
-import org.crsh.text.ui.UIBuilder
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.springframework.util.ObjectUtils
 
 /**
  * Utilizada por la consola CRaSH para la administración del modificador tipo rango
@@ -28,6 +29,19 @@ import org.springframework.util.ObjectUtils
  */
 @Usage("Administración del Modificador tipo Rango")
 class modificadorTipoRango {
+    private static final String METAL = "metal"
+    private static final String CALIDAD = "calidad"
+    private static final String RANGO = "rango"
+    private static final String FACTOR = "factor"
+    private static final String DESPLAZAMIENTO = "desplazamiento"
+    private static final String LIMITE_INFERIOR = "limite inferior"
+    private static final String LIMITE_SUPERIOR = "limite superior"
+    private static final List<String>  PROPIEDADES_RANGO =
+        ["metal", "calidad", "rango", "factor", "desplazamiento", "limiteInferior", "limiteSuperior"]
+    private static final List<String>  NOMBRE_PROPIEDADES_RANGO =
+        [METAL, CALIDAD, RANGO, FACTOR, DESPLAZAMIENTO, LIMITE_INFERIOR, LIMITE_SUPERIOR]
+    private static final List<String>  HEADERS =
+        ["Metal", "Calidad", "Rango", "Factor", "Desplazamiento", "Limite Inferior", "Limite Superior"]
 
     /**
      * Permite obtener el valor del tipo Rango
@@ -37,27 +51,25 @@ class modificadorTipoRango {
      */
     @Usage("Permite actualizar el Factor Alhaja")
     @Command
-    def actualizar(InvocationContext context, @Usage("contenido ") @Required @Argument String contenido) {
-        ListadoRango listadoRango  = null
-            if (ObjectUtils.isEmpty(contenido)) {
-                out.println("Se requiere el contenido a procesar ")
-            }else{
-                try{
-                 listadoRango = crearListado(contenido, context)
-                }catch(Exception e){
-                    e.printStackTrace()
-                    out.println("No es posible crear la lista")
-                }
+    def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument String contenido) {
+        ListadoRango listadoRango
 
-                try{
-                    getModificadorRangoRepository(context).actualizarListado(listadoRango)
-                    out.println("El Listado de Factores de Rango fue actualizado correctamente.")
-                }catch(Exception e){
-                    e.stackTrace
-                    out.println("No se pudo crear la lista")
-                }
+        try {
+            ReadObjecstFromString rof = new ReadObjecstFromString(contenido, 7, NOMBRE_PROPIEDADES_RANGO);
+            List<Map<String, String>> objects = rof.readObjects()
+            listadoRango = crearListado(objects, context)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
 
-            }
+        try{
+            getModificadorRangoRepository(context).actualizarListado(listadoRango)
+            out.println("El Listado de Factores de Rango fue actualizado correctamente.")
+        } catch(Exception e){
+            e.printStackTrace()
+            "Ocurrio un error inesperado al actualizar el Listado de Factores de Rango."
+        }
     }
 
 
@@ -69,145 +81,126 @@ class modificadorTipoRango {
      */
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
-    def consultar(InvocationContext context, @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
-        LocalDate fechaFormat
+    def consultar(InvocationContext context,
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Indica si el resultado se muestra en formato de lista")
+                  @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
+        LocalDate fechaFormat = null
 
-        try {
-            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
-        } catch (IllegalArgumentException e) {
-            out.println("${e.getMessage()}")
-            return
+        if (fecha) {
+            try {
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
+            }
         }
 
         try {
-            def elementos = getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fechaFormat)
-            mostrarTablaResultados(elementos)
+            def elementos = recuperarElementos(context, fechaFormat)
+            mostrarResultados(elementos, mostrarEnLista)
         } catch (FactorAlhajaNoEncontradoException e) {
             e.printStackTrace()
-            "No existe un Listado de Factores de Rango para la fecha solicitada."
+            procesarMensajeError(fechaFormat)
         }
     }
 
     /**
-     * Utilizado para representar los elementos del catálogo en un formato de tabla.
+     * Recupera los elemtos del catálogo vigentes o por fecha especificada.
      *
-     * @param elementos Lista de elementos del catálogo.
-     * @return Despliegue visual en la consola con los elementos del catálogo.
+     context El contexto de la invocación.
+     * @param fecha Fecha de consulta.
+     *
+     * @return Lista de elemetos
      */
-    private def mostrarTablaResultados(elementos) {
-        new UIBuilder().table(separator: dashed, overflow: Overflow.HIDDEN, rightCellPadding: 1) {
-            header(decoration: bold, foreground: black, background: white) {
-                label('Metal')
-                label('Calidad')
-                label('Rango')
-                label('Factor')
-                label('Desplazamiento')
-                label('Limite Inferior')
-                label('Limite Superior')
+    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+        if (fecha) {
+            Set<FactorAlhaja> factorAlhajas  = new HashSet<>()
+            getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fecha).each {
+                factorAlhajas.addAll(it.factorAlhajas)
             }
 
-            elementos.each { elemento ->
-                elemento.factorAlhajas.each { rango ->
-                    row {
-                        label(rango.metal, foreground: white)
-                        label(rango.calidad, foreground: white)
-                        label(rango.rango, foreground: white)
-                        label(rango.factor, foreground: white)
-                        label(rango.desplazamiento, foreground: white)
-                        label(rango.limiteInferior, foreground: white)
-                        label(rango.limiteSuperior, foreground: white)
-                    }
-                }
-            }
+            factorAlhajas
+        } else {
+            getModificadorRangoRepository(context).consultarListadoVigente().factorAlhajas
         }
     }
 
     /**
-     * Utilizado para listas
+     * Muestra los resultados de la consulta según el formato especificado.
      *
-     * @param file archivp que se recibe
-     * @param context El contexto de la invocación
-     * @return ListadoModificadorRango
+     * @param elementos Elementos a mostrar.
+     * @param mostrarEnLista Indica el formato de salida.
+     *
+     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private def crearListado(String contenido, InvocationContext context){
+    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
+        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_RANGO, mostrarEnLista)
+    }
 
-        BigDecimal factor
-        FactorAlhaja factorAlhaja
-        String metalRango
-        String calidad
-        String rango
-        BigDecimal desplazamiento
-        BigDecimal limiteInferior
-        BigDecimal limiteSuperior
-        def nMetal = "Metal"
-        def nCalidad = "Calidad"
-        def nRango = "Rango"
-        def nFactor = "Factor"
-        def nDesplazamiento = "Desplazamiento"
-        def nLimiteInferior = "LimiteInferior"
-        def nLimiteSuperior = "limiteSuperior"
+    /**
+     * Crea el mensaje cuando se presenta un error en la consulta del catálogo
+     *
+     * @param fecha Fecha de consulta.
+     *
+     * @return Mesaje de error.
+     */
+    private static def procesarMensajeError(LocalDate fecha) {
+        String msj
 
-
-        def dataList = []
-        def infoTxt = [:]
-        def factorAlhajaSet = new HashSet<>()
-
-        contenido.eachLine { line ->
-            if (line.trim()) {
-                def (key, value) = line.split(':').collect() { it.trim() }
-                infoTxt."$key" = value
-            } else {
-                if (infoTxt) {
-                    dataList << infoTxt
-                    infoTxt = [:]
-                }
-            }
+        if (fecha) {
+            msj = "para la fecha solicitada."
+        } else {
+            msj = "vigente."
         }
 
-        if(infoTxt){
-            dataList << infoTxt
-        }
+        "No existe un Listado de Factores de Rango $msj"
+    }
 
-        dataList.eachWithIndex{ it , index ->
-            out.println("Carga $index")
-            it.each {k, v ->
-                out.println("$k" : "$v")
-                if(nMetal == k)
-                    metalRango = v.toString()
-                if(nCalidad == k)
-                    calidad = v.toString()
-                if(nRango == k)
-                    rango = new BigDecimal(v.toString())
-                if(nFactor == k)
-                    factor = new BigDecimal(v.toString())
-                if(nDesplazamiento == k)
-                    desplazamiento = new BigDecimal(v.toString())
-                if(nLimiteInferior == k)
-                    limiteInferior = new BigDecimal(v.toString())
-                if(nLimiteSuperior == k)
-                    limiteSuperior = new BigDecimal(v.toString())
-            }
-            try{
-                factorAlhaja = FactorAlhajaFactory.crear(metalRango, calidad, rango, factor, desplazamiento, limiteInferior, limiteSuperior, new DateTime())
-                //out.println("Se creao el factor Alhaja")
-            }catch(Exception e){
-                out.println("No se pudo crear el Factor alhaja ")
-                e.stackTrace
+    /**
+     * Utilizado para crear el listado
+     *
+     * @param objects Contenido a procesar.
+     * @param context El contexto de la invocación.
+     *
+     * @return Listado a actualizar
+     */
+    private static ListadoRango crearListado(List<Map<String, String>> objects, InvocationContext context) {
+        Set<FactorAlhaja> factorAlhajaSet = new HashSet<>()
+
+        objects.eachWithIndex { Map<String, String> entry, int i ->
+            BigDecimal factor = convertirABigDecimal(entry[FACTOR], FACTOR, entry)
+            BigDecimal desplazamiento = convertirABigDecimal(entry[DESPLAZAMIENTO], DESPLAZAMIENTO, entry)
+            BigDecimal limiteInferior = convertirABigDecimal(entry[LIMITE_INFERIOR], LIMITE_INFERIOR, entry)
+            BigDecimal limiteSuperior = convertirABigDecimal(entry[LIMITE_SUPERIOR], LIMITE_SUPERIOR, entry)
+
+            if (!entry[METAL]) {
+                throw new IllegalArgumentException(
+                    "El $METAL del factor de rango es una propiedad requerida.\nEn $entry")
             }
 
+            if (!entry[RANGO]) {
+                throw new IllegalArgumentException(
+                    "El $RANGO del factor de rango es una propiedad requerida.\nEn $entry")
+            }
+
+            FactorAlhaja factorAlhaja = FactorAlhajaFactory.crear(entry[METAL], entry[CALIDAD], entry[RANGO], factor,
+                desplazamiento, limiteInferior, limiteSuperior, DateTime.now())
             factorAlhajaSet.add(factorAlhaja)
-            //out.println("El tamanio del set es : "+ factorAlhajaSet.size())
         }
-        ListadoRango listadoRango = null
-            try {
-                listadoRango  = getListadoRangoFactory(context).crear(DateTime.now(), LocalDate.now(),factorAlhajaSet)
-                //out.println("el tamaño del listado es : "+ listadoRango.getFactorAlhajas().size())
-            }catch(Exception e){
-                e.printStackTrace()
-                out.println("No es posible crear el listadoFactory")
-            }
 
-        return listadoRango
+        getListadoRangoFactory(context).crear(DateTime.now(), LocalDate.now(),factorAlhajaSet)
+    }
+
+    private static BigDecimal convertirABigDecimal(String valor, String prop, Map<String, String> entry) {
+        try {
+            valor.toBigDecimal()
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "El formato del $prop [${entry[valor]}] no es valido.\nEn $entry", e);
+        } catch(NullPointerException e) {
+            throw new IllegalArgumentException("El $prop del factor de rango es una propiedad requerida.\nEn $entry", e);
+        }
     }
 
     /**

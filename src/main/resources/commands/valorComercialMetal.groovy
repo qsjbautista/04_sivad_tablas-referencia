@@ -4,6 +4,9 @@
  */
 package commands
 
+import commands.util.ConvertirAFechaUtil
+import commands.util.MostrarResultadosUtil
+import commands.util.ReadObjecstFromString
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetal
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialMetalFactory
@@ -12,11 +15,10 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.MetalFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
+import org.crsh.cli.Option
 import org.crsh.cli.Required
 import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
-import org.crsh.text.ui.Overflow
-import org.crsh.text.ui.UIBuilder
 import org.joda.time.LocalDate
 
 /**
@@ -26,8 +28,14 @@ import org.joda.time.LocalDate
  */
 @Usage("Administración del Valor Comercial del Metal")
 class valorComercialMetal {
+    private static final String METAL = "metal"
+    private static final String CALIDAD = "calidad"
+    private static final String PRECIO = "precio"
+    private static final List<String>  PROPIEDADES_METAL = [METAL, CALIDAD, PRECIO]
+    private static final List<String>  HEADERS = ["Metal", "Calidad", "Precio"]
+
     /**
-     * Permite actualizar e lvalor comercial del Metal
+     * Permite actualizar el valor comercial del Metal
      *
      * @param context El contexto de la invocación.
      * @param contenido Contenido que con el que se va actualizar
@@ -35,14 +43,16 @@ class valorComercialMetal {
      */
     @Usage("Permite actualizar el Valor del Metal")
     @Command
-    def actualizar(InvocationContext context, @Usage("Contenido a procesar:") @Required @Argument  String contenido) {
-        ListadoValorComercialMetal listadoValorComercialMetal = null
+    def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument  String contenido) {
+        ListadoValorComercialMetal listadoValorComercialMetal
 
         try {
-            listadoValorComercialMetal = crearListado(contenido)
-        } catch (Exception e){
-             e.printStackTrace()
-            out.println("No es posible crear listado ")
+            ReadObjecstFromString rof = new ReadObjecstFromString(contenido, 2, PROPIEDADES_METAL);
+            List<Map<String, String>> objects = rof.readObjects()
+            listadoValorComercialMetal = crearListado(objects)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
         }
 
         try {
@@ -50,7 +60,7 @@ class valorComercialMetal {
             out.println("El Listado Valor Comercial Metal fue actualizado correctamente.")
         }catch(Exception e) {
             e.printStackTrace()
-            out.println("No es posible actualizar ")
+            "Ocurrio un error inesperado al actualizar el Listado Valor Comercial Metal."
         }
     }
 
@@ -63,118 +73,112 @@ class valorComercialMetal {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
-        LocalDate fechaFormat
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Indica si el resultado se muestra en formato de lista")
+                  @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
+        LocalDate fechaFormat = null
 
-        try {
-            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
-        } catch (IllegalArgumentException e) {
-            out.println("${e.getMessage()}")
-            return
+        if (fecha) {
+            try {
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
+            }
         }
 
         try {
-            def elementos = getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fechaFormat)
-            mostrarTablaResultados(elementos)
+            def elementos = recuperarElementos(context, fechaFormat);
+            mostrarResultados(elementos, mostrarEnLista)
         } catch (ListadoValorGramoNoEncontradoException e) {
             e.printStackTrace()
-            "No existe un Listado Valor Comercial Metal para la fecha solicitada."
+            procesarMensajeError(fechaFormat)
         }
     }
 
     /**
-     * Utilizado para representar los elementos del catálogo en un formato de tabla.
+     * Recupera los elemtos del catálogo vigentes o por fecha especificada.
      *
-     * @param elementos Lista de elementos del catálogo.
-     * @return Despliegue visual en la consola con los elementos del catálogo.
+     context El contexto de la invocación.
+     * @param fecha Fecha de consulta.
+     *
+     * @return Lista de elemetos
      */
-    private def mostrarTablaResultados(elementos) {
-        new UIBuilder().table(separator: dashed, overflow: Overflow.HIDDEN, rightCellPadding: 1) {
-            header(decoration: bold, foreground: black, background: white) {
-                label('Metal')
-                label('Calidad')
-                label('Precio')
+    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+        if (fecha) {
+            Set<Metal> valoresComerciales = new HashSet<>()
+            getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fecha).each {
+                valoresComerciales.addAll(it.valoresComerciales)
             }
 
-            elementos.each { elemento ->
-                elemento.valoresComerciales.each { metal ->
-                    row {
-                        label(metal.metal, foreground: white)
-                        label(metal.calidad, foreground: white)
-                        label(metal.precio, foreground: white)
-                    }
-                }
-            }
+            valoresComerciales
+        } else {
+            getValorComercialMetalRepository(context).consultarListadoVigente().valoresComerciales
         }
     }
 
     /**
-     * Utilizado para listas
+     * Muestra los resultados de la consulta según el formato especificado.
      *
-     * @param contenido Contenido a procesar
-     * @return ListadoValorcomercialMetalFactory
+     * @param elementos Elementos a mostrar.
+     * @param mostrarEnLista Indica el formato de salida.
+     *
+     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private def crearListado(String contenido) {
+    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
+        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_METAL, mostrarEnLista)
+    }
 
-        String calidad
-        BigDecimal precio
-        Metal metal
-        String metalS
-        def dataList = []
-        def infoTxt = [:]
-        def metalSet = new HashSet<>()
-        def m = "Metal"
-        def ca = "Calidad"
-        def p = "Precio"
+    /**
+     * Crea el mensaje cuando se presenta un error en la consulta del catálogo
+     *
+     * @param fecha Fecha de consulta.
+     *
+     * @return Mesaje de error.
+     */
+    private static def procesarMensajeError(LocalDate fecha) {
+        String msj
 
-        contenido.eachLine { line ->
-            if (line.trim()) {
-                def (key, value) = line.split(':').collect() { it.trim() }
-                infoTxt."$key" = value
-            } else {
-                if (infoTxt) {
-                    dataList << infoTxt
-                    infoTxt = [:]
-                }
-            }
-
+        if (fecha) {
+            msj = "para la fecha solicitada."
+        } else {
+            msj = "vigente."
         }
 
-        if (infoTxt) {
-            dataList << infoTxt
-        }
+        "No existe un Listado Valor Comercial Metal $msj"
+    }
 
-        dataList.eachWithIndex { it, index ->
-            out.println("Carga $index")
-            it.each { k, v ->
-                out.println("$k": "$v")
-                if (m == k)
-                    metalS = v.toString()
-                if (ca == k)
-                    calidad = v.toString()
-                if (p == k)
-                    precio = new BigDecimal(v.toString())
-            }
+    /**
+     * Utilizado para crear el listado
+     *
+     * @param objects Contenido a procesar
+     *
+     * @return Listado a actualizar
+     */
+    private static ListadoValorComercialMetal crearListado(List<Map<String, String>> objects) {
+        Set<Metal> metalSet = new HashSet<>()
+
+        objects.eachWithIndex { Map<String, String> entry, int i ->
+            BigDecimal precio
+
             try {
-
-                metal = MetalFactory.create(metalS, calidad, precio)
-                //out.println(metal.toString())
-            } catch (Exception e) {
-                out.println("No se pudo crear el Metal")
-                e.printStackTrace()
+                precio = entry[PRECIO].toBigDecimal()
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                    "El formato del $PRECIO [${entry[PRECIO]}] no es valido.\nEn $entry", e);
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("El precio del metal es una propiedad requerida.\nEn $entry", e);
             }
-            metalSet.add(metal)
-            //out.println(metalSet.size())
+
+            try {
+                Metal metal = MetalFactory.create(entry[METAL], entry[CALIDAD], precio)
+                metalSet.add(metal)
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("El metal es una propiedad requerida.\nEn $entry", e);
+            }
         }
 
-        ListadoValorComercialMetal listadoValorComercialMetal = null
-            try {
-                listadoValorComercialMetal = ListadoValorComercialMetalFactory.create(metalSet)
-            }catch(Exception e){
-                e.printStackTrace()
-            }
-
-        return listadoValorComercialMetal
+        ListadoValorComercialMetalFactory.create(metalSet)
     }
 
     /**

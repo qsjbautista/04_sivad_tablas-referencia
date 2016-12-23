@@ -4,6 +4,9 @@
  */
 package commands
 
+import commands.util.ConvertirAFechaUtil
+import commands.util.MostrarResultadosUtil
+import commands.util.ReadObjecstFromString
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoModificadorCertificadoFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado
@@ -12,14 +15,11 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoModificadorCertifica
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
+import org.crsh.cli.Option
 import org.crsh.cli.Required
 import org.crsh.cli.Usage
 import org.crsh.command.InvocationContext
-import org.crsh.text.ui.Overflow
-import org.crsh.text.ui.UIBuilder
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import org.springframework.util.ObjectUtils
 
 /**
  * Utilizada por la consola CRaSH para la administración del modificador tipo certifcado
@@ -28,6 +28,11 @@ import org.springframework.util.ObjectUtils
  */
 @Usage("Administración del Modificador tipo certificado")
 class modificadorTipoCertificado {
+    private static final String NOMBRE_CERTIFICADO = "nombre certificado"
+    private static final String FACTOR = "factor"
+    private static final List<String>  PROPIEDADES_CERTIFICADO = ["certificado", "factor"]
+    private static final List<String>  NOMBRE_PROPIEDADES_CERTIFICADO = [NOMBRE_CERTIFICADO, FACTOR]
+    private static final List<String>  HEADERS = ["Nombre Certificado", "Factor"]
 
     /**
      * Permite obtener tipo de certificado
@@ -38,24 +43,23 @@ class modificadorTipoCertificado {
     @Usage("Permite actualizar los tipos de Certificados")
     @Command
     def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument String contenido) {
-        ListadoModificadorCertificado listadoModificadorCertificado = null
-            if (ObjectUtils.isEmpty(contenido)) {
-                out.println("Se requiere el contenido a procesar")
-            }
+        ListadoModificadorCertificado listadoModificadorCertificado
 
-            try{
-                listadoModificadorCertificado = crearListado(contenido, context)
-            } catch (Exception e) {
-                out.println("No posible crear el listado")
-                e.printStackTrace()
-            }
+        try {
+            ReadObjecstFromString rof = new ReadObjecstFromString(contenido, 2, NOMBRE_PROPIEDADES_CERTIFICADO);
+            List<Map<String, String>> objects = rof.readObjects()
+            listadoModificadorCertificado = crearListado(objects, context)
+        } catch (IllegalArgumentException e) {
+            out.println("${e.getMessage()}")
+            return
+        }
 
         try{
             getModificadorCertificadoRepository(context).actualizarListado(listadoModificadorCertificado)
             out.println("El Listado de Certificados fue actualizado correctamente.")
         }catch(Exception e ){
-            out.println("No persitieron los Certificados")
             e.printStackTrace()
+            "Ocurrio un error inesperado al actualizar el Listado de Certificados."
         }
     }
 
@@ -68,107 +72,107 @@ class modificadorTipoCertificado {
     @Usage("Permite recuperar todos los elementos del catálogo")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
-        LocalDate fechaFormat
+                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Indica si el resultado se muestra en formato de lista")
+                  @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
+        LocalDate fechaFormat = null
 
-        try {
-            fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
-        } catch (IllegalArgumentException e) {
-            out.println("${e.getMessage()}")
-            return
+        if (fecha) {
+            try {
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
+            }
         }
 
         try {
-            def elementos = getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fechaFormat)
-            mostrarTablaResultados(elementos)
+            def elementos = recuperarElementos(context, fechaFormat);
+            mostrarResultados(elementos, mostrarEnLista)
         } catch (CertificadoNoEncontradoException e) {
             e.printStackTrace()
-            "No existe un Listado de Certificados para la fecha solicitada."
+            procesarMensajeError(fechaFormat)
         }
     }
 
     /**
-     * Utilizado para representar los elementos del catálogo en un formato de tabla.
+     * Recupera los elemtos del catálogo vigentes o por fecha especificada.
      *
-     * @param elementos Lista de elementos del catálogo.
-     * @return Despliegue visual en la consola con los elementos del catálogo.
+     context El contexto de la invocación.
+     * @param fecha Fecha de consulta.
+     *
+     * @return Lista de elemetos
      */
-    private def mostrarTablaResultados(elementos) {
-        new UIBuilder().table(separator: dashed, overflow: Overflow.HIDDEN, rightCellPadding: 1) {
-            header(decoration: bold, foreground: black, background: white) {
-                label('Nombre Certificado')
-                label('Factor')
+    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+        if (fecha) {
+            Set<Certificado> certificados  = new HashSet<>()
+            getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fecha).each {
+                certificados.addAll(it.certificados)
             }
 
-            elementos.each { elemento ->
-                elemento.certificados.each { certificado ->
-                    row {
-                        label(certificado.certificado, foreground: white)
-                        label(certificado.factor, foreground: white)
-                    }
-                }
-            }
+            certificados
+        } else {
+            getModificadorCertificadoRepository(context).consultarListadoVigente().certificados
         }
     }
 
     /**
-     * Utilizado para listas
+     * Muestra los resultados de la consulta según el formato especificado.
      *
-     * @param file archivp que se recibe
-     * @param context El contexto de la invocación
-     * @return ListadoValorcomercialOroFactory
+     * @param elementos Elementos a mostrar.
+     * @param mostrarEnLista Indica el formato de salida.
+     *
+     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private def crearListado(String contenido, InvocationContext context) {
+    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
+        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_CERTIFICADO, mostrarEnLista)
+    }
 
-        String nCertificado
-        BigDecimal factor
-        Certificado certificado
-        def dataList = []
-        def infoTxt = [:]
-        def certificadoSet = new HashSet<>()
-        def c = "Certificado"
-        def f = "Factor"
-        def fecha = new DateTime(new Date())
+    /**
+     * Crea el mensaje cuando se presenta un error en la consulta del catálogo
+     *
+     * @param fecha Fecha de consulta.
+     *
+     * @return Mesaje de error.
+     */
+    private static def procesarMensajeError(LocalDate fecha) {
+        String msj
 
-        contenido.eachLine { line ->
-            if (line.trim()) {
-                def (key, value) = line.split(':').collect() { it.trim() }
-                infoTxt."$key" = value
-            } else {
-                if (infoTxt) {
-                    dataList << infoTxt
-                    infoTxt = [:]
-                }
+        if (fecha) {
+            msj = "para la fecha solicitada."
+        } else {
+            msj = "vigente."
+        }
+
+        "No existe un Listado de Certificados $msj"
+    }
+
+    /**
+     * Utilizado para crear el listado
+     *
+     * @param objects Contenido a procesar.
+     * @param context El contexto de la invocación.
+     *
+     * @return Listado a actualizar
+     */
+    private static ListadoModificadorCertificado crearListado(List<Map<String, String>> objects, InvocationContext context) {
+        Set<Certificado> certificadoSet = new HashSet<>()
+
+        objects.eachWithIndex { Map<String, String> entry, int i ->
+            BigDecimal factor
+
+            try {
+                factor = entry[FACTOR].toBigDecimal()
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(
+                    "El formato del $FACTOR [${entry[FACTOR]}] no es valido.\nEn $entry", e);
             }
-        }
 
-        if (infoTxt) {
-            dataList << infoTxt
-        }
-
-        dataList.eachWithIndex { it, index ->
-            out.println("Carga $index")
-            it.each {k, v ->
-                out.println("$k" : "$v")
-                if(c == k)
-                    nCertificado = v.toString()
-                if(f == k)
-                    factor = new BigDecimal(v.toString())
-        }
-                try{
-                    certificado = CertificadoFactory.crear(nCertificado, factor)
-                }catch(Exception e){
-                    out.println("No se pudo crear el certificado" )
-                    e.stackTrace
-                }
+            Certificado certificado = CertificadoFactory.crear(entry[NOMBRE_CERTIFICADO], factor)
             certificadoSet.add(certificado)
-
         }
-        ListadoModificadorCertificado listadoModificadorCertificado = null
-        LocalDate fechaLocal = new LocalDate(new Date())
-        listadoModificadorCertificado = getListadoModificadorCertificadoFactory(context).crear(fechaLocal, certificadoSet)
 
-        return listadoModificadorCertificado
+        getListadoModificadorCertificadoFactory(context).crear(LocalDate.now(), certificadoSet)
     }
 
     /**
