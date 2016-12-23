@@ -34,6 +34,7 @@
     <logger name="org.crsh" level="WARN" />
     <logger name="org.hibernate" level="WARN" />
     <logger name="org.springframework" level="WARN" />
+    <logger name="org.springframework.batch" level="INFO" />
     <logger name="org.xnio" level="WARN" />
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
