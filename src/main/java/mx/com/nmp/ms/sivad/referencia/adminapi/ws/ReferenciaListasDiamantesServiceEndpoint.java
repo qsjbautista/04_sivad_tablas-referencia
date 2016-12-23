@@ -133,10 +133,19 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
             builder.addDate("fechaListado", parameters.getListado().getFecha().toGregorianCalendar().getTime());
             JobParameters jobParameters = builder.toJobParameters();
             JobExecution execution = jobLauncher.run(diamantesJob, jobParameters);
+
             LOGGER.info("Codigo de salida: {}", execution.getStatus());
+            if( execution.getStatus() == BatchStatus.FAILED) {
+                String mensajesError = "";
+                for(Throwable excepcion : execution.getAllFailureExceptions()){
+                    mensajesError = mensajesError.concat(excepcion.getMessage());
+                }
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), mensajesError);
+            }
            //}
+
         } catch (Exception e) {
-            LOGGER.info("<< Error" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+            LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
             throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
         }
 

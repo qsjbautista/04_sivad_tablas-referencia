@@ -49,14 +49,14 @@ public class ValorComercialDiamanteProcessor
                 }
             }
         } catch (Exception e) {
-            String mensaje ="<< " + e.getMessage() + " "
+            String mensaje =e.getMessage() + " "
                 + "Registor: {" + precioCorteDetalle.getColor()+", " +
                     precioCorteDetalle.getClaridad() +", " +
                     precioCorteDetalle.getTamanioInferior() +", " +
                     precioCorteDetalle.getTamanioSuperior() +", " +
                     precioCorteDetalle.getPrecio()+"}";
             LOGGER.info(WebServiceExceptionCodes.NMPR004.getMessageException() + "." +mensaje);
-            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), mensaje);
+            throw new IllegalArgumentException(mensaje);
         }
         LOGGER.debug("<< process(): {}", diamante);
         return diamante;
@@ -90,6 +90,6 @@ public class ValorComercialDiamanteProcessor
         }
         return cadena;
     }
- 
+
 }
 
