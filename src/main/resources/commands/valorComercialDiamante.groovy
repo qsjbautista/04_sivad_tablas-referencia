@@ -23,7 +23,7 @@ import org.springframework.util.ObjectUtils
  *
  * @author roramirez
  */
-@Usage("Administración del Valor Comercial del Diamante")
+@Usage("Administraci\u00f3n del Listado de Valor Comercial Diamante")
 class valorComercialDiamante {
 
     /**
@@ -32,10 +32,11 @@ class valorComercialDiamante {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite recuperar todos los elementos del catálogo")
+    @Usage("Permite recuperar el Listado de Valor Comercial Diamante vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha) {
+                  @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
+                  @Option(names = ["f", "fecha"]) String fecha) {
         LocalDate fechaFormat = null
 
         if (fecha) {
@@ -52,7 +53,7 @@ class valorComercialDiamante {
             mostrarTablaResultados(elementos)
         } catch (ListadoValorComercialNoEncontradoException e) {
             e.printStackTrace()
-            "No existe un Listado de Valor Comercial Diamante para la fecha solicitada."
+            out.println("No existe un Listado de Valor Comercial Diamante para la fecha solicitada.")
         }
     }
 
@@ -62,15 +63,18 @@ class valorComercialDiamante {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite restaurar el listado de precios de diamantes anterior al listado vigente.")
+    @Usage("Permite restaurar el Listado de Valor Comercial Diamante anterior al listado vigente")
     @Command
     def restaurarAnterior(InvocationContext context) {
         try {
             def elementos = getValorComercialDiamanteRepository(context).restaurarListadoAnterior()
             out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha anterior.\n")
             mostrarTablaResultados(elementos)
+        } catch (ListadoValorComercialNoEncontradoException e) {
+            out.println("No existe un Listado de Valor Comercial Diamante con fecha anterior.")
+            e.printStackTrace()
         } catch (Exception e) {
-            out.println("No es posible restaurar el Listado de Valor Comercial Diamante a la fecha anterior.")
+            out.println("Ocurri\u00f3 un error inesperado al restaurar el Listado de Valor Comercial Diamante a la fecha anterior.")
             e.printStackTrace()
         }
     }
@@ -81,28 +85,30 @@ class valorComercialDiamante {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite restaurar el listado de precios de diamantes de la fecha de vigencia indicada.")
+    @Usage("Permite restaurar el Listado de Valor Comercial Diamante de la fecha de vigencia indicada")
     @Command
     def restaurarPorFecha(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd:") @Required @Argument String fecha) {
+                  @Usage("Fecha de vigencia a restaurar con formato yyyy-mm-dd")
+                  @Required @Argument String fecha) {
 
         if (ObjectUtils.isEmpty(fecha)) {
             out.println("Se requiere la fecha para consultar ")
         } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println(/El formato de la fecha no es correcto debe de cumplir yyyy-mm-dd  /)
+            out.println("El formato de la fecha no es correcto debe de cumplir yyyy-mm-dd")
         } else
             try {
                 LocalDate fechaFormat = new LocalDate(fecha)
                 def elementos = getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
                 out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha: [${fecha}].\n")
                 mostrarTablaResultados(elementos)
+            } catch (ListadoValorComercialNoEncontradoException e) {
+                out.println("No existe un Listado de Valor Comercial Diamante con fecha: [${fecha}].")
+                e.printStackTrace()
             } catch (Exception e) {
-                out.println("No es posible restaurar el Listado de Valor Comercial Diamante a la fecha: [${fecha}].")
+                out.println("Ocurri\u00f3 un error inesperado al restaurar el Listado de Valor Comercial Diamante a la fecha: [${fecha}].")
                 e.printStackTrace()
             }
     }
-
-
 
     /**
      * Utilizado para representar los elementos del catálogo en un formato de tabla.
@@ -161,7 +167,5 @@ class valorComercialDiamante {
     private static ValorComercialDiamanteRepository getValorComercialDiamanteRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ValorComercialDiamanteRepository)
     }
-
-
 
 }

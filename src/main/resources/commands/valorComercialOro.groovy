@@ -26,7 +26,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
-@Usage("Administración del Valor Comercial del Oro")
+@Usage("Administraci\u00f3n del Listado de Valor Comercial Oro")
 class valorComercialOro {
     private static final String COLOR = "color"
     private static final String CALIDAD = "calidad"
@@ -40,9 +40,11 @@ class valorComercialOro {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar el Valor del Oro")
+    @Usage("Permite actualizar el Listado de Valor Comercial Oro")
     @Command
-    def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument String contenido) {
+    def actualizar(InvocationContext context,
+                   @Usage("Nuevo contenido del Listado de Valor Comercial Oro")
+                   @Required @Argument String contenido) {
         ListadoValorComercialOro  listadoValorComercialOro
 
         try {
@@ -59,10 +61,9 @@ class valorComercialOro {
             out.println("El Listado Valor Comercial Oro fue actualizado correctamente.")
         }catch(Exception e) {
             e.printStackTrace()
-            "Ocurrio un error inesperado al actualizar el Listado Valor Comercial Oro."
+            out.println("Ocurri\u00f3 un error inesperado al actualizar el Listado Valor Comercial Oro.")
         }
     }
-
 
     /**
      * Permite obtener el valor Comercial del oro
@@ -70,10 +71,11 @@ class valorComercialOro {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite recuperar todos los elementos del catálogo")
+    @Usage("Permite recuperar el Listado de Valor Comercial Oro vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
+                  @Option(names = ["f", "fecha"]) String fecha,
                   @Usage("Indica si el resultado se muestra en formato de lista")
                   @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
         LocalDate fechaFormat = null
@@ -184,6 +186,5 @@ class valorComercialOro {
     private static ValorComercialOroRepository getConsultaListado(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ValorComercialOroRepository)
     }
-
 
 }

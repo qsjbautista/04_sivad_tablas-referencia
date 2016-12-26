@@ -26,7 +26,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
-@Usage("Administración del Modificador tipo certificado")
+@Usage("Administraci\u00f3n del Listado de Modificador Tipo Certificado")
 class modificadorTipoCertificado {
     private static final String NOMBRE_CERTIFICADO = "nombre certificado"
     private static final String FACTOR = "factor"
@@ -40,9 +40,11 @@ class modificadorTipoCertificado {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite actualizar los tipos de Certificados")
+    @Usage("Permite actualizar el Listado de Modificador Tipo Certificado")
     @Command
-    def actualizar(InvocationContext context, @Usage("Contenido a procesar") @Required @Argument String contenido) {
+    def actualizar(InvocationContext context,
+                   @Usage("Nuevo contenido del Listado de Modificador Tipo Certificado")
+                   @Required @Argument String contenido) {
         ListadoModificadorCertificado listadoModificadorCertificado
 
         try {
@@ -59,7 +61,7 @@ class modificadorTipoCertificado {
             out.println("El Listado de Certificados fue actualizado correctamente.")
         }catch(Exception e ){
             e.printStackTrace()
-            "Ocurrio un error inesperado al actualizar el Listado de Certificados."
+            out.println("Ocurri\u00f3 un error inesperado al actualizar el Listado de Certificados.")
         }
     }
 
@@ -69,10 +71,11 @@ class modificadorTipoCertificado {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite recuperar todos los elementos del catálogo")
+    @Usage("Permite recuperar el Listado de Modificador Tipo Certificado vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
+                  @Option(names = ["f", "fecha"]) String fecha,
                   @Usage("Indica si el resultado se muestra en formato de lista")
                   @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
         LocalDate fechaFormat = null

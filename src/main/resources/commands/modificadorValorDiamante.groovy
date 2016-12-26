@@ -20,7 +20,7 @@ import org.joda.time.DateTime
  *
  * @author mmarquez
  */
-@Usage("Administración del Modificador Valor Diamante")
+@Usage("Administraci\u00f3n del Listado de Modificador Valor Diamante")
 class modificadorValorDiamante {
     private static final List<String>  PROPIEDADES_FACTOR_VALOR_DIAMANTE =
         ["minimo", "medio", "maximo"]
@@ -32,10 +32,11 @@ class modificadorValorDiamante {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite recuperar los Modificador Valor Diamante vigentes de la fecha dada")
+    @Usage("Permite recuperar el Listado de Modificador Valor Diamante vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
     def consultar(InvocationContext context,
-                  @Usage("Fecha de vigencia a consultar yyyy-mm-dd") @Option(names = ["f", "fecha"]) String fecha,
+                  @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
+                  @Option(names = ["f", "fecha"]) String fecha,
                   @Usage("Indica si el resultado se muestra en formato de lista")
                   @Option(names = ["l", "mostrarEnLista"]) Boolean mostrarEnLista) {
         DateTime fechaFormat = null
@@ -119,4 +120,5 @@ class modificadorValorDiamante {
     private static ModificadorValorDiamanteRepository getModificadorValorDiamanteRepository(InvocationContext context) {
         context.attributes['spring.beanfactory'].getBean(ModificadorValorDiamanteRepository)
     }
+
 }
