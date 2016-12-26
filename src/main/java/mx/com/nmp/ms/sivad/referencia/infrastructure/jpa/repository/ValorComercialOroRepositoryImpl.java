@@ -6,6 +6,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialOro;
@@ -164,6 +165,13 @@ public class ValorComercialOroRepositoryImpl implements ValorComercialOroReposit
     @Transactional
     public void actualizarListado(@NotNull ListadoValorComercialOro listado) {
         LOGGER.info(">> actualizarListado({})", listado);
+
+        if (ObjectUtils.isEmpty(listado) ||
+            ObjectUtils.isEmpty(listado.getValoresComerciales())) {
+            String msg = "El nuevo listado no contiene elementos.";
+            LOGGER.error(msg);
+            throw new ListadoValorComercialSinElementosException(msg, ListadoValorComercialOroJPA.class);
+        }
 
         ListadoValorComercialOroJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 

@@ -9,6 +9,7 @@ import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialSinElementosException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
@@ -32,7 +33,6 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -179,6 +179,13 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Transactional
     public void actualizarListado(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListado({})", listado);
+
+        if (ObjectUtils.isEmpty(listado) ||
+            ObjectUtils.isEmpty(listado.getValoresComerciales())) {
+            String msg = "El nuevo listado no contiene elementos.";
+            LOGGER.error(msg);
+            throw new ListadoValorComercialSinElementosException(msg, ListadoValorComercialDiamanteJPA.class);
+        }
 
         ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
 

@@ -90,24 +90,28 @@ class valorComercialDiamante {
     def restaurarPorFecha(InvocationContext context,
                   @Usage("Fecha de vigencia a restaurar con formato yyyy-mm-dd")
                   @Required @Argument String fecha) {
+        LocalDate fechaFormat = null
 
-        if (ObjectUtils.isEmpty(fecha)) {
-            out.println("Se requiere la fecha para consultar ")
-        } else if (!fecha.matches(/\d{4}-\d{2}-\d{2}/)) {
-            out.println("El formato de la fecha no es correcto debe de cumplir yyyy-mm-dd")
-        } else
+        if (fecha) {
             try {
-                LocalDate fechaFormat = new LocalDate(fecha)
-                def elementos = getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
-                out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha: [${fecha}].\n")
-                mostrarTablaResultados(elementos)
-            } catch (ListadoValorComercialNoEncontradoException e) {
-                out.println("No existe un Listado de Valor Comercial Diamante con fecha: [${fecha}].")
-                e.printStackTrace()
-            } catch (Exception e) {
-                out.println("Ocurri\u00f3 un error inesperado al restaurar el Listado de Valor Comercial Diamante a la fecha: [${fecha}].")
-                e.printStackTrace()
+                fechaFormat = ConvertirAFechaUtil.convertirAFecha(fecha)
+            } catch (IllegalArgumentException e) {
+                out.println("${e.getMessage()}")
+                return
             }
+        }
+
+        try {
+            def elementos = getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
+            out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha: [${fecha}].\n")
+            mostrarTablaResultados(elementos)
+        } catch (ListadoValorComercialNoEncontradoException e) {
+            out.println("No existe un Listado de Valor Comercial Diamante con fecha: [${fecha}].")
+            e.printStackTrace()
+        } catch (Exception e) {
+            out.println("Ocurri\u00f3 un error inesperado al restaurar el Listado de Valor Comercial Diamante a la fecha: [${fecha}].")
+            e.printStackTrace()
+        }
     }
 
     /**
