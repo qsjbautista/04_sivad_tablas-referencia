@@ -82,7 +82,7 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
                 factorAlhaja.getCalidad(), factorAlhaja.getRango());
         }
         FactorAlhajaJPA factorAlhajaJPA;
-        if(factorAlhaja.getCalidad()==null) {
+        if(ObjectUtils.isEmpty(factorAlhaja.getCalidad())) {
             factorAlhajaJPA =
                 factorAlhajaRepositoryJPA.findByMetalAndRango(factorAlhaja.getMetal(),
                     factorAlhaja.getRango());

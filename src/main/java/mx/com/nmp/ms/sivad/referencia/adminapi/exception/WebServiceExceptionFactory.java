@@ -43,6 +43,19 @@ public final class WebServiceExceptionFactory {
      * @return Excepción creada.
      */
     public static WebServiceException crearWebServiceExceptionCon(String codigoError, String mensaje, Throwable actor) {
+        return new WebServiceException(getFalla(codigoError, mensaje, actor.getMessage()));
+    }
+
+    /**
+     * Crea excepción tipo {@link WebServiceException}
+     *
+     * @param codigoError Texto empleado para indicar el tipo de error.
+     * @param mensaje Texto empleado para explicar el tipo de error.
+     * @param actor Texto empleado para indicar quien causo el error.
+     *
+     * @return Excepción creada.
+     */
+    public static WebServiceException crearWebServiceExceptionCon(String codigoError, String mensaje, String actor) {
         return new WebServiceException(getFalla(codigoError, mensaje, actor));
     }
 
@@ -75,11 +88,11 @@ public final class WebServiceExceptionFactory {
      *
      * @return <code>SOAPFault</code> representando la falla.
      */
-    private static SOAPFault getFalla(String codigoError, String mensaje, Throwable actor) {
+    private static SOAPFault getFalla(String codigoError, String mensaje, String actor) {
         SOAPFault falla = getFalla(codigoError, mensaje);
 
         try {
-            falla.setFaultActor(actor.getMessage());
+            falla.setFaultActor(actor);
         } catch (SOAPException e) {
             LOGGER.warn(e.getMessage(), e);
         }

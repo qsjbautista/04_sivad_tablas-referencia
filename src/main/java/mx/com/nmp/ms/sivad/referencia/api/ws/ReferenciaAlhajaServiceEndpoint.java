@@ -17,8 +17,6 @@ import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
@@ -28,6 +26,7 @@ import javax.inject.Inject;
  *
  * @author jbautista
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaAlhajaServiceEndpoint.class);
@@ -40,9 +39,6 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
     @Inject
     ModificadorRangoRepository modificadorRangoRepository;
-
-    @Autowired
-    private Environment env;
 
     /**
      * Obtiene el valor por gramo correspondiente a las caracteristicas del metal de una alhaja.
@@ -67,6 +63,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), calidad: ({}), color: ({}) ", parameters, parameters.getCalidad(), parameters.getColor());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getPrecioPorGramo());
@@ -86,7 +83,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerValorGramoMetalResponse response = new ObtenerValorGramoMetalResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad())) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal())) {
             try {
                 MetalVO metalVO = new MetalVO(parameters.getMetal(), parameters.getCalidad());
                 Metal metal = valorComercialMetalRepository.consultarMetalVigente(metalVO);
@@ -97,6 +94,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}) ", parameters, parameters.getMetal(), parameters.getCalidad());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getPrecioPorGramo());
@@ -115,7 +113,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerDesplazamientoResponse response = new ObtenerDesplazamientoResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
@@ -126,6 +124,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getDesplazamiento());
@@ -145,7 +144,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerFactorResponse response = new ObtenerFactorResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
@@ -156,6 +155,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getFactor());
@@ -175,7 +175,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         ObtenerLimitesIncrementoResponse response = new ObtenerLimitesIncrementoResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getCalidad()) && !ObjectUtils.isEmpty(parameters.getRango())) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
@@ -192,10 +192,17 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), rango({}) ", parameters, parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getLimitesIncremento());
 
         return response;
+    }
+
+    private static void throwWebServiceException() {
+        throw WebServiceExceptionFactory
+            .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                WebServiceExceptionCodes.NMPR004.getMessageException());
     }
 }

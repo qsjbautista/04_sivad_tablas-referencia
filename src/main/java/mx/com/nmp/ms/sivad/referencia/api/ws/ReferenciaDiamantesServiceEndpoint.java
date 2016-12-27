@@ -24,6 +24,7 @@ import javax.inject.Inject;
  *
  * @author osanchez
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaDiamantesServiceEndpoint.class);
 
@@ -37,7 +38,7 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
     /**
      * Obtiene el valor comercial de diamante en base a sus caracteristcas.
      *
-     * @param parameters
+     * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerValorComercialResponse
      */
     @Override
@@ -65,6 +66,7 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), corte: ({}), color: ({}), claridad: ({}), Quilates: ({})", parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getValorComercial());
@@ -75,7 +77,7 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
     /**
      * Obtiene el porcentaje de modificación de valor correspondiente a un certificado.
      *
-     * @param parameters
+     * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerModificadorResponse
      */
     @Override
@@ -96,10 +98,17 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), certificado: ({}) ", parameters, parameters.getCertificadoDiamante());
+            throwWebServiceException();
         }
 
         LOGGER.info("<< {}", response.getFactor());
 
         return response;
+    }
+
+    private static void throwWebServiceException() {
+        throw WebServiceExceptionFactory
+            .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                WebServiceExceptionCodes.NMPR004.getMessageException());
     }
 }

@@ -5,13 +5,10 @@ import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFact
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.ModificadorValorDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
+import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorFecha;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemReader;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemWriter;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteBatchProcessor;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.ReferenciaListasDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.*;
@@ -31,18 +28,16 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.HashSet;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 /**
  * @author osanchez
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaListasDiamanteService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaListasDiamantesServiceEndpoint.class);
 
@@ -74,12 +69,6 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     ModificadorValorDiamanteFactory modificadorValorDiamanteFactory;
 
     /**
-     * Referencia al repositorio de ValorComercialDiamanteRepository.
-     */
-    @Inject
-    private ValorComercialDiamanteRepository valorComercialDiamanteRepository;
-
-    /**
      * Referencia a la fabrica de Value Object
      */
     @Inject
@@ -92,12 +81,15 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     ValorComercialDiamanteBatchProcessor valorComercialDiamanteBatchProcessor;
 
     /**
-     * @param parameters
+     * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
     @Override
     public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
         LOGGER.info(">> actualizarListaValorComercial({})", parameters);
+
+        validarDatosEntrada(parameters.getListado());
+
 
         try {
             LOGGER.debug("iniciando ejecución...");
@@ -140,20 +132,23 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 for(Throwable excepcion : execution.getAllFailureExceptions()){
                     mensajesError = mensajesError.concat(excepcion.getMessage());
                 }
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), mensajesError);
+                throw WebServiceExceptionFactory
+                    .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
             }
            //}
 
         } catch (Exception e) {
             LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
+            throw WebServiceExceptionFactory
+                .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                    WebServiceExceptionCodes.NMPR004.getMessageException(), e);
         }
 
         return new Void();
     }
 
     /**
-     * @param parameters
+     * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
     @Override
@@ -171,12 +166,45 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 modificadorValorDiamante.actualizar();
             } catch (Exception e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
+                throw WebServiceExceptionFactory
+                    .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                        WebServiceExceptionCodes.NMPR004.getMessageException(), e);
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), minimo: ({}), medio: ({}), maximo: ({}) ", parameters,
                 parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(), parameters.getFactorDiamante().getFactorMaximo());
+            throwWebServiceException();
         }
         return new Void();
+    }
+
+    private static void validarDatosEntrada(PreciosDiamante datos) {
+        validarFecha(datos.getFecha());
+        if (ObjectUtils.isEmpty(datos.getPreciosCorte())) {
+            throwWebServiceException();
+        } else {
+            for (PrecioCorte pc : datos.getPreciosCorte()) {
+                if (ObjectUtils.isEmpty(pc.getPrecioCorte())) {
+                    throwWebServiceException();
+                }
+            }
+        }
+    }
+
+    private static void validarFecha(XMLGregorianCalendar fecha) {
+        try {
+            ValidadorFecha.validarFechaFutura(LocalDate.fromCalendarFields(
+                fecha.toGregorianCalendar()), "La fecha de listado no debe ser posterior a la fecha actual.");
+        } catch (IllegalArgumentException e) {
+            throw WebServiceExceptionFactory
+                .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                    WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
+        }
+    }
+
+    private static void throwWebServiceException() {
+        throw WebServiceExceptionFactory
+            .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                WebServiceExceptionCodes.NMPR004.getMessageException());
     }
 }
