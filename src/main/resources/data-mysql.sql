@@ -1,5 +1,5 @@
 --
--- Utilizado para poblar la BD (h2) utilizada con el perfil de desarrollo.
+-- Utilizado para poblar la BD (mysql) utilizada con los perfiles cloud.
 --
 
 
