@@ -85,25 +85,25 @@ INSERT INTO cfg_diamante_listado_valor_comercial (id, fecha_carga, fecha_listado
 VALUES (1, '2016-12-20 10:00:00.521', '2016-12-20');
 
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (1, 'OV', 'GRADO_COLOR_D', 'IF', 0.90, 0.99, 135.0000, 1);
+VALUES (1, 'Pear', 'D', 'IF', 0.90, 0.99, 135.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (2, 'OV', 'GRADO_COLOR_D', 'VVS1', 0.90, 0.99, 111.0000, 1);
+VALUES (2, 'Pear', 'D', 'VVS1', 0.90, 0.99, 111.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (3, 'OV', 'GRADO_COLOR_D', 'VVS2', 0.90, 0.99, 97.0000, 1);
+VALUES (3, 'Pear', 'D', 'VVS2', 0.90, 0.99, 97.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (4, 'OV', 'GRADO_COLOR_D', 'VS1', 0.90, 0.99, 73.0000, 1);
+VALUES (4, 'Pear', 'D', 'VS1', 0.90, 0.99, 73.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (5, 'OV', 'GRADO_COLOR_D', 'VS2', 0.90, 0.99, 66.0000, 1);
+VALUES (5, 'Pear', 'D', 'VS2', 0.90, 0.99, 66.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (6, 'OV', 'GRADO_COLOR_E', 'IF', 0.90, 0.99, 107.0000, 1);
+VALUES (6, 'Pear', 'E', 'IF', 0.90, 0.99, 107.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (7, 'OV', 'GRADO_COLOR_E', 'VVS1', 0.90, 0.99, 99.0000, 1);
+VALUES (7, 'Pear', 'E', 'VVS1', 0.90, 0.99, 99.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (8, 'OV', 'GRADO_COLOR_E', 'VVS2', 0.90, 0.99, 84.0000, 1);
+VALUES (8, 'Pear', 'E', 'VVS2', 0.90, 0.99, 84.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (9, 'OV', 'GRADO_COLOR_E', 'VS1', 0.90, 0.99, 68.0000, 1);
+VALUES (9, 'Pear', 'E', 'VS1', 0.90, 0.99, 68.0000, 1);
 INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (10, 'OV', 'GRADO_COLOR_E', 'VS2', 0.90, 0.99, 63.0000, 1);
+VALUES (10, 'Pear', 'E', 'VS2', 0.90, 0.99, 63.0000, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: VALOR COMERCIAL 'DIAMANTE'
 -- ----------------------------------------------------------------------------------------------------------------------

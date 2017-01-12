@@ -6,6 +6,7 @@ package commands
 
 import commands.util.ConvertirAFechaUtil
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
@@ -16,13 +17,13 @@ import org.crsh.command.InvocationContext
 import org.crsh.text.ui.Overflow
 import org.crsh.text.ui.UIBuilder
 import org.joda.time.LocalDate
-import org.springframework.util.ObjectUtils
 
 /**
  * Utilizada por la consola CRaSH para la administración del valor comercial del diamante
  *
  * @author roramirez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Valor Comercial Diamante")
 class valorComercialDiamante {
 
@@ -32,8 +33,9 @@ class valorComercialDiamante {
      * @param context El contexto de la invocación.
      * @return Lista de elementos
      */
-    @Usage("Permite recuperar el Listado de Valor Comercial Diamante vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    @Usage("Permite recuperar el Listado de Valor Comercial Diamante vigente o de alguna fecha de vigencia espec\u00edfica")
     def consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
                   @Option(names = ["f", "fecha"]) String fecha) {
@@ -49,8 +51,8 @@ class valorComercialDiamante {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat)
-            mostrarTablaResultados(elementos)
+            List<ListadoValorComercialDiamante> elementos = recuperarElementos(context, fechaFormat)
+            mostrarResultados(elementos)
         } catch (ListadoValorComercialNoEncontradoException e) {
             e.printStackTrace()
             out.println("No existe un Listado de Valor Comercial Diamante para la fecha solicitada.")
@@ -154,11 +156,31 @@ class valorComercialDiamante {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+    private static List<ListadoValorComercialDiamante> recuperarElementos(InvocationContext context, LocalDate fecha) {
         if (fecha) {
-            getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fecha)
+            getValorComercialDiamanteRepository(context).consultarListadoPorFechaVigencia(fecha).collect()
         } else {
-            getValorComercialDiamanteRepository(context).consultarListadoVigente()
+            [getValorComercialDiamanteRepository(context).consultarListadoVigente()]
+        }
+    }
+
+    /**
+     * Muestra los resultados de la consulta según el formato especificado.
+     *
+     * @param elementos Elementos a mostrar.
+     */
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ListadoValorComercialDiamante> elementos) {
+        Collections.sort(elementos, new Comparator<ListadoValorComercialDiamante>() {
+            @Override
+            int compare(ListadoValorComercialDiamante o1, ListadoValorComercialDiamante o2) {
+                return o2.fechaCarga <=> o1.fechaCarga
+            }
+        })
+
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.fechaCarga)}", green)
+            out.println(mostrarTablaResultados(it))
         }
     }
 

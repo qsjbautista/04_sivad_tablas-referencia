@@ -7,7 +7,7 @@ package commands
 import commands.util.ConvertirAFechaUtil
 import commands.util.MostrarResultadosUtil
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorValorDiamanteRepository
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -20,6 +20,7 @@ import org.joda.time.DateTime
  *
  * @author mmarquez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Modificador Valor Diamante")
 class modificadorValorDiamante {
     private static final List<String>  PROPIEDADES_FACTOR_VALOR_DIAMANTE =
@@ -51,7 +52,7 @@ class modificadorValorDiamante {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat)
+            List<ModificadorValorDiamante> elementos = recuperarElementos(context, fechaFormat)
             mostrarResultados(elementos, mostrarEnLista)
         } catch (ValorComercialNoEncontradoException e) {
             e.printStackTrace()
@@ -67,16 +68,11 @@ class modificadorValorDiamante {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, DateTime fecha) {
+    private static List<ModificadorValorDiamante> recuperarElementos(InvocationContext context, DateTime fecha) {
         if (fecha) {
-            Set<FactorValorDiamante> factorValorDiamante  = new HashSet<>()
-            getModificadorValorDiamanteRepository(context).consultar(fecha).each {
-                factorValorDiamante.addAll(it.factor)
-            }
-
-            factorValorDiamante
+            getModificadorValorDiamanteRepository(context).consultar(fecha)
         } else {
-            getModificadorValorDiamanteRepository(context).consultar().factor
+            [getModificadorValorDiamanteRepository(context).consultar()]
         }
     }
 
@@ -85,11 +81,21 @@ class modificadorValorDiamante {
      *
      * @param elementos Elementos a mostrar.
      * @param mostrarEnLista Indica el formato de salida.
-     *
-     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
-        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_FACTOR_VALOR_DIAMANTE, mostrarEnLista)
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ModificadorValorDiamante> elementos, Boolean mostrarEnLista) {
+        Collections.sort(elementos, new Comparator<ModificadorValorDiamante>() {
+            @Override
+            int compare(ModificadorValorDiamante o1, ModificadorValorDiamante o2) {
+                return o2.fechaCarga <=> o1.fechaCarga
+            }
+        })
+
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.fechaCarga)}", green)
+            out.println(MostrarResultadosUtil
+                .mostrarResultados(HEADERS, it.factor, PROPIEDADES_FACTOR_VALOR_DIAMANTE, mostrarEnLista))
+        }
     }
 
     /**

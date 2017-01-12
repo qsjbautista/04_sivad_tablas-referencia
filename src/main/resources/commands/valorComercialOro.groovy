@@ -26,6 +26,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Valor Comercial Oro")
 class valorComercialOro {
     private static final String COLOR = "color"
@@ -90,7 +91,7 @@ class valorComercialOro {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat)
+            List<ListadoValorComercialOro> elementos = recuperarElementos(context, fechaFormat)
             mostrarResultados(elementos, mostrarEnLista)
         } catch (ListadoValorGramoNoEncontradoException e) {
             e.printStackTrace()
@@ -106,16 +107,11 @@ class valorComercialOro {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+    private static List<ListadoValorComercialOro> recuperarElementos(InvocationContext context, LocalDate fecha) {
         if (fecha) {
-            Set<Oro> valoresComerciales = new HashSet<>()
-            getConsultaListado(context).consultarListadoPorFechaVigencia(fecha).each {
-                valoresComerciales.addAll(it.valoresComerciales)
-            }
-
-            valoresComerciales
+            getConsultaListado(context).consultarListadoPorFechaVigencia(fecha).collect()
         } else {
-            getConsultaListado(context).consultarListadoVigente().valoresComerciales
+            [getConsultaListado(context).consultarListadoVigente()]
         }
     }
 
@@ -124,11 +120,21 @@ class valorComercialOro {
      *
      * @param elementos Elementos a mostrar.
      * @param mostrarEnLista Indica el formato de salida.
-     *
-     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
-        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_ORO, mostrarEnLista)
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ListadoValorComercialOro> elementos, Boolean mostrarEnLista) {
+        Collections.sort(elementos, new Comparator<ListadoValorComercialOro>() {
+            @Override
+            int compare(ListadoValorComercialOro o1, ListadoValorComercialOro o2) {
+                return o2.ultimaActualizacion <=> o1.ultimaActualizacion
+            }
+        })
+
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.ultimaActualizacion)}", green)
+            out.println(MostrarResultadosUtil
+                .mostrarResultados(HEADERS, it.valoresComerciales, PROPIEDADES_ORO, mostrarEnLista))
+        }
     }
 
     /**

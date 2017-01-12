@@ -26,6 +26,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Valor Comercial Metal")
 class valorComercialMetal {
     private static final String METAL = "metal"
@@ -91,7 +92,7 @@ class valorComercialMetal {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat);
+            List<ListadoValorComercialMetal> elementos = recuperarElementos(context, fechaFormat);
             mostrarResultados(elementos, mostrarEnLista)
         } catch (ListadoValorGramoNoEncontradoException e) {
             e.printStackTrace()
@@ -107,16 +108,11 @@ class valorComercialMetal {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+    private static List<ListadoValorComercialMetal> recuperarElementos(InvocationContext context, LocalDate fecha) {
         if (fecha) {
-            Set<Metal> valoresComerciales = new HashSet<>()
-            getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fecha).each {
-                valoresComerciales.addAll(it.valoresComerciales)
-            }
-
-            valoresComerciales
+            getValorComercialMetalRepository(context).consultarListadoPorFechaVigencia(fecha).collect()
         } else {
-            getValorComercialMetalRepository(context).consultarListadoVigente().valoresComerciales
+            [getValorComercialMetalRepository(context).consultarListadoVigente()]
         }
     }
 
@@ -125,11 +121,20 @@ class valorComercialMetal {
      *
      * @param elementos Elementos a mostrar.
      * @param mostrarEnLista Indica el formato de salida.
-     *
-     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
-        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_METAL, mostrarEnLista)
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ListadoValorComercialMetal> elementos, Boolean mostrarEnLista) {
+        Collections.sort(elementos, new Comparator<ListadoValorComercialMetal>() {
+            @Override
+            int compare(ListadoValorComercialMetal o1, ListadoValorComercialMetal o2) {
+                return o2.ultimaActualizacion <=> o1.ultimaActualizacion
+            }
+        })
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.ultimaActualizacion)}", green)
+            out.println(MostrarResultadosUtil
+                .mostrarResultados(HEADERS, it.valoresComerciales, PROPIEDADES_METAL, mostrarEnLista))
+        }
     }
 
     /**

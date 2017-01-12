@@ -26,6 +26,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Modificador Tipo Certificado")
 class modificadorTipoCertificado {
     private static final String NOMBRE_CERTIFICADO = "nombre certificado"
@@ -90,7 +91,7 @@ class modificadorTipoCertificado {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat);
+            List<ListadoModificadorCertificado> elementos = recuperarElementos(context, fechaFormat);
             mostrarResultados(elementos, mostrarEnLista)
         } catch (CertificadoNoEncontradoException e) {
             e.printStackTrace()
@@ -106,16 +107,11 @@ class modificadorTipoCertificado {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+    private static List<ListadoModificadorCertificado> recuperarElementos(InvocationContext context, LocalDate fecha) {
         if (fecha) {
-            Set<Certificado> certificados  = new HashSet<>()
-            getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fecha).each {
-                certificados.addAll(it.certificados)
-            }
-
-            certificados
+            getModificadorCertificadoRepository(context).consultarListadoPorUltimaActualizacion(fecha).collect()
         } else {
-            getModificadorCertificadoRepository(context).consultarListadoVigente().certificados
+            [getModificadorCertificadoRepository(context).consultarListadoVigente()]
         }
     }
 
@@ -124,11 +120,21 @@ class modificadorTipoCertificado {
      *
      * @param elementos Elementos a mostrar.
      * @param mostrarEnLista Indica el formato de salida.
-     *
-     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
-        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_CERTIFICADO, mostrarEnLista)
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ListadoModificadorCertificado> elementos, Boolean mostrarEnLista) {
+        Collections.sort(elementos, new Comparator<ListadoModificadorCertificado>() {
+            @Override
+            int compare(ListadoModificadorCertificado o1, ListadoModificadorCertificado o2) {
+                return o2.ultimaActualizacion <=> o1.ultimaActualizacion
+            }
+        })
+
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.ultimaActualizacion)}", green)
+            out.println(MostrarResultadosUtil
+                .mostrarResultados(HEADERS, it.certificados, PROPIEDADES_CERTIFICADO, mostrarEnLista))
+        }
     }
 
     /**

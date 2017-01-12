@@ -27,6 +27,7 @@ import org.joda.time.LocalDate
  *
  * @author roramirez
  */
+@SuppressWarnings("GroovyUnusedDeclaration")
 @Usage("Administraci\u00f3n del Listado de Modificador Tipo Rango")
 class modificadorTipoRango {
     private static final String METAL = "metal"
@@ -100,7 +101,7 @@ class modificadorTipoRango {
         }
 
         try {
-            def elementos = recuperarElementos(context, fechaFormat)
+            List<ListadoRango> elementos = recuperarElementos(context, fechaFormat)
             mostrarResultados(elementos, mostrarEnLista)
         } catch (FactorAlhajaNoEncontradoException e) {
             e.printStackTrace()
@@ -116,16 +117,11 @@ class modificadorTipoRango {
      *
      * @return Lista de elemetos
      */
-    private static def recuperarElementos(InvocationContext context, LocalDate fecha) {
+    private static List<ListadoRango> recuperarElementos(InvocationContext context, LocalDate fecha) {
         if (fecha) {
-            Set<FactorAlhaja> factorAlhajas  = new HashSet<>()
-            getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fecha).each {
-                factorAlhajas.addAll(it.factorAlhajas)
-            }
-
-            factorAlhajas
+            getModificadorRangoRepository(context).consultarListadoPorFechaCarga(fecha).collect()
         } else {
-            getModificadorRangoRepository(context).consultarListadoVigente().factorAlhajas
+            [getModificadorRangoRepository(context).consultarListadoVigente()]
         }
     }
 
@@ -134,11 +130,21 @@ class modificadorTipoRango {
      *
      * @param elementos Elementos a mostrar.
      * @param mostrarEnLista Indica el formato de salida.
-     *
-     * @return espliegue visual en la consola con los elementos del catálogo.
      */
-    private static def mostrarResultados(def elementos, Boolean mostrarEnLista) {
-        MostrarResultadosUtil.mostrarResultados(HEADERS, elementos, PROPIEDADES_RANGO, mostrarEnLista)
+    @SuppressWarnings("GroovyAssignabilityCheck")
+    private void mostrarResultados(List<ListadoRango> elementos, Boolean mostrarEnLista) {
+        Collections.sort(elementos, new Comparator<ListadoRango>() {
+            @Override
+            int compare(ListadoRango o1, ListadoRango o2) {
+                return o2.ultimaActualizacion <=> o1.ultimaActualizacion
+            }
+        })
+
+        elementos.each {
+            out.println("Fecha Vigencia: ${ConvertirAFechaUtil.convertirAString(it.ultimaActualizacion)}", green)
+            out.println(MostrarResultadosUtil
+                .mostrarResultados(HEADERS, it.factorAlhajas, PROPIEDADES_RANGO, mostrarEnLista))
+        }
     }
 
     /**
