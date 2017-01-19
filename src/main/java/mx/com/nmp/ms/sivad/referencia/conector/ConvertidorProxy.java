@@ -7,6 +7,7 @@ import mx.com.nmp.ms.sivad.referencia.conector.referencia.ReferenciaConvertidorC
 import mx.com.nmp.ms.sivad.referencia.conector.referencia.factory.ReferenciaConvertidorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public class ConvertidorProxy implements Convertidor{
      *
      * @return BigDecimal Objeto que contiene la informción de la respuesta.
      */
+    @Cacheable("ConvertidorProxy.convertir")
     @Override
     public BigDecimal convertir(@NotNull String base, @NotNull String destino, @NotNull BigDecimal monto) {
         LOGGER.info(">> convertir(base {}, destino{}, monto{})", base, destino, monto);

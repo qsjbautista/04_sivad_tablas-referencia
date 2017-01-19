@@ -5,6 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,6 +38,7 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
         "AND vcd.claridad = :claridad " +
         "AND vcd.tamanioInferior <= :quilatesCt " +
         "AND vcd.tamanioSuperior >= :quilatesCt")
+    @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
     ValorComercialDiamanteJPA obtenerValorComercial(
         @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesCt") BigDecimal quilatesCt);
 

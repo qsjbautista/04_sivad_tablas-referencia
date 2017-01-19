@@ -1,5 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.api.ws;
 
+import com.codahale.metrics.annotation.Timed;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException;
@@ -41,13 +42,20 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
      * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerValorComercialResponse
      */
+    @Timed
     @Override
     public ObtenerValorComercialResponse obtenerValorComercial(ObtenerValorComercialRequest parameters) {
-        LOGGER.info(">> obtenerValorComercial({})", parameters);
+        if (LOGGER.isInfoEnabled() && parameters != null) {
+            LOGGER.info(">> obtenerValorComercial({},{},{},{})", new Object[]{
+                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt()
+            });
+        }
 
         ObtenerValorComercialResponse response = new ObtenerValorComercialResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getColor()) && !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt())) {
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getColor()) &&
+            !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt())) {
+
             DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
 
             try {
@@ -69,7 +77,12 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
             throwWebServiceException();
         }
 
-        LOGGER.info("<< {}", response.getValorComercial());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("<< {}/{}/{}", new Object[]{
+                response.getValorComercial().getValorMinimo(),
+                response.getValorComercial().getValorMedio(),
+                response.getValorComercial().getValorMaximo()});
+        }
 
         return response;
     }

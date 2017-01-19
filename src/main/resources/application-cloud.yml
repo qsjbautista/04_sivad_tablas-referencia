@@ -27,13 +27,15 @@ spring:
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
+                # Plan gratuito = 4 conexiones, dejamos una libre
+                maximumPoolSize: 3
     h2:
         console:
             enabled: true
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         database: MYSQL
-        show-sql: true
+        show-sql: false
         generate-ddl: false
         hibernate:
             ddl-auto: validate

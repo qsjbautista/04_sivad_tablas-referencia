@@ -19,6 +19,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorValorDiama
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.util.ObjectUtils;
@@ -91,6 +92,7 @@ public class ModificadorValorDiamanteRepositoryJpa implements ModificadorValorDi
     /**
      * {@inheritDoc}
      */
+    @Cacheable("ModificadorValorDiamanteRepositoryJpa.consultar")
     @Override
     public ModificadorValorDiamante consultar() {
         LOGGER.info(">> consultar()");

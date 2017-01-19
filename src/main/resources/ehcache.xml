@@ -49,4 +49,14 @@
            timeToLiveSeconds="3600">
     </cache>
 
+    <cache name="ConvertidorProxy.convertir"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="ValorComercialDiamanteJPARepository.obtenerValorComercial"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="ModificadorValorDiamanteRepositoryJpa.consultar"
+           timeToLiveSeconds="3600">
+    </cache>
+
 </ehcache>
