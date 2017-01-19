@@ -81,7 +81,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     public Diamante obtenerValorComercial(@NotNull DiamanteVO diamanteVO) {
         LOGGER.info(">> obtenerValorComercial({})", diamanteVO);
-        LOGGER.info(diamanteVO.toString());
 
         ValorComercialDiamanteJPA valorComercialDiamanteJPA =
             valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getCorte(), diamanteVO.getColor(),
