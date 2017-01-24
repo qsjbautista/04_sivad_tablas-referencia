@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,9 @@ public class ModificadorValorDiamanteRepositoryITest {
     @Inject
     private FactorValorDiamanteFactory fabricaVO;
 
+    @Inject
+    private CacheManager cacheManager;
+
     /**
      * Constructor.
      */
@@ -80,6 +84,7 @@ public class ModificadorValorDiamanteRepositoryITest {
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     public void consultarVigentesNoDatosTest() {
+        cacheManager.getCache("ModificadorValorDiamanteRepositoryJpa.consultar").clear();
         test.consultar();
     }
 

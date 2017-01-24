@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -114,7 +115,8 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Mock
     private Convertidor convertidor;
 
-
+    @Inject
+    private CacheManager cacheManager;
 
     // METODOS
 
@@ -500,6 +502,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
     public void obtenerValorComercialDiamanteTest21() {
+        cacheManager.getCache("ValorComercialDiamanteJPARepository.obtenerValorComercial").clear();
         DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
             CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
