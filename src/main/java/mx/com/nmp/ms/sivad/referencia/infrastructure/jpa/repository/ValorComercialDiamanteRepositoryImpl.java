@@ -24,6 +24,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -175,6 +176,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      */
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
     public void actualizarListado(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListado({})", listado);
 
@@ -205,6 +207,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      */
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
     public ListadoValorComercialDiamante restaurarListadoAnterior() {
         LOGGER.info(">> restaurarListadoAnterior()");
 
@@ -248,6 +251,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      */
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
     public ListadoValorComercialDiamante restaurarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> restaurarListadoPorFecha({})", fechaVigencia);
 
