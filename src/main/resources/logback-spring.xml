@@ -31,6 +31,7 @@
     <logger name="javax.xml" level="WARN" />
     <logger name="net.sf" level="INFO" />
     <logger name="org.apache" level="WARN" />
+    <logger name="org.apache.cxf" level="INFO" />
     <logger name="org.crsh" level="WARN" />
     <logger name="org.hibernate" level="WARN" />
     <logger name="org.springframework" level="WARN" />
