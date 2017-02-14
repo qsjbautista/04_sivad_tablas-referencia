@@ -158,17 +158,24 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getFactorDiamante())
             && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMinimo()) && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMedio())
             && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMaximo())) {
-            try {
-                FactorValorDiamante vo = factorValorDiamanteFactory
-                    .crearCon(parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(),
-                        parameters.getFactorDiamante().getFactorMaximo());
-                ModificadorValorDiamante modificadorValorDiamante = modificadorValorDiamanteFactory.crearPersistibleCon(DateTime.now(), LocalDate.now(), vo);
-                modificadorValorDiamante.actualizar();
-            } catch (Exception e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-                throw WebServiceExceptionFactory
-                    .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
-                        WebServiceExceptionCodes.NMPR004.getMessageException(), e);
+            if(parameters.getFactorDiamante().getFactorMinimo().compareTo(parameters.getFactorDiamante().getFactorMedio()) <= 0 &&
+                parameters.getFactorDiamante().getFactorMedio().compareTo(parameters.getFactorDiamante().getFactorMaximo()) <= 0) {
+                try {
+                    FactorValorDiamante vo = factorValorDiamanteFactory
+                        .crearCon(parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(),
+                            parameters.getFactorDiamante().getFactorMaximo());
+                    ModificadorValorDiamante modificadorValorDiamante = modificadorValorDiamanteFactory.crearPersistibleCon(DateTime.now(), LocalDate.now(), vo);
+                    modificadorValorDiamante.actualizar();
+                } catch (Exception e) {
+                    LOGGER.info("<< " + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+                    throw WebServiceExceptionFactory
+                        .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                            WebServiceExceptionCodes.NMPR004.getMessageException(), e);
+                }
+            } else {
+                LOGGER.info("Los valores de los parametros deben ser congruentes: ({}), minimo: ({}), medio: ({}), maximo: ({}) ", parameters,
+                    parameters.getFactorDiamante().getFactorMinimo(), parameters.getFactorDiamante().getFactorMedio(), parameters.getFactorDiamante().getFactorMaximo());
+                throwWebServiceException();
             }
         } else {
             LOGGER.info("Valores nulos o vacios, parameters: ({}), minimo: ({}), medio: ({}), maximo: ({}) ", parameters,
