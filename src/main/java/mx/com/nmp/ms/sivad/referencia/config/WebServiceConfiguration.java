@@ -11,6 +11,7 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,9 @@ import javax.xml.ws.Endpoint;
  */
 @Configuration
 public class WebServiceConfiguration {
+
+    @Value("${soap.mensaje.mostrar}")
+    private Boolean mostrarSoap;
 
     /**
      * Configura la ruta en la que serán expuestos los web services
@@ -42,10 +46,13 @@ public class WebServiceConfiguration {
     @Bean(name = Bus.DEFAULT_BUS_ID)
     public SpringBus springBus() {
         final SpringBus springBus = new SpringBus();
-        LoggingFeature loggingFeature = new LoggingFeature();
-        loggingFeature.setPrettyLogging(true);
-        loggingFeature.initialize(springBus);
-        springBus.getFeatures().add(loggingFeature);
+
+        if (mostrarSoap) {
+            LoggingFeature loggingFeature = new LoggingFeature();
+            loggingFeature.setPrettyLogging(true);
+            loggingFeature.initialize(springBus);
+            springBus.getFeatures().add(loggingFeature);
+        }
 
         return springBus;
     }
