@@ -1,5 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.api.ws;
 
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceException;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontradoException;
@@ -7,6 +8,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoEx
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.TipoMetalEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorAlhajaVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
@@ -15,11 +17,14 @@ import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepo
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Clase que contiene los metodos para recuperar información necesaria de diamantes.
@@ -31,14 +36,20 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaAlhajaServiceEndpoint.class);
 
-    @Inject
-    ValorComercialOroRepository valorComercialOroRepository;
+    private static final List<String> listaMetalesCalidad;
+
+    static {
+        listaMetalesCalidad = Arrays.asList(TipoMetalEnum.AU.name(), TipoMetalEnum.AG.name());
+    }
 
     @Inject
-    ValorComercialMetalRepository valorComercialMetalRepository;
+    private ValorComercialOroRepository valorComercialOroRepository;
 
     @Inject
-    ModificadorRangoRepository modificadorRangoRepository;
+    private ValorComercialMetalRepository valorComercialMetalRepository;
+
+    @Inject
+    private ModificadorRangoRepository modificadorRangoRepository;
 
     /**
      * Obtiene el valor por gramo correspondiente a las caracteristicas del metal de una alhaja.
@@ -85,6 +96,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal())) {
             try {
+                validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 MetalVO metalVO = new MetalVO(parameters.getMetal(), parameters.getCalidad());
                 Metal metal = valorComercialMetalRepository.consultarMetalVigente(metalVO);
                 response.setPrecioPorGramo(metal.obtenerValorGramo());
@@ -115,6 +127,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
+                validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
                 response.setDesplazamiento(factorAlhaja.getDesplazamiento());
@@ -146,6 +159,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
+                validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
                 response.setFactor(factorAlhaja.getFactor());
@@ -177,6 +191,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getRango())) {
             try {
+                validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
 
@@ -204,5 +219,23 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
         throw WebServiceExceptionFactory
             .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
                 WebServiceExceptionCodes.NMPR004.getMessageException());
+    }
+
+    /**
+     * Valida si para el {@code metal} es requerida la {@code calida}
+     *
+     * @param metal Metal recibido.
+     * @param calidad Calidad recibida.
+     *
+     * @throws WebServiceException Si para el {@code metal} la {@code calida} y esta es {@literal null}
+     */
+    private void validarMetalCalidad(String metal, String calidad) {
+        if (StringUtils.isBlank(calidad) && listaMetalesCalidad.contains(metal)) {
+            String actor = String.format("La calidad no puede ser nula para el metal %s(%s)",
+                metal, TipoMetalEnum.valueOf(metal).getNombre());
+            throw WebServiceExceptionFactory
+                .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
+                    WebServiceExceptionCodes.NMPR004.getMessageException(), actor);
+        }
     }
 }
