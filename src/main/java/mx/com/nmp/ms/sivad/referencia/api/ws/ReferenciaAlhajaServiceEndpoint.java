@@ -15,6 +15,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
+import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorCalidadMetal;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
 import org.apache.commons.lang.StringUtils;
@@ -35,12 +36,6 @@ import java.util.List;
 public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaAlhajaServiceEndpoint.class);
-
-    private static final List<String> listaMetalesCalidad;
-
-    static {
-        listaMetalesCalidad = Arrays.asList(TipoMetalEnum.AU.name(), TipoMetalEnum.AG.name());
-    }
 
     @Inject
     private ValorComercialOroRepository valorComercialOroRepository;
@@ -230,7 +225,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
      * @throws WebServiceException Si para el {@code metal} la {@code calida} y esta es {@literal null}
      */
     private void validarMetalCalidad(String metal, String calidad) {
-        if (StringUtils.isBlank(calidad) && listaMetalesCalidad.contains(metal)) {
+        if (!ValidadorCalidadMetal.validar(metal, calidad)) {
             String actor = String.format("La calidad no puede ser nula para el metal %s(%s)",
                 metal, TipoMetalEnum.valueOf(metal).getNombre());
             throw WebServiceExceptionFactory
