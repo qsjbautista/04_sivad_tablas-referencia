@@ -12,7 +12,6 @@ import mx.com.nmp.ms.sivad.referencia.dominio.factory.ListadoRangoFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhajaFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.TipoMetalEnum
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorCalidadMetal
 import org.apache.commons.lang.StringUtils
@@ -199,8 +198,7 @@ class modificadorTipoRango {
             if (StringUtils.isNotBlank(entry[CALIDAD]) &&
                     !ValidadorCalidadMetal.validarMetalRequiereCalidad(entry[METAL])) {
                 throw new IllegalArgumentException(
-                    "El metal ${entry[METAL]}(${TipoMetalEnum.valueOf(entry[METAL]).getNombre()}) no debe contener " +
-                        "la propiedad $CALIDAD.\nEn $entry")
+                    "La $CALIDAD no es una propiedad válida para el metal ${entry[METAL]}.\nEn $entry")
             }
 
             if (!entry[RANGO]) {
