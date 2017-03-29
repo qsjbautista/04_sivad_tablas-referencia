@@ -13,6 +13,8 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhajaFactory
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoRango
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository
+import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorCalidadMetal
+import org.apache.commons.lang.StringUtils
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -52,13 +54,13 @@ class modificadorTipoRango {
      */
     @Usage("Permite actualizar el Listado de Modificador Tipo Rango")
     @Command
-    def actualizar(InvocationContext context,
+    void actualizar(InvocationContext context,
                    @Usage("Nuevo contenido del Listado de Modificador Tipo Rango")
                    @Required @Argument String contenido) {
         ListadoRango listadoRango
 
         try {
-            ReadObjecstFromString rof = new ReadObjecstFromString(contenido, 7, NOMBRE_PROPIEDADES_RANGO);
+            ReadObjecstFromString rof = new ReadObjecstFromString(contenido, 6, NOMBRE_PROPIEDADES_RANGO)
             List<Map<String, String>> objects = rof.readObjects()
             listadoRango = crearListado(objects, context)
         } catch (IllegalArgumentException e) {
@@ -84,7 +86,7 @@ class modificadorTipoRango {
      */
     @Usage("Permite recuperar el Listado de Modificador Tipo Rango vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
-    def consultar(InvocationContext context,
+    void consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
                   @Option(names = ["f", "fecha"]) String fecha,
                   @Usage("Indica si el resultado se muestra en formato de lista")
@@ -154,7 +156,7 @@ class modificadorTipoRango {
      *
      * @return Mesaje de error.
      */
-    private static def procesarMensajeError(LocalDate fecha) {
+    private static String procesarMensajeError(LocalDate fecha) {
         String msj
 
         if (fecha) {
@@ -188,6 +190,17 @@ class modificadorTipoRango {
                     "El $METAL del factor de rango es una propiedad requerida.\nEn $entry")
             }
 
+            if (!ValidadorCalidadMetal.validar(entry[METAL], entry[CALIDAD])) {
+                throw new IllegalArgumentException(
+                    "La $CALIDAD es una propiedad requerida para el metal ${entry[METAL]}.\nEn $entry")
+            }
+
+            if (StringUtils.isNotBlank(entry[CALIDAD]) &&
+                    !ValidadorCalidadMetal.validarMetalRequiereCalidad(entry[METAL])) {
+                throw new IllegalArgumentException(
+                    "La $CALIDAD no es una propiedad válida para el metal ${entry[METAL]}.\nEn $entry")
+            }
+
             if (!entry[RANGO]) {
                 throw new IllegalArgumentException(
                     "El $RANGO del factor de rango es una propiedad requerida.\nEn $entry")
@@ -206,9 +219,9 @@ class modificadorTipoRango {
             valor.toBigDecimal()
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
-                "El formato del $prop [${entry[valor]}] no es valido.\nEn $entry", e);
+                "El formato del $prop [${entry[valor]}] no es valido.\nEn $entry", e)
         } catch(NullPointerException e) {
-            throw new IllegalArgumentException("El $prop del factor de rango es una propiedad requerida.\nEn $entry", e);
+            throw new IllegalArgumentException("El $prop del factor de rango es una propiedad requerida.\nEn $entry", e)
         }
     }
 
