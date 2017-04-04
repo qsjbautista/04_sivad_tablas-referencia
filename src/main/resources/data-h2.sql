@@ -67,7 +67,7 @@ VALUES (14, 'AU_BL', '16_Q', 520.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (15, 'AU_BL', '18_Q', 585.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
-VALUES (16, 'AU_BL', '21_Q', 632.77, 1);
+VALUES (16, 'AU_BL', '21_Q', 632.770, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (17, 'AU_BL', '22_Q', 715.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
