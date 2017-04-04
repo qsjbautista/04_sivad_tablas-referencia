@@ -1,5 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.adminapi.ws;
 
+import com.codahale.metrics.annotation.Timed;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
@@ -84,6 +85,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
      * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
+    @Timed
     @Override
     public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
         LOGGER.info(">> actualizarListaValorComercial({})", parameters);
