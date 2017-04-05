@@ -41,6 +41,7 @@ import java.util.Set;
  * @author ngonzalez
  */
 @Component
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiamanteRepository {
 
     /**
@@ -179,27 +180,9 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
     public void actualizarListado(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListado({})", listado);
-
-        ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
-
-        if (!ObjectUtils.isEmpty(listadoVigente)) {
-
-            // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
-            HistListadoValorComercialDiamanteJPA listadoHistorico =
-                ValorComercialDiamanteUtil.convertToListadoHistoricoJPA(listadoVigente);
-            histListadoJpaRepository.save(listadoHistorico);
-
-            // SE ELIMINA EL LISTADO VIGENTE.
-            listadoJpaRepository.delete(listadoVigente.getId());
-        }
-
-
-        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
-        ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
-        Set<ValorComercialDiamanteJPA> listadoVCD = valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch();
-        listadoNuevo.setValoresComerciales(valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch());
-        listadoNuevo.setFechaCarga(DateTime.now());
-        listadoJpaRepository.save(listadoNuevo);
+        // Invocación al stored procedure sp_diamante_valor_comercial_generar_vigente que será el encargado de
+        // generar el histórico y la nueva lista vigente.
+        listadoJpaRepository.generarVigente(listado.getFechaListado().toDate());
     }
 
     /**

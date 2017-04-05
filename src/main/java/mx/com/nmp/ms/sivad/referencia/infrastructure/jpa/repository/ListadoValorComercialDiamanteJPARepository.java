@@ -8,8 +8,11 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorCome
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -28,6 +31,14 @@ public interface ListadoValorComercialDiamanteJPARepository extends
      */
     @Query("SELECT lvcd FROM ListadoValorComercialDiamanteJPA lvcd")
     ListadoValorComercialDiamanteJPA obtenerListadoVigente();
+
+    /**
+     * Genera una lista vigente de valores comerciales de diamantes.
+     *
+     * @param fecha Fecha en que se genero el listado por parte del proveedor.
+     */
+    @Procedure(name = "generar_vigente")
+    void generarVigente(@Param("_fechaListado") Date fecha);
 
     /**
      * Permite obtener los listados de valor comercial del diamante que correspondan a la fecha indicada.
