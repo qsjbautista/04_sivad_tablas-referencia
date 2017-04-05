@@ -62,7 +62,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
             }
         }catch (Exception e) {
             valorComercialDiamanteRepository.rollBackBatch();
-            LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+            LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage(), e);
             throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getMessageException(), e.getMessage());
         }
     }
