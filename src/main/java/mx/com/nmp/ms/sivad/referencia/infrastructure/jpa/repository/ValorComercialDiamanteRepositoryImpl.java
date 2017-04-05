@@ -4,6 +4,7 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
+import com.codahale.metrics.annotation.Timed;
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
@@ -72,7 +73,6 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      */
     @Inject
     private Convertidor convertidor;
-
 
 
     // METODOS
@@ -175,6 +175,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     /**
      * {@inheritDoc}
      */
+    @Timed
     @Override
     @Transactional
     @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
@@ -288,9 +289,16 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      * {@inheritDoc}
      */
     @Override
+    @Timed
     @Transactional
     public void actualizarListadoSinHist(@NotNull ListadoValorComercialDiamante listado) {
-        LOGGER.info(">> actualizarListadoSinHist({})", listado);
+        if (LOGGER.isInfoEnabled()) {
+            int registros = 0;
+            if (listado != null && listado.getValoresComerciales() != null) {
+                registros = listado.getValoresComerciales().size();
+            }
+            LOGGER.info(">> actualizarListadoSinHist({} registros)", registros);
+        }
 
         // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
         ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
