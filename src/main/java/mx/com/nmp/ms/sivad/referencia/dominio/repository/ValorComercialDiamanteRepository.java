@@ -66,11 +66,11 @@ public interface ValorComercialDiamanteRepository {
     ListadoValorComercialDiamante restaurarListadoPorFechaVigencia(LocalDate fechaVigencia);
 
     /**
-     * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.
+     * Permite guardar la lista valores comerciales de diamante.
      *
-     * @param listado El nuevo listado.
+     * @param lista El nuevo listado.
      */
-    void actualizarListadoSinHist(ListadoValorComercialDiamante listado);
+    void procesarLista(List<? extends Diamante> lista);
 
     /**
      * Si existe un error en el procesamiento batch se eliminan los registros insertados.

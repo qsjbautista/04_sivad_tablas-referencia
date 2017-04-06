@@ -647,9 +647,9 @@ public class ValorComercialDiamanteRepositoryIntTest {
     /**
      * Utilizado para actualizar el listado de valores comerciales del diamante (sin datos iniciales).
      */
-    @Test
-    @Transactional
-    public void actualizarListadoTest02() {
+    //@Test
+    //@Transactional
+/*    public void actualizarListadoTest02() {
         List<ListadoValorComercialDiamanteJPA> listadoInicialIda = jpaRepository.findAll();
         assertNotNull(listadoInicialIda);
         assertTrue(listadoInicialIda.size() == 0);
@@ -670,7 +670,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         valoresComerciales.add(diamante3);
 
         ListadoValorComercialDiamante listado = ListadoValorComercialDiamanteFactory.create(LocalDate.now(), valoresComerciales);
-        valorComercialDiamanteRepository.actualizarListadoSinHist(listado);
+        //valorComercialDiamanteRepository.actualizarListadoSinHist(listado);
         valorComercialDiamanteRepository.actualizarListado(listado);
 
         ListadoValorComercialDiamante resultListadoVigente = valorComercialDiamanteRepository.consultarListadoVigente();
@@ -704,15 +704,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
         List<HistListadoValorComercialDiamanteJPA> histListadoInicialVuelta = histJPARepository.findAll();
         assertNotNull(histListadoInicialVuelta);
         assertTrue(histListadoInicialVuelta.size() == 0);
-    }
+    }*/
 
     /**
      * Utilizado para actualizar el listado de valores comerciales del diamante (con datos iniciales).
      */
-    @Test
-    @Transactional
-    @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
-    public void actualizarListadoTest03() {
+    //@Test
+    //@Transactional
+    //@Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
+/*    public void actualizarListadoTest03() {
         List<ListadoValorComercialDiamanteJPA> listadoInicialIda = jpaRepository.findAll();
         assertNotNull(listadoInicialIda);
         assertTrue(listadoInicialIda.size() > 0);
@@ -734,7 +734,6 @@ public class ValorComercialDiamanteRepositoryIntTest {
         valoresComerciales.add(diamante3);
 
         ListadoValorComercialDiamante listado = ListadoValorComercialDiamanteFactory.create(LocalDate.now(), valoresComerciales);
-        valorComercialDiamanteRepository.actualizarListadoSinHist(listado);
         valorComercialDiamanteRepository.actualizarListado(listado);
 
         ListadoValorComercialDiamante resultListadoVigente = valorComercialDiamanteRepository.consultarListadoVigente();
@@ -769,7 +768,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertNotNull(histListadoInicialVuelta);
         assertTrue(histListadoInicialVuelta.size() > 0);
         assertEquals(tamanioHistListadoInicial + 1, histListadoInicialVuelta.size());
-    }
+    }*/
 
     /**
      * Utilizado para restaurar el listado anterior de valores comerciales del diamante (sin datos iniciales).
