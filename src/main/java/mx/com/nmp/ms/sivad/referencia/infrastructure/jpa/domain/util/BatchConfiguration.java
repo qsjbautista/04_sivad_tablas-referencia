@@ -1,6 +1,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
@@ -18,8 +19,8 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public ItemWriter<Diamante> diamanteItemWriter() {
-        return new DiamanteItemWriter();
+    public ItemWriter<Diamante> diamanteItemWriter(ValorComercialDiamanteRepository repository) {
+        return new DiamanteItemWriter(repository);
     }
 
 }
