@@ -10,7 +10,11 @@ public enum WebServiceExceptionCodes {
     NMPR007("NMP-TR-007", "No existe el rango solicitado."),
     NMPR008("NMP-TR-008", "No existe un valor gramo para las características de oro solicitadas."),
     NMPR009("NMP-TR-009", "No existe el certificado solicitado."),
-    NMPR010("NMP-TR-010", "No existe un valor comercial para las características de diamante solicitadas."),
+    // Se modifica por petición del cliente, es mensaje será lanzado cuando
+    // no exista un valor comercial para un diamante (no necesariamente por falta del quilataje).
+    NMPR010("NMP-TR-010",
+        "El quilataje seleccionado no corresponde a ese tipo de corte, " +
+            "favor de verificar la información ingresada de acuerdo a la política de Valuar Partida sección Diamantes"),
     NMPR011("NMP-TR-011", "No existe un valor gramo para las características de metal solicitadas.");
 
     private String codeException;
