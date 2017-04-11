@@ -34,9 +34,13 @@
     <logger name="org.apache.cxf" level="INFO" />
     <logger name="org.crsh" level="WARN" />
     <logger name="org.hibernate" level="WARN" />
+    <logger name="p6spy" level="WARN" />
     <logger name="org.springframework" level="WARN" />
     <logger name="org.springframework.batch" level="INFO" />
     <logger name="org.xnio" level="WARN" />
+
+    <logger name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteProcessor" level="INFO" />
+    <logger name="mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemReader" level="WARN" />
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

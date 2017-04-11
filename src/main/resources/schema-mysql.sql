@@ -146,7 +146,7 @@ CREATE TABLE HIST_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO
 DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_VALOR_COMERCIAL;
 CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
+    ID BIGINT NOT NULL,
     CORTE VARCHAR(20) NOT NULL,
     COLOR VARCHAR(20) NOT NULL,
     CLARIDAD VARCHAR(20) NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
 DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL;
 CREATE TABLE HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
+    ID BIGINT NOT NULL,
     FECHA_CARGA TIMESTAMP NOT NULL,
     FECHA_LISTADO DATE NOT NULL,
     PRIMARY KEY (ID)
@@ -182,6 +182,17 @@ CREATE TABLE CFG_DIAMANTE_VALOR_COMERCIAL
     PRECIO DECIMAL(10, 4) NOT NULL,
     LISTADO BIGINT,
     PRIMARY KEY (ID)
+);
+
+DROP TABLE IF EXISTS TMP_DIAMANTE_VALOR_COMERCIAL;
+CREATE TABLE TMP_DIAMANTE_VALOR_COMERCIAL
+(
+    CORTE VARCHAR(20) NOT NULL,
+    COLOR VARCHAR(20) NOT NULL,
+    CLARIDAD VARCHAR(20) NOT NULL,
+    TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
+    TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
+    PRECIO DECIMAL(10, 4) NOT NULL
 );
 
 DROP TABLE IF EXISTS CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL;
@@ -340,13 +351,13 @@ CREATE INDEX IDX_HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL_ID ON HIST_CFG_DIAMAN
 
 CREATE INDEX IDX_HIST_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON HIST_CFG_DIAMANTE_VALOR_COMERCIAL(ID);
 ALTER TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_HIST_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
+FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
 
 CREATE INDEX IDX_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL_ID ON CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
 
 CREATE INDEX IDX_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON CFG_DIAMANTE_VALOR_COMERCIAL(ID);
 ALTER TABLE CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
+FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
 
 CREATE INDEX IDX_HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO_ID ON HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO(ID);
 
@@ -371,3 +382,158 @@ CREATE INDEX IDX_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL_ID ON CFG_ALHAJA_LISTA
 CREATE INDEX IDX_CFG_ALHAJA_VALOR_COMERCIAL_METAL_ID ON CFG_ALHAJA_VALOR_COMERCIAL_METAL(ID);
 ALTER TABLE CFG_ALHAJA_VALOR_COMERCIAL_METAL ADD CONSTRAINT FK_CFG_ALHAJA_VALOR_COMERCIAL_METAL
 FOREIGN KEY(LISTADO) REFERENCES CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
+
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_generar_historico;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_generar_historico(IN _listado BIGINT)
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        START TRANSACTION;
+            -- Se pasa el listado vigente a la tabla de historicos
+            INSERT INTO hist_cfg_diamante_listado_valor_comercial
+                SELECT * FROM cfg_diamante_listado_valor_comercial
+                WHERE id = _listado;
+
+            -- Se pasan los valores comerciales vigentes a la tabla de historicos
+            INSERT INTO hist_cfg_diamante_valor_comercial
+                SELECT * FROM cfg_diamante_valor_comercial
+                WHERE listado = _listado;
+
+            -- Se elimina el listado y valores comerciales vigentes
+            DELETE FROM cfg_diamante_listado_valor_comercial
+            WHERE id = _listado;
+        COMMIT;
+    END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_generar_vigente;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_generar_vigente(IN _fechaListado DATE)
+    BEGIN
+        DECLARE idListadoVigeneteActual BIGINT;
+        DECLARE idListadoVigeneteNuevo BIGINT;
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        START TRANSACTION;
+            -- Se selecciona el identificador del listado vigente
+            SELECT MAX(id) INTO idListadoVigeneteActual FROM cfg_diamante_listado_valor_comercial;
+
+            -- Se generan los historicos
+            CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
+
+            -- Se inserta el nuevo listado vigente
+            INSERT INTO cfg_diamante_listado_valor_comercial(fecha_listado) VALUES (_fechaListado);
+
+            -- Se recupera el identificador del listado vigente
+            SET idListadoVigeneteNuevo = last_insert_id();
+
+            -- Se insertan los valores comerciales vigentes con el listado vigente
+            INSERT INTO
+                cfg_diamante_valor_comercial(corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo
+                FROM tmp_diamante_valor_comercial;
+
+            -- Se limpia la tabla temporal
+            TRUNCATE tmp_diamante_valor_comercial;
+        COMMIT;
+    END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_historico;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIGINT)
+    BEGIN
+        DECLARE idListadoVigeneteNuevo BIGINT;
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        START TRANSACTION;
+            -- Se pasa el listado historico a la tabla de vigentes
+            INSERT INTO cfg_diamante_listado_valor_comercial (fecha_carga, fecha_listado)
+                SELECT fecha_carga, fecha_listado FROM hist_cfg_diamante_listado_valor_comercial
+                WHERE id = _listado;
+
+            -- Se recupera el identificador del listado vigente
+            SET idListadoVigeneteNuevo = last_insert_id();
+
+            -- Se pasan los valores comerciales historicos a la tabla de vigentes
+            INSERT INTO
+                cfg_diamante_valor_comercial (corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo
+                FROM hist_cfg_diamante_valor_comercial
+                WHERE listado = _listado;
+
+            -- Se elimina el listado y valores comerciales historicos
+            DELETE FROM hist_cfg_diamante_listado_valor_comercial
+            WHERE id = _listado;
+        COMMIT;
+    END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_anterior;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_anterior()
+    BEGIN
+        DECLARE idListadoVigeneteActual BIGINT;
+        DECLARE fechaCargaVigeneteActual TIMESTAMP;
+        DECLARE idListadoHistorico BIGINT;
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        START TRANSACTION;
+            -- Se selecciona el identificador y la fecha de carga del listado vigente
+            SELECT id, fecha_carga INTO idListadoVigeneteActual, fechaCargaVigeneteActual
+            FROM cfg_diamante_listado_valor_comercial ORDER BY id DESC LIMIT 1;
+
+            -- Verifica si existe un listado vigente
+            IF fechaCargaVigeneteActual IS NULL THEN
+                SIGNAL SQLSTATE '02000'
+                SET MESSAGE_TEXT = 'No existe un listado de precios vigente.',
+                MYSQL_ERRNO = 1329;
+            END IF;
+
+            -- Selecciona el identificador del listado historico donde la fecha de
+            -- carga se menor a la del lisdado vigente
+            SELECT id INTO idListadoHistorico
+            FROM hist_cfg_diamante_listado_valor_comercial
+            WHERE fecha_carga < fechaCargaVigeneteActual ORDER BY id DESC LIMIT 1;
+
+            -- Verifica si no hay una fecha de carga menor a la vigente
+            IF idListadoHistorico IS NULL THEN
+                -- Si no hay una fecha menor a la vigente regresa el primer historico
+                SELECT id INTO idListadoHistorico
+                FROM hist_cfg_diamante_listado_valor_comercial
+                ORDER BY id DESC LIMIT 1;
+
+                -- Verifica si no existe un listado historico
+                IF idListadoHistorico IS NULL THEN
+                    SIGNAL SQLSTATE '02000'
+                    SET MESSAGE_TEXT = 'No existe un listado de precios anterior.',
+                    MYSQL_ERRNO = 1329;
+                END IF;
+            END IF;
+
+            CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
+            CALL sp_diamante_valor_comercial_restaurar_historico(idListadoHistorico);
+        COMMIT;
+    END //
+DELIMITER ;

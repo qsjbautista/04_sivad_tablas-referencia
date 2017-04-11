@@ -19,6 +19,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValor
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteJdbcBulkInsert;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -26,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -33,6 +35,7 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,7 +44,14 @@ import java.util.Set;
  * @author ngonzalez
  */
 @Component
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiamanteRepository {
+
+    private static final String TMP_TABLA = "tmp_diamante_valor_comercial";
+    private static final String[] PROP = new  String[]{"corte", "color", "claridad",
+        "tamanioInferior", "tamanioSuperior", "precio"};
+
+    private static final String CLEAR_QUERY = "TRUNCATE tmp_diamante_valor_comercial";
 
     /**
      * Utilizada para manipular los mensajes informativos y de error.
@@ -73,6 +83,11 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     private Convertidor convertidor;
 
 
+    /**
+     * Referencia a la plantilla de JDBC
+     */
+    @Inject
+    private JdbcTemplate jdbcTemplate;
 
     // METODOS
 
@@ -179,27 +194,9 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
     public void actualizarListado(@NotNull ListadoValorComercialDiamante listado) {
         LOGGER.info(">> actualizarListado({})", listado);
-
-        ListadoValorComercialDiamanteJPA listadoVigente = listadoJpaRepository.obtenerListadoVigente();
-
-        if (!ObjectUtils.isEmpty(listadoVigente)) {
-
-            // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
-            HistListadoValorComercialDiamanteJPA listadoHistorico =
-                ValorComercialDiamanteUtil.convertToListadoHistoricoJPA(listadoVigente);
-            histListadoJpaRepository.save(listadoHistorico);
-
-            // SE ELIMINA EL LISTADO VIGENTE.
-            listadoJpaRepository.delete(listadoVigente.getId());
-        }
-
-
-        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
-        ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
-        Set<ValorComercialDiamanteJPA> listadoVCD = valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch();
-        listadoNuevo.setValoresComerciales(valorComercialDiamanteJPARepository.obtenerValoresComercialesDiamanteBatch());
-        listadoNuevo.setFechaCarga(DateTime.now());
-        listadoJpaRepository.save(listadoNuevo);
+        // Invocación al stored procedure sp_diamante_valor_comercial_generar_vigente que será el encargado de
+        // generar el histórico y la nueva lista vigente.
+        listadoJpaRepository.generarVigente(listado.getFechaListado().toDate());
     }
 
     /**
@@ -306,12 +303,13 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
      */
     @Override
     @Transactional
-    public void actualizarListadoSinHist(@NotNull ListadoValorComercialDiamante listado) {
-        LOGGER.info(">> actualizarListadoSinHist({})", listado);
+    public void procesarLista(@NotNull List<? extends Diamante> lista) {
+        LOGGER.info(">> procesarLista({})", lista.size());
 
-        // SE CONVIERTE EL LISTADO DE DOMINIO EN VIGENTE.
-        ListadoValorComercialDiamanteJPA listadoNuevo = ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listado);
-        valorComercialDiamanteJPARepository.save(listadoNuevo.getValoresComerciales());
+        DiamanteJdbcBulkInsert bulkInsertQuery = new DiamanteJdbcBulkInsert();
+
+        bulkInsertQuery.withTableName(TMP_TABLA).usingValues(lista, PROP);
+        jdbcTemplate.execute(bulkInsertQuery.generateQuery());
     }
 
     /**
@@ -320,9 +318,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     @Transactional
     public void rollBackBatch() {
-        Set<ValorComercialDiamanteJPA> listadoVCD = valorComercialDiamanteJPARepository
-            .obtenerValoresComercialesDiamanteBatch();
-        valorComercialDiamanteJPARepository.delete(listadoVCD);
+        jdbcTemplate.execute(CLEAR_QUERY);
     }
 
 }
