@@ -80,21 +80,18 @@ public class ListadoValorComercialDiamante {
 
     /**
      * Permite restaurar el listado de precios de diamantes anterior al listado vigente.
-     *
-     * @return El nuevo listado restaurado.
      */
-    public ListadoValorComercialDiamante restaurarAnterior() {
-        return valorComercialDiamanteRepository.restaurarListadoAnterior();
+    public void restaurarAnterior() {
+        valorComercialDiamanteRepository.restaurarListadoAnterior();
     }
 
     /**
      * Permite restaurar el listado de precios de diamantes de la fecha de vigencia indicada.
      *
      * @param fechaVigencia La fecha de vigencia del listado que se desea restaurar.
-     * @return El nuevo listado restaurado.
      */
-    public ListadoValorComercialDiamante restaurarPorFecha(LocalDate fechaVigencia) {
-        return valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fechaVigencia);
+    public void restaurarPorFecha(LocalDate fechaVigencia) {
+        valorComercialDiamanteRepository.restaurarListadoPorFechaVigencia(fechaVigencia);
     }
 
 

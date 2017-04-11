@@ -86,7 +86,7 @@ class modificadorTipoRango {
      */
     @Usage("Permite recuperar el Listado de Modificador Tipo Rango vigente o de alguna fecha de vigencia espec\u00edfica")
     @Command
-    void consultar(InvocationContext context,
+    def consultar(InvocationContext context,
                   @Usage("Fecha de vigencia a consultar con formato yyyy-mm-dd")
                   @Option(names = ["f", "fecha"]) String fecha,
                   @Usage("Indica si el resultado se muestra en formato de lista")

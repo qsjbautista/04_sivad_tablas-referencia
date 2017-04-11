@@ -7,6 +7,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -17,6 +18,14 @@ import java.util.Set;
 @Entity
 @Table(name = "hist_cfg_diamante_listado_valor_comercial")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(name = "restaurar_anterior",
+        procedureName = "sp_diamante_valor_comercial_restaurar_anterior"),
+    @NamedStoredProcedureQuery(name = "restaurar_fecha",
+        procedureName = "sp_diamante_valor_comercial_restaurar_fecha",
+        parameters = {@StoredProcedureParameter(mode = ParameterMode.IN, name = "_fechaIni", type = Date.class),
+            @StoredProcedureParameter(mode = ParameterMode.IN, name = "_fechaFin", type = Date.class)})
+})
 public class HistListadoValorComercialDiamanteJPA extends AbstractListadoValorComercialDiamanteJPA {
 
     /**

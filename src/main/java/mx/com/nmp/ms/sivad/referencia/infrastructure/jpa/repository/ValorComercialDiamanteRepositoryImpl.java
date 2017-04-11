@@ -21,6 +21,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDi
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DateUtil;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteJdbcBulkInsert;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteUtil;
+import org.hibernate.exception.GenericJDBCException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -28,12 +29,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -205,42 +208,15 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     @Transactional
     @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
-    public ListadoValorComercialDiamante restaurarListadoAnterior() {
+    public void restaurarListadoAnterior() {
         LOGGER.info(">> restaurarListadoAnterior()");
 
-        HistListadoValorComercialDiamanteJPA listadoAnterior =
-            histListadoJpaRepository.findFirstByOrderByFechaCargaDesc();
-
-        if (ObjectUtils.isEmpty(listadoAnterior) ||
-            ObjectUtils.isEmpty(listadoAnterior.getValoresComerciales())) {
-            String msg = "No existe un listado de precios anterior.";
-            LOGGER.error(msg);
-            throw new ListadoValorComercialNoEncontradoException(msg, HistListadoValorComercialDiamanteJPA.class);
+        try {
+            histListadoJpaRepository.restaurarAnterior();
+            LOGGER.info("<< restaurarListadoAnterior()");
+        } catch (JpaSystemException e) {
+            manejarJPASPExcepcion(e);
         }
-
-        ListadoValorComercialDiamanteJPA listadoVigente =
-            listadoJpaRepository.obtenerListadoVigente();
-
-        if (ObjectUtils.isEmpty(listadoVigente) ||
-            ObjectUtils.isEmpty(listadoVigente.getValoresComerciales())) {
-            String msg = "No existe un listado de precios vigente.";
-            LOGGER.error(msg);
-            throw new ListadoValorComercialNoEncontradoException(msg, ListadoValorComercialDiamanteJPA.class);
-        }
-
-        // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
-        HistListadoValorComercialDiamanteJPA listadoHistorico =
-            ValorComercialDiamanteUtil.convertToListadoHistoricoJPA(listadoVigente);
-        histListadoJpaRepository.save(listadoHistorico);
-
-        // SE ELIMINA EL LISTADO VIGENTE.
-        listadoJpaRepository.delete(listadoVigente.getId());
-
-        // SE CONVIERTE EL LISTADO HISTÓRICO EN VIGENTE.
-        ListadoValorComercialDiamanteJPA listadoNuevo =
-            ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listadoAnterior);
-        listadoNuevo.setFechaCarga(DateTime.now());
-        return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
     }
 
     /**
@@ -249,7 +225,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Override
     @Transactional
     @CacheEvict(cacheNames = "ValorComercialDiamanteJPARepository.obtenerValorComercial", allEntries = true)
-    public ListadoValorComercialDiamante restaurarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
+    public void restaurarListadoPorFechaVigencia(@NotNull LocalDate fechaVigencia) {
         LOGGER.info(">> restaurarListadoPorFecha({})", fechaVigencia);
 
         if (DateUtil.isGreaterThanNow(fechaVigencia.toDate())) {
@@ -261,41 +237,12 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         DateTime fechaVigenciaInicio = fechaVigencia.toDateTimeAtStartOfDay();
         DateTime fechaVigenciaFin = fechaVigencia.toDateTimeAtCurrentTime().millisOfDay().withMaximumValue();
 
-        HistListadoValorComercialDiamanteJPA listadoFechaVigencia =
-            histListadoJpaRepository.findFirstByFechaCargaBetweenOrderByFechaCargaDesc(
-                fechaVigenciaInicio, fechaVigenciaFin);
-
-        if (ObjectUtils.isEmpty(listadoFechaVigencia) ||
-            ObjectUtils.isEmpty(listadoFechaVigencia.getValoresComerciales())) {
-            String msg = "Fecha de vigencia solicitada no existe.";
-            LOGGER.error(msg);
-            throw new ListadoValorComercialNoEncontradoException(msg, HistListadoValorComercialDiamanteJPA.class);
+        try {
+            histListadoJpaRepository.restaurarFecha(fechaVigenciaInicio.toDate(), fechaVigenciaFin.toDate());
+            LOGGER.info("<< restaurarListadoPorFecha({})", fechaVigencia);
+        } catch (JpaSystemException e) {
+            manejarJPASPExcepcion(e);
         }
-
-        ListadoValorComercialDiamanteJPA listadoVigente =
-            listadoJpaRepository.obtenerListadoVigente();
-
-        if (ObjectUtils.isEmpty(listadoVigente) ||
-            ObjectUtils.isEmpty(listadoVigente.getValoresComerciales())) {
-            String msg = "No existe un listado de precios vigente.";
-            LOGGER.error(msg);
-            throw new ListadoValorComercialNoEncontradoException(msg, ListadoValorComercialDiamanteJPA.class);
-        }
-
-        // SE CONVIERTE EL LISTADO VIGENTE EN HISTÓRICO.
-        HistListadoValorComercialDiamanteJPA listadoHistorico =
-            ValorComercialDiamanteUtil.convertToListadoHistoricoJPA(listadoVigente);
-        histListadoJpaRepository.save(listadoHistorico);
-
-        // SE ELIMINA EL LISTADO VIGENTE.
-        listadoJpaRepository.delete(listadoVigente.getId());
-
-        // SE CONVIERTE EL LISTADO HISTÓRICO (DE LA FECHA DE VIGENCIA INDICADA) EN VIGENTE.
-        ListadoValorComercialDiamanteJPA listadoNuevo =
-            ValorComercialDiamanteUtil.convertToListadoVigenteJPA(listadoFechaVigencia);
-        listadoNuevo.setFechaCarga(DateTime.now());
-
-        return ValorComercialDiamanteUtil.convertToListadoDeDominio(listadoJpaRepository.save(listadoNuevo));
     }
 
     /**
@@ -319,6 +266,19 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     @Transactional
     public void rollBackBatch() {
         jdbcTemplate.execute(CLEAR_QUERY);
+    }
+
+    private static void manejarJPASPExcepcion(JpaSystemException jpaSystemException) {
+        if (jpaSystemException.getCause() instanceof GenericJDBCException) {
+            GenericJDBCException causa = (GenericJDBCException) jpaSystemException.getCause();
+            SQLException ex = causa.getSQLException();
+
+            if (ex.getSQLState().equals("02000") && ex.getErrorCode() == 1329) {
+                LOGGER.error(ex.getMessage());
+                throw new ListadoValorComercialNoEncontradoException(ex.getMessage(),
+                    HistListadoValorComercialDiamanteJPA.class);
+            }
+        }
     }
 
 }

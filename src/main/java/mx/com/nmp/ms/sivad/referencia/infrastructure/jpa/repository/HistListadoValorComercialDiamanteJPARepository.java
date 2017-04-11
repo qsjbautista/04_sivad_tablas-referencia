@@ -7,8 +7,11 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialDiamanteJPA;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -45,5 +48,11 @@ public interface HistListadoValorComercialDiamanteJPARepository extends
      * @return El histórico que coincida con la fecha indicada.
      */
     HistListadoValorComercialDiamanteJPA findFirstByFechaCargaBetweenOrderByFechaCargaDesc(DateTime fechaInicial, DateTime fechaFinal);
+
+    @Procedure(name = "restaurar_anterior")
+    void restaurarAnterior();
+
+    @Procedure(name = "restaurar_fecha")
+    void restaurarFecha(@Param("_fechaIni") Date fechaIni, @Param("_fechaFin") Date fechaFin);
 
 }

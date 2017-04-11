@@ -464,8 +464,8 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIG
 
         START TRANSACTION;
             -- Se pasa el listado historico a la tabla de vigentes
-            INSERT INTO cfg_diamante_listado_valor_comercial (fecha_carga, fecha_listado)
-                SELECT fecha_carga, fecha_listado FROM hist_cfg_diamante_listado_valor_comercial
+            INSERT INTO cfg_diamante_listado_valor_comercial (fecha_listado)
+                SELECT fecha_listado FROM hist_cfg_diamante_listado_valor_comercial
                 WHERE id = _listado;
 
             -- Se recupera el identificador del listado vigente
@@ -490,7 +490,6 @@ DELIMITER //
 CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_anterior()
     BEGIN
         DECLARE idListadoVigeneteActual BIGINT;
-        DECLARE fechaCargaVigeneteActual TIMESTAMP;
         DECLARE idListadoHistorico BIGINT;
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -500,40 +499,78 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_anterior()
         END;
 
         START TRANSACTION;
-            -- Se selecciona el identificador y la fecha de carga del listado vigente
-            SELECT id, fecha_carga INTO idListadoVigeneteActual, fechaCargaVigeneteActual
-            FROM cfg_diamante_listado_valor_comercial ORDER BY id DESC LIMIT 1;
-
-            -- Verifica si existe un listado vigente
-            IF fechaCargaVigeneteActual IS NULL THEN
-                SIGNAL SQLSTATE '02000'
-                SET MESSAGE_TEXT = 'No existe un listado de precios vigente.',
-                MYSQL_ERRNO = 1329;
-            END IF;
+            -- Recupera el id y fecha carga del listado vigente
+            CALL sp_diamante_valor_comercial_recuperar_vigente(idListadoVigeneteActual);
 
             -- Selecciona el identificador del listado historico donde la fecha de
             -- carga se menor a la del lisdado vigente
             SELECT id INTO idListadoHistorico
             FROM hist_cfg_diamante_listado_valor_comercial
-            WHERE fecha_carga < fechaCargaVigeneteActual ORDER BY id DESC LIMIT 1;
+            ORDER BY fecha_carga DESC LIMIT 1;
 
             -- Verifica si no hay una fecha de carga menor a la vigente
             IF idListadoHistorico IS NULL THEN
-                -- Si no hay una fecha menor a la vigente regresa el primer historico
-                SELECT id INTO idListadoHistorico
-                FROM hist_cfg_diamante_listado_valor_comercial
-                ORDER BY id DESC LIMIT 1;
-
-                -- Verifica si no existe un listado historico
-                IF idListadoHistorico IS NULL THEN
-                    SIGNAL SQLSTATE '02000'
-                    SET MESSAGE_TEXT = 'No existe un listado de precios anterior.',
-                    MYSQL_ERRNO = 1329;
-                END IF;
+                SIGNAL SQLSTATE '02000'
+                SET MESSAGE_TEXT = 'No existe un listado de precios anterior.',
+                MYSQL_ERRNO = 1329;
             END IF;
 
             CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
             CALL sp_diamante_valor_comercial_restaurar_historico(idListadoHistorico);
         COMMIT;
+    END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_fecha;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_fecha(IN _fechaIni TIMESTAMP, IN _fechaFin TIMESTAMP)
+    BEGIN
+        DECLARE idListadoVigeneteActual BIGINT;
+        DECLARE idListadoHistorico BIGINT;
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+
+        START TRANSACTION;
+            -- Recupera el id y fecha carga del listado vigente
+            CALL sp_diamante_valor_comercial_recuperar_vigente(idListadoVigeneteActual);
+
+            -- Selecciona el identificador del listado historico donde la fecha de
+            -- carga este en el rango de los parametros
+            SELECT id INTO idListadoHistorico
+            FROM hist_cfg_diamante_listado_valor_comercial
+            WHERE fecha_carga BETWEEN _fechaIni AND _fechaFin ORDER BY fecha_carga DESC LIMIT 1;
+
+        -- Verifica si existe un listado historico para la fecha
+        IF idListadoHistorico IS NULL THEN
+            SIGNAL SQLSTATE '02000'
+            SET MESSAGE_TEXT = 'No existe un listado de precios para la fecha.',
+            MYSQL_ERRNO = 1329;
+        END IF;
+
+        CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
+        CALL sp_diamante_valor_comercial_restaurar_historico(idListadoHistorico);
+        COMMIT;
+    END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_recuperar_vigente;
+DELIMITER //
+CREATE PROCEDURE sp_diamante_valor_comercial_recuperar_vigente(OUT idListadoVigeneteActual BIGINT)
+    BEGIN
+        -- Se selecciona el identificador y la fecha de carga del listado vigente
+        SELECT id INTO idListadoVigeneteActual
+        FROM cfg_diamante_listado_valor_comercial ORDER BY id DESC LIMIT 1;
+
+        -- Verifica si existe un listado vigente
+        IF idListadoVigeneteActual IS NULL THEN
+            SIGNAL SQLSTATE '02000'
+            SET MESSAGE_TEXT = 'No existe un listado de precios vigente.',
+            MYSQL_ERRNO = 1329;
+        END IF;
     END //
 DELIMITER ;
