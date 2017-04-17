@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 /**
  * Expone los metodos de acceso a datos para la entidad ValorComercialDiamanteJPA.
@@ -41,18 +40,4 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
     @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
     ValorComercialDiamanteJPA obtenerValorComercial(
         @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesCt") BigDecimal quilatesCt);
-
-
-    /**
-     * Utilizado para obtener la entidad que coincida exactamente con los atributos "corte", "color", "claridad"
-     * y "quilatesCt" indicados.
-     *
-     * @return La entidad que coincida con los valores de los atributos indicados.
-     */
-    @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd " +
-        "WHERE vcd.listado IS NULL  ")
-    Set<ValorComercialDiamanteJPA> obtenerValoresComercialesDiamanteBatch();
-
-
-
 }

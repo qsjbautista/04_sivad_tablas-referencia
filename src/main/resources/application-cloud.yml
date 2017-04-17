@@ -27,8 +27,8 @@ spring:
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
-                # Plan gratuito = 4 conexiones, dejamos una libre
-                maximumPoolSize: 3
+                # Plan gratuito para DEV = 4 conexiones; TEST en adelante = 15 conexiones
+                maximumPoolSize: 12
     h2:
         console:
             enabled: true
@@ -53,3 +53,9 @@ spring:
 # ===================================================================
 # Propiedades especificas de la aplicacion (microservicio)
 # ===================================================================
+thread:
+    pool:
+        size:
+            core: 10
+            max: 50
+            queue: 1000
