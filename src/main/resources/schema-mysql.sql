@@ -477,10 +477,6 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIG
                 SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo
                 FROM hist_cfg_diamante_valor_comercial
                 WHERE listado = _listado;
-
-            -- Se elimina el listado y valores comerciales historicos
-            DELETE FROM hist_cfg_diamante_listado_valor_comercial
-            WHERE id = _listado;
         COMMIT;
     END //
 DELIMITER ;
