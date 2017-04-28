@@ -1,5 +1,5 @@
 --
--- Utilizado para poblar la BD (mysql) utilizada con los perfiles cloud.
+-- Utilizado para poblar la BD (mysql) utilizada con los perfiles local y cloud.
 --
 
 
@@ -83,7 +83,7 @@ VALUES (18, 'AU_BL', '24_Q', 780.000, 1);
 -- INICIA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
 INSERT INTO cfg_diamante_factor (id, factor_minimo, factor_medio, factor_maximo, fecha_carga, fecha_listado)
-VALUES (1, 0.250, 0.400, 0.550, '2016-12-20 10:00:00.521', '2016-12-20');
+VALUES (1, 1.000, 1.000, 1.000, '2016-12-20 10:00:00.521', '2016-12-20');
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
@@ -102,6 +102,8 @@ INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (2, 'HR', 1.050, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (3, 'IG', 1.050, 1);
+INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
+VALUES (4, 'AJ', 1.050, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADOR CERTIFICADO
 -- ----------------------------------------------------------------------------------------------------------------------
