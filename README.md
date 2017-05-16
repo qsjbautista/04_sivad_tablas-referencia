@@ -55,7 +55,6 @@ sea el ciclo de desarrollo:
 * local         Perfil de desarrollo local, utilizando MySQL como base de datos.
 * cloud         Perfil para despliegue en servicios de tipo CloudFoundry.
 * metrics       Perfil de metricas (utilizado para la recolección de métricas y NO debe ser levantado de manera aislada).
-
 Para hacer uso de estos perfiles en el micro servicio se utilizan las siguientes instrucciones:
 
 ```
