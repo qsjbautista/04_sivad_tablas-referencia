@@ -1,5 +1,6 @@
 package mx.com.nmp.ms.sivad.referencia.adminapi.ws;
 
+import com.codahale.metrics.annotation.Timed;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.factory.FactorValorDiamanteFactory;
@@ -9,6 +10,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorFecha;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemReader;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteBatchProcessor;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.ReferenciaListasDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.*;
@@ -28,11 +30,14 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author osanchez
@@ -80,10 +85,14 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     @Inject
     ValorComercialDiamanteBatchProcessor valorComercialDiamanteBatchProcessor;
 
+    @Inject
+    private TaskExecutor taskExecutor;
+
     /**
      * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
+    @Timed
     @Override
     public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
         LOGGER.info(">> actualizarListaValorComercial({})", parameters);
@@ -94,30 +103,38 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
         try {
             LOGGER.debug("iniciando ejecución...");
 
-            // Reader
+            // Preparar lista para el Reader
             List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
+            Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
+            for (PrecioCorte pc : listaPrecios) {
+                for (PrecioCorteDetalle pcd : pc.getPrecioCorte()) {
+                    PrecioCorteDetalleBatch pcdb = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+                    preciosDiamantes.add(pcdb);
+                }
+            }
 
-                // Reader
-                ItemReader diamanteItemReader = new DiamanteItemReader(listaPrecios);
+            // Reader
+            ItemReader diamanteItemReader = new DiamanteItemReader(preciosDiamantes);
 
-                // Step
-                Step procesaPrecioStep = stepBuilderFactory.get("procesarPreciosDiamantes")
-                    //Se guardan cada 1000 registros
-                    .<PrecioCorteDetalle, Diamante>chunk(1000)
-                    .reader(diamanteItemReader)
-                    .processor(diamantesProcessor)
-                    .writer(diamanteItemWriter)
-                    .build();
+            // Step
+            Step procesaPrecioStep = stepBuilderFactory.get("procesarPreciosDiamantes")
+                //Se guardan cada 500 registros
+                .<PrecioCorteDetalle, Diamante>chunk(500)
+                .reader(diamanteItemReader)
+                .processor(diamantesProcessor)
+                .writer(diamanteItemWriter)
+                .taskExecutor(taskExecutor)
+                .build();
 
-                // Job
-                Job diamantesJob = jobBuilderFactory.get("importarPreciosDiamantes")
-                    .listener(jobCompletionNotificationListener)
-                    .incrementer(new RunIdIncrementer())
-                    .flow(procesaPrecioStep)
-                    .end()
-                    .build();
+            // Job
+            Job diamantesJob = jobBuilderFactory.get("importarPreciosDiamantes")
+                .listener(jobCompletionNotificationListener)
+                .incrementer(new RunIdIncrementer())
+                .flow(procesaPrecioStep)
+                .end()
+                .build();
 
-                // Execution
+            // Execution
             JobParametersBuilder builder = new JobParametersBuilder();
             //Se agrega un timer para que no se repita nunca el job.
             builder.addLong("time", System.currentTimeMillis());
@@ -127,15 +144,15 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
             JobExecution execution = jobLauncher.run(diamantesJob, jobParameters);
 
             LOGGER.info("Codigo de salida: {}", execution.getStatus());
-            if( execution.getStatus() == BatchStatus.FAILED) {
+            if (execution.getStatus() == BatchStatus.FAILED) {
                 String mensajesError = "";
-                for(Throwable excepcion : execution.getAllFailureExceptions()){
+                for (Throwable excepcion : execution.getAllFailureExceptions()) {
                     mensajesError = mensajesError.concat(excepcion.getMessage());
                 }
                 throw WebServiceExceptionFactory
                     .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
             }
-           //}
+            //}
 
         } catch (Exception e) {
             LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
@@ -158,7 +175,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getFactorDiamante())
             && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMinimo()) && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMedio())
             && !ObjectUtils.isEmpty(parameters.getFactorDiamante().getFactorMaximo())) {
-            if(parameters.getFactorDiamante().getFactorMinimo().compareTo(parameters.getFactorDiamante().getFactorMedio()) <= 0 &&
+            if (parameters.getFactorDiamante().getFactorMinimo().compareTo(parameters.getFactorDiamante().getFactorMedio()) <= 0 &&
                 parameters.getFactorDiamante().getFactorMedio().compareTo(parameters.getFactorDiamante().getFactorMaximo()) <= 0) {
                 try {
                     FactorValorDiamante vo = factorValorDiamanteFactory

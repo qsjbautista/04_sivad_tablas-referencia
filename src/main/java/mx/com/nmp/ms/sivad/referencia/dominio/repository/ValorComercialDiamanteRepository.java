@@ -52,25 +52,22 @@ public interface ValorComercialDiamanteRepository {
 
     /**
      * Permite restaurar el listado de precios de diamantes anterior al listado vigente.
-     *
-     * @return El nuevo listado restaurado.
      */
-    ListadoValorComercialDiamante restaurarListadoAnterior();
+    void restaurarListadoAnterior();
 
     /**
      * Permite restaurar el listado de precios de diamantes de la fecha de vigencia indicada.
      *
      * @param fechaVigencia La fecha de vigencia del listado que se desea restaurar.
-     * @return El nuevo listado restaurado.
      */
-    ListadoValorComercialDiamante restaurarListadoPorFechaVigencia(LocalDate fechaVigencia);
+    void restaurarListadoPorFechaVigencia(LocalDate fechaVigencia);
 
     /**
-     * Permite actualizar el listado vigente con la información del listado que se recibe como parámetro.
+     * Permite guardar la lista valores comerciales de diamante.
      *
-     * @param listado El nuevo listado.
+     * @param lista El nuevo listado.
      */
-    void actualizarListadoSinHist(ListadoValorComercialDiamante listado);
+    void procesarLista(List<? extends Diamante> lista);
 
     /**
      * Si existe un error en el procesamiento batch se eliminan los registros insertados.

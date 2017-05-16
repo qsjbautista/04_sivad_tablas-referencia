@@ -7,6 +7,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -17,6 +18,11 @@ import java.util.Set;
 @Entity
 @Table(name = "cfg_diamante_listado_valor_comercial")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(name = "generar_vigente",
+        procedureName = "sp_diamante_valor_comercial_generar_vigente",
+        parameters = @StoredProcedureParameter(mode = ParameterMode.IN, name = "_fechaListado", type = Date.class))
+})
 public class ListadoValorComercialDiamanteJPA extends AbstractListadoValorComercialDiamanteJPA {
 
     /**

@@ -67,7 +67,7 @@ VALUES (14, 'AU_BL', '16_Q', 520.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (15, 'AU_BL', '18_Q', 585.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
-VALUES (16, 'AU_BL', '21_Q', 632.77, 1);
+VALUES (16, 'AU_BL', '21_Q', 632.770, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (17, 'AU_BL', '22_Q', 715.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
@@ -114,7 +114,7 @@ VALUES (10, 'Pear', 'E', 'VS2', 0.90, 0.99, 63.0000, 1);
 -- INICIA - DATOS: FACTOR VALOR DIAMANTE
 ------------------------------------------------------------------------------------------------------------------------
 INSERT INTO cfg_diamante_factor (id, factor_minimo, factor_medio, factor_maximo, fecha_carga, fecha_listado)
-VALUES (1, 1.000, 1.050, 1.100, '2016-12-20 10:00:00.521-06:00', '2016-12-20');
+VALUES (1, 0.550, 1.000, 1.100, '2017-05-02 12:56:00.521', '2017-05-02');
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: FACTOR VALOR DIAMANTE
 ------------------------------------------------------------------------------------------------------------------------
@@ -133,6 +133,8 @@ INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (2, 'HR', 1.050, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (3, 'IG', 1.050, 1);
+INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
+VALUES (4, 'AJ', 1.050, 1);
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADOR CERTIFICADO
 ------------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 --
--- Utilizado para poblar la BD (mysql) utilizada con los perfiles cloud.
+-- Utilizado para poblar la BD (mysql) utilizada con los perfiles local y cloud.
 --
 
 
@@ -67,7 +67,7 @@ VALUES (14, 'AU_BL', '16_Q', 520.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (15, 'AU_BL', '18_Q', 585.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
-VALUES (16, 'AU_BL', '21_Q', 632.77, 1);
+VALUES (16, 'AU_BL', '21_Q', 632.770, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (17, 'AU_BL', '22_Q', 715.000, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
@@ -78,43 +78,12 @@ VALUES (18, 'AU_BL', '24_Q', 780.000, 1);
 
 
 
--- ----------------------------------------------------------------------------------------------------------------------
--- INICIA - DATOS: VALOR COMERCIAL 'DIAMANTE'
--- ----------------------------------------------------------------------------------------------------------------------
-INSERT INTO cfg_diamante_listado_valor_comercial (id, fecha_carga, fecha_listado)
-VALUES (1, '2016-12-20 10:00:00.521', '2016-12-20');
-
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (1, 'Pear', 'D', 'IF', 0.90, 0.99, 135.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (2, 'Pear', 'D', 'VVS1', 0.90, 0.99, 111.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (3, 'Pear', 'D', 'VVS2', 0.90, 0.99, 97.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (4, 'Pear', 'D', 'VS1', 0.90, 0.99, 73.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (5, 'Pear', 'D', 'VS2', 0.90, 0.99, 66.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (6, 'Pear', 'E', 'IF', 0.90, 0.99, 107.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (7, 'Pear', 'E', 'VVS1', 0.90, 0.99, 99.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (8, 'Pear', 'E', 'VVS2', 0.90, 0.99, 84.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (9, 'Pear', 'E', 'VS1', 0.90, 0.99, 68.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (10, 'Pear', 'E', 'VS2', 0.90, 0.99, 63.0000, 1);
--- ----------------------------------------------------------------------------------------------------------------------
--- TERMINA - DATOS: VALOR COMERCIAL 'DIAMANTE'
--- ----------------------------------------------------------------------------------------------------------------------
-
-
 
 -- ----------------------------------------------------------------------------------------------------------------------
 -- INICIA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
 INSERT INTO cfg_diamante_factor (id, factor_minimo, factor_medio, factor_maximo, fecha_carga, fecha_listado)
-VALUES (1, 1.000, 1.050, 1.100, '2016-12-20 10:00:00.521', '2016-12-20');
+VALUES (1, 0.550, 1.000, 1.100, '2017-05-02 12:56:00.521', '2017-05-02');
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
@@ -133,6 +102,8 @@ INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (2, 'HR', 1.050, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (3, 'IG', 1.050, 1);
+INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
+VALUES (4, 'AJ', 1.050, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADOR CERTIFICADO
 -- ----------------------------------------------------------------------------------------------------------------------

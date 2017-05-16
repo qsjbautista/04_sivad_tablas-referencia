@@ -67,11 +67,10 @@ class valorComercialDiamante {
      */
     @Usage("Permite restaurar el Listado de Valor Comercial Diamante anterior al listado vigente")
     @Command
-    def restaurarAnterior(InvocationContext context) {
+    void restaurarAnterior(InvocationContext context) {
         try {
-            def elementos = getValorComercialDiamanteRepository(context).restaurarListadoAnterior()
+            getValorComercialDiamanteRepository(context).restaurarListadoAnterior()
             out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha anterior.\n")
-            mostrarTablaResultados(elementos)
         } catch (ListadoValorComercialNoEncontradoException e) {
             out.println("No existe un Listado de Valor Comercial Diamante con fecha anterior.")
             e.printStackTrace()
@@ -89,7 +88,7 @@ class valorComercialDiamante {
      */
     @Usage("Permite restaurar el Listado de Valor Comercial Diamante de la fecha de vigencia indicada")
     @Command
-    def restaurarPorFecha(InvocationContext context,
+    void restaurarPorFecha(InvocationContext context,
                   @Usage("Fecha de vigencia a restaurar con formato yyyy-mm-dd")
                   @Required @Argument String fecha) {
         LocalDate fechaFormat = null
@@ -104,9 +103,8 @@ class valorComercialDiamante {
         }
 
         try {
-            def elementos = getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
+            getValorComercialDiamanteRepository(context).restaurarListadoPorFechaVigencia(fechaFormat)
             out.println("El Listado de Valor Comercial Diamante fue restaurado exitosamente a la fecha: [${fecha}].\n")
-            mostrarTablaResultados(elementos)
         } catch (ListadoValorComercialNoEncontradoException e) {
             out.println("No existe un Listado de Valor Comercial Diamante con fecha: [${fecha}].")
             e.printStackTrace()
