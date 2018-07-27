@@ -154,6 +154,9 @@ CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
     PRECIO DECIMAL(10, 4) NOT NULL,
     LISTADO BIGINT,
+    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
+    MONTOVBD DECIMAL(10, 4) NOT NULL,
+    MONTOFCASTIGOXRANGO DECIMAL(10, 4) NOT NULL,
     PRIMARY KEY (ID)
 );
 
@@ -181,6 +184,9 @@ CREATE TABLE CFG_DIAMANTE_VALOR_COMERCIAL
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
     PRECIO DECIMAL(10, 4) NOT NULL,
     LISTADO BIGINT,
+    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
+    MONTOVBD DECIMAL(10, 4) NOT NULL,
+    MONTOFCASTIGOXRANGO DECIMAL(10, 4) NOT NULL,
     PRIMARY KEY (ID)
 );
 
@@ -192,7 +198,10 @@ CREATE TABLE TMP_DIAMANTE_VALOR_COMERCIAL
     CLARIDAD VARCHAR(20) NOT NULL,
     TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
-    PRECIO DECIMAL(10, 4) NOT NULL
+    PRECIO DECIMAL(10, 4) NOT NULL,
+    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
+    MONTOVBD DECIMAL(10, 4) NOT NULL,
+    MONTOFCASTIGOXRANGO DECIMAL(10, 4) NOT NULL
 );
 
 DROP TABLE IF EXISTS CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL;
@@ -440,8 +449,10 @@ CREATE PROCEDURE sp_diamante_valor_comercial_generar_vigente(IN _fechaListado DA
 
             -- Se insertan los valores comerciales vigentes con el listado vigente
             INSERT INTO
-                cfg_diamante_valor_comercial(corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo
+                cfg_diamante_valor_comercial(corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado,
+                    tipo_cambio, montovbd, montofcastigoxrango)
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo,
+                    tipo_cambio, montovbd, montofcastigoxrango
                 FROM tmp_diamante_valor_comercial;
 
             -- Se limpia la tabla temporal
@@ -473,8 +484,10 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIG
 
             -- Se pasan los valores comerciales historicos a la tabla de vigentes
             INSERT INTO
-                cfg_diamante_valor_comercial (corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo
+                cfg_diamante_valor_comercial (corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado,
+                    tipo_cambio, montovbd, montofcastigoxrango)
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo,
+                    tipo_cambio, montovbd, montofcastigoxrango
                 FROM hist_cfg_diamante_valor_comercial
                 WHERE listado = _listado;
         COMMIT;

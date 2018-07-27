@@ -50,7 +50,8 @@ public final class ValorComercialDiamanteUtil {
             for (ValorComercialDiamanteJPA vcd : listado.getValoresComerciales()) {
                 valoresComerciales.add(
                     DiamanteFactory.create(vcd.getCorte(), vcd.getColor(), vcd.getClaridad(),
-                        vcd.getTamanioInferior(), vcd.getTamanioSuperior(), vcd.getPrecio()));
+                        vcd.getTamanioInferior(), vcd.getTamanioSuperior(), vcd.getPrecio(),
+                        vcd.getTipoCambio(), vcd.getMontoVbd(), vcd.getMontofCastigoxRango()));
             }
         }
 
@@ -72,7 +73,8 @@ public final class ValorComercialDiamanteUtil {
             for (HistValorComercialDiamanteJPA hvcd : listado.getValoresComerciales()) {
                 valoresComerciales.add(
                     DiamanteFactory.create(hvcd.getCorte(), hvcd.getColor(), hvcd.getClaridad(),
-                        hvcd.getTamanioInferior(), hvcd.getTamanioSuperior(), hvcd.getPrecio()));
+                        hvcd.getTamanioInferior(), hvcd.getTamanioSuperior(), hvcd.getPrecio(),
+                        hvcd.getTipoCambio(), hvcd.getMontoVbd(), hvcd.getMontofCastigoxRango()));
             }
         }
 

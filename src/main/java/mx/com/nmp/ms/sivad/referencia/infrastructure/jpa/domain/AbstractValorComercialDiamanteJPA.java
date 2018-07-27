@@ -4,6 +4,8 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
+import mx.com.nmp.ms.arquetipo.annotation.journal.JournalData;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -59,6 +61,24 @@ public abstract class AbstractValorComercialDiamanteJPA {
      */
     @Column(name = "precio", precision = 10, scale = 4, nullable = false)
     protected BigDecimal precio;
+
+    /**
+     * Tipo de cambio
+     */
+    @Column(name = "tipo_cambio", precision = 12, scale = 4)
+    private BigDecimal tipoCambio;
+
+    /**
+     * Precio en pesos con depreciacion
+     */
+    @Column(name = "montovbd", precision = 10, scale = 4, nullable = false)
+    protected BigDecimal montoVbd;
+
+    /**
+     * Precio con el porcentaje aplicado de castigo por rango de pesos
+     */
+    @Column(name = "montofcastigoxrango", precision = 10, scale = 4, nullable = false)
+    protected BigDecimal montofCastigoxRango;
 
 
 
@@ -120,6 +140,30 @@ public abstract class AbstractValorComercialDiamanteJPA {
         this.precio = precio;
     }
 
+    public BigDecimal getTipoCambio() {
+        return tipoCambio;
+    }
+
+    public void setTipoCambio(BigDecimal tipoCambio) {
+        this.tipoCambio = tipoCambio;
+    }
+
+    public BigDecimal getMontoVbd() {
+        return montoVbd;
+    }
+
+    public void setMontoVbd(BigDecimal montoVbd) {
+        this.montoVbd = montoVbd;
+    }
+
+    public BigDecimal getMontofCastigoxRango() {
+        return montofCastigoxRango;
+    }
+
+    public void setMontofCastigoxRango(BigDecimal montofCastigoxRango) {
+        this.montofCastigoxRango = montofCastigoxRango;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,13 +178,17 @@ public abstract class AbstractValorComercialDiamanteJPA {
         if (!precio.equals(that.precio)) return false;
         if (!tamanioInferior.equals(that.tamanioInferior)) return false;
         if (!tamanioSuperior.equals(that.tamanioSuperior)) return false;
+        if (!tipoCambio.equals(that.tipoCambio)) return false;
+        if (!montoVbd.equals(that.montoVbd)) return false;
+        if (!montofCastigoxRango.equals(that.montofCastigoxRango)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, corte, color, claridad, tamanioInferior, tamanioSuperior, precio);
+        return Objects.hash(id, corte, color, claridad, tamanioInferior, tamanioSuperior, precio,
+            tipoCambio, montoVbd, montofCastigoxRango);
     }
 
 }

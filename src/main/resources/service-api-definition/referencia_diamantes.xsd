@@ -11,6 +11,8 @@
                 <s:element name="color" type="s:string"/>
                 <s:element name="claridad" type="s:string"/>
                 <s:element name="quilates_ct" type="s:decimal"/>
+                <s:element name="quilates_desde" type="s:decimal"/>
+                <s:element name="quilates_hasta" type="s:decimal"/>
             </s:sequence>
         </s:complexType>
     </s:element>
@@ -46,5 +48,24 @@
             <s:element name="valorMaximo" type="s:decimal"/>
         </s:sequence>
     </s:complexType>
+
+    <s:element name="obtenerRangoPesoRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="quilataje" type="s:decimal" default="0.0" />
+                <s:element name="cantidad" type="s:int" default="1"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="obtenerRangoPesoResponse">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="quilatesDesde" type="s:decimal"/>
+                <s:element name="quilatesHasta" type="s:decimal"/>
+                <s:element name="pesoAproximado" type="s:decimal"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
 
 </s:schema>

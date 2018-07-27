@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 /**
  * Expone los metodos de acceso a datos para la entidad ValorComercialDiamanteJPA.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 @Repository
 public interface ValorComercialDiamanteJPARepository extends JpaRepository<ValorComercialDiamanteJPA, Long> {
@@ -40,4 +40,25 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
     @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
     ValorComercialDiamanteJPA obtenerValorComercial(
         @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesCt") BigDecimal quilatesCt);
+
+    /**
+     * Utilizado para obtener la entidad que coincida exactamente con los atributos "color", "claridad",
+     * "quilatesDesde" y "quilatesHasta" indicados.
+     *
+     * @param color El tipo de color del diamante.
+     * @param claridad El tipo de claridad del diamante.
+     * @param quilatesDesde El valor inferior en quilates del diamante.
+     * @param quilatesHasta El valor inferior en quilates del diamante.
+     * @return La entidad que coincida con los valores de los atributos indicados.
+     */
+    @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd " +
+        "WHERE (vcd.colorFijo IS NOT NULL AND vcd.colorFijo = :color) " +
+        "OR (vcd.colorFijo IS NULL AND vcd.colorDesde = :color OR vcd.colorHasta = :color) " +
+        "AND vcd.claridad = :claridad " +
+        "AND vcd.tamanioInferior <= :quilatesDesde " +
+        "AND vcd.tamanioSuperior >= :quilatesHasta")
+    @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
+    ValorComercialDiamanteJPA obtenerValorComercial(
+        @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesDesde") BigDecimal quilatesDesde,
+        @Param("quilatesHasta") BigDecimal quilatesHasta);
 }

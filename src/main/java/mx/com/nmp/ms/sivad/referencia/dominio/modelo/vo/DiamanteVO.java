@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Value Object con la información del diamante.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 public class DiamanteVO {
 
@@ -33,6 +33,16 @@ public class DiamanteVO {
      */
     private BigDecimal quilatesCt;
 
+    /**
+     * El valor inferior en quilates del diamante.
+     */
+    private BigDecimal quilatesDesde;
+
+    /**
+     * El valor superior en quilates del diamante.
+     */
+    private BigDecimal quilatesHasta;
+
 
 
     // METODOS
@@ -50,6 +60,24 @@ public class DiamanteVO {
         this.color = color;
         this.claridad = claridad;
         this.quilatesCt = quilatesCt;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param corte El tipo de corte del diamante.
+     * @param color El tipo de color del diamante.
+     * @param claridad El tipo de claridad del diamante.
+     * @param quilatesCt El valor en quilates del diamante.
+     */
+    public DiamanteVO(String corte, String color, String claridad, BigDecimal quilatesCt,
+                      BigDecimal quilatesDesde, BigDecimal quilatesHasta) {
+        this.corte = corte;
+        this.color = color;
+        this.claridad = claridad;
+        this.quilatesCt = quilatesCt;
+        this.quilatesDesde = quilatesDesde;
+        this.quilatesHasta = quilatesHasta;
     }
 
 
@@ -72,13 +100,23 @@ public class DiamanteVO {
         return quilatesCt;
     }
 
+    public BigDecimal getQuilatesDesde() {
+        return quilatesDesde;
+    }
+
+    public BigDecimal getQuilatesHasta() {
+        return quilatesHasta;
+    }
+
     @Override
     public String toString() {
         return "DiamanteVO{" +
             "corte='" + corte + '\'' +
             ", color='" + color + '\'' +
             ", claridad='" + claridad + '\'' +
-            ", quilatesCt=" + quilatesCt +
+            ", quilatesCt='" + quilatesCt + '\'' +
+            ", quilatesDesde='" + quilatesDesde + '\'' +
+            ", quilatesHasta='" + quilatesHasta +
             '}';
     }
 

@@ -4,13 +4,17 @@ import com.codahale.metrics.annotation.Timed;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CertificadoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.RangoPesoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Certificado;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.RangoPesoDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.CertificadoVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.DiamanteVO;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.RangoPesoDiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.ValorComercialDiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorCertificadoRepository;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.RangoPesoDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.ReferenciaDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.*;
@@ -19,11 +23,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 
 /**
  * Clase que contiene los metodos que son invocados para obtener la información comercial de diamantes.
  *
- * @author osanchez
+ * @author osanchez, ecancino
  */
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteService {
@@ -34,6 +39,9 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
     @Inject
     ModificadorCertificadoRepository modificadorCertificadoRepository;
+
+    @Inject
+    RangoPesoDiamanteRepository rangoPesoDiamanteRepository;
 
 
     /**
@@ -46,17 +54,20 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
     @Override
     public ObtenerValorComercialResponse obtenerValorComercial(ObtenerValorComercialRequest parameters) {
         if (LOGGER.isInfoEnabled() && parameters != null) {
-            LOGGER.info(">> obtenerValorComercial({},{},{},{})", new Object[]{
-                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt()
+            LOGGER.info(">> obtenerValorComercial({},{},{},{},{},{})", new Object[]{
+                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
+                parameters.getQuilatesDesde(), parameters.getQuilatesHasta()
             });
         }
 
         ObtenerValorComercialResponse response = new ObtenerValorComercialResponse();
 
         if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getColor()) &&
-            !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt())) {
+            !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt()) && !ObjectUtils.isEmpty(parameters.getQuilatesDesde())
+            && !ObjectUtils.isEmpty(parameters.getQuilatesHasta())) {
 
-            DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
+            DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
+                parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
 
             try {
                 Diamante diamante = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
@@ -69,11 +80,13 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
                 response.setValorComercial(valorComercial);
             } catch (ValorComercialNoEncontradoException e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR010.getMessageException() + " para las entradas: corte: ({}), color: ({}), claridad: ({}), Quilates: ({})", parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR010.getMessageException() + " para las entradas: corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
+                    parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR010.getCodeException(), WebServiceExceptionCodes.NMPR010.getMessageException());
             }
         } else {
-            LOGGER.info("Valores nulos o vacios, parameters: ({}), corte: ({}), color: ({}), claridad: ({}), Quilates: ({})", parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt());
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
+                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
             throwWebServiceException();
         }
 
@@ -115,6 +128,53 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
         }
 
         LOGGER.info("<< {}", response.getFactor());
+
+        return response;
+    }
+
+    /**
+     * Servicio que permite calcular el rango de peso y un valor aproximado de peso para el total de diamantes
+     * dado un valor en quilates.
+     *
+     * @param parameters EL objeto que contiene las caracteristicas del diamante: quilataje y cantidad de diamantes.
+     * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerRangoPesoResponse
+     *  El peso aproximado y el rango de peso en el que se encuentran los diamantes.
+     */
+    public ObtenerRangoPesoResponse obtenerRangoPeso(ObtenerRangoPesoRequest parameters) {
+        if (LOGGER.isInfoEnabled() && parameters != null) {
+            LOGGER.info(">> obtenerRangoPeso({},{})", parameters.getQuilataje(), parameters.getCantidad());
+        }
+
+        ObtenerRangoPesoResponse response = new ObtenerRangoPesoResponse();
+
+        //SE VALIDA QUE LOS PARAMETROS NO TENGAN VALORES NULOS O VACIOS
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getQuilataje()) && !ObjectUtils.isEmpty(parameters.getCantidad())) {
+
+            RangoPesoDiamanteVO rangoPesoDiamanteVO = new RangoPesoDiamanteVO(parameters.getQuilataje());
+
+            try {
+                //SE OBTIENE EL RANGO DE PESO AL QUE PERTENECE EN BASE AL PESO EN QUILATES RECIBIDO.
+                RangoPesoDiamante rangoPesoDiamante = rangoPesoDiamanteRepository.obtenerRangoPeso(rangoPesoDiamanteVO);
+
+                response.setQuilatesDesde(rangoPesoDiamante.getTamanioInferior());
+                response.setQuilatesHasta(rangoPesoDiamante.getTamanioSuperior());
+
+                //SE MULTIPLICAN LOS QUILATES INGRESADOS POR EL CAMPO DIAMANTES IGUALES PARA OBTENER EL PESO APROXIMADO
+                BigDecimal pesoAproximado = parameters.getQuilataje().multiply(new BigDecimal(parameters.getCantidad()));
+                response.setPesoAproximado(pesoAproximado);
+
+            } catch (RangoPesoNoEncontradoException e) {
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas: quilates: ({})", parameters.getQuilataje());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
+            }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), quilataje: ({}), cantidad de diamantes: ({})", parameters,  parameters.getQuilataje(), parameters.getCantidad());
+            throwWebServiceException();
+        }
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("<< {}/{}/{}", response.getQuilatesDesde(), response.getQuilatesHasta(), response.getPesoAproximado());
+        }
 
         return response;
     }
