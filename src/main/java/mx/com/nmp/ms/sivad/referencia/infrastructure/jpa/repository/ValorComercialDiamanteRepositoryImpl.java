@@ -5,8 +5,6 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
-import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
-import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
@@ -15,6 +13,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.DiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
@@ -44,7 +43,7 @@ import java.util.Set;
 /**
  * Implementación de ValorComercialDiamanteRepository.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 @Component
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
@@ -52,7 +51,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
     private static final String TMP_TABLA = "tmp_diamante_valor_comercial";
     private static final String[] PROP = new  String[]{"corte", "color", "claridad",
-        "tamanioInferior", "tamanioSuperior", "precio"};
+        "tamanioInferior", "tamanioSuperior", "precio", "tipoCambio", "montoVbd", "montofCastigoxRango"};
 
     private static final String CLEAR_QUERY = "TRUNCATE tmp_diamante_valor_comercial";
 
@@ -80,10 +79,10 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     private ValorComercialDiamanteJPARepository valorComercialDiamanteJPARepository;
 
     /**
-     * Referencia al conector con microservicio de tipo cambiario.
+     * Referencia al repositorio de CastigoCorteDiamanteJPARepository.
      */
     @Inject
-    private Convertidor convertidor;
+    private CastigoCorteDiamanteJPARepository castigoCorteDiamanteJPARepository;
 
 
     /**
@@ -101,9 +100,10 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     public Diamante obtenerValorComercial(@NotNull DiamanteVO diamanteVO) {
         LOGGER.info(">> obtenerValorComercial({})", diamanteVO);
 
+        //SE EJECUTA EL QUERY
         ValorComercialDiamanteJPA valorComercialDiamanteJPA =
-            valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getCorte(), diamanteVO.getColor(),
-                diamanteVO.getClaridad(), diamanteVO.getQuilatesCt());
+            valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getColor(),
+                diamanteVO.getClaridad(), diamanteVO.getQuilatesDesde(), diamanteVO.getQuilatesHasta());
 
         if (ObjectUtils.isEmpty(valorComercialDiamanteJPA)) {
             String msg = "No existe un valor comercial para las características de diamante solicitadas.";
@@ -111,12 +111,17 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
             throw new ValorComercialNoEncontradoException(ValorComercialDiamanteJPA.class, msg);
         }
 
-        BigDecimal precioDiamanteEnPesos = convertidor.convertir(
-            TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo(), valorComercialDiamanteJPA.getPrecio());
+        //SE OBTIENE EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
+        CastigoCorteDiamanteJPA castigoCorteDiamaneJPA =
+            castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getCorte());
+
+        //SE MULTIPLICA EL MONTOFCASTIGOXRANGO POR EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
+        BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango().multiply(castigoCorteDiamaneJPA.getFactor());
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),
-            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamanteEnPesos);
+            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamante, valorComercialDiamanteJPA.getTipoCambio(),
+            valorComercialDiamanteJPA.getMontoVbd(), valorComercialDiamanteJPA.getMontofCastigoxRango());
     }
 
     /**

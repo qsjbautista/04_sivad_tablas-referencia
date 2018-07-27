@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema"
+          xmlns="http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/datatypes/"
+          targetNamespace="http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/datatypes/"
+          elementFormDefault="qualified"
+          version="1.0">
+
+    <s:annotation>
+        <s:appinfo>Siva Diamantes - Consulta de Tipo de Cambio</s:appinfo>
+        <s:documentation>Definiciones de datos para Consulta de Tipo de Cambio de Siva Diamantes</s:documentation>
+    </s:annotation>
+
+    <s:element name="valorPorUnidadRequest">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="base" type="s:string" />
+                <s:element name="destino" type="s:string" />
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+    <s:element name="valorPorUnidadResponse">
+        <s:complexType>
+            <s:sequence>
+                <s:element name="valorPorUnidad" type="s:decimal"/>
+            </s:sequence>
+        </s:complexType>
+    </s:element>
+
+</s:schema>
