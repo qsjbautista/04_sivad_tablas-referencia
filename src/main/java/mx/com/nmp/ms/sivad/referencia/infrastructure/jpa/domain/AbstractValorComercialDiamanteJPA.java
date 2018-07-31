@@ -4,8 +4,6 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain;
 
-import mx.com.nmp.ms.arquetipo.annotation.journal.JournalData;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -13,7 +11,7 @@ import java.util.Objects;
 /**
  * Clase abstracta que factoriza los atributos comunes de los valores comerciales de Diamante.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 @MappedSuperclass
 public abstract class AbstractValorComercialDiamanteJPA {
@@ -65,7 +63,7 @@ public abstract class AbstractValorComercialDiamanteJPA {
     /**
      * Tipo de cambio
      */
-    @Column(name = "tipo_cambio", precision = 12, scale = 4)
+    @Column(name = "tipo_cambio", precision = 12, scale = 4, nullable = false)
     private BigDecimal tipoCambio;
 
     /**

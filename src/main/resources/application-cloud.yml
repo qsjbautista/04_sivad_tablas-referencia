@@ -50,6 +50,12 @@ spring:
             # sin ello se manifiesta como NullPointerException en cacheAdvisor al levantar el contexto
             hibernate.temp.use_jdbc_metadata_defaults: false
 
+tipocambio:
+  convertidor:
+    wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl
+  consulta:
+    wsdlLocation: http://localhost:8083/soap-api/ConsultaTipoCambio?wsdl
+
 # ===================================================================
 # Propiedades especificas de la aplicacion (microservicio)
 # ===================================================================

@@ -201,7 +201,10 @@ public class Diamante {
             ", claridad='" + claridad + '\'' +
             ", tamanioInferior=" + tamanioInferior +
             ", tamanioSuperior=" + tamanioSuperior +
-            ", precio=" + precio +
+            ", precio=" + precio + '\'' +
+            ", tipoCambio='" + tipoCambio + '\'' +
+            ", montoVbd='" + montoVbd + '\'' +
+            ", montofCastigoxRango='" + montofCastigoxRango +
             '}';
     }
 
@@ -218,6 +221,9 @@ public class Diamante {
         if (!precio.equals(diamante.precio)) return false;
         if (!tamanioInferior.equals(diamante.tamanioInferior)) return false;
         if (!tamanioSuperior.equals(diamante.tamanioSuperior)) return false;
+        if (!tipoCambio.equals(diamante.tipoCambio)) return false;
+        if (!montoVbd.equals(diamante.montoVbd)) return false;
+        if (!montofCastigoxRango.equals(diamante.montofCastigoxRango)) return false;
 
         return true;
     }
@@ -230,6 +236,9 @@ public class Diamante {
         result = 31 * result + tamanioInferior.hashCode();
         result = 31 * result + tamanioSuperior.hashCode();
         result = 31 * result + precio.hashCode();
+        result = 31 * result + tipoCambio.hashCode();
+        result = 31 * result + montoVbd.hashCode();
+        result = 31 * result + montofCastigoxRango.hashCode();
         return result;
     }
 
