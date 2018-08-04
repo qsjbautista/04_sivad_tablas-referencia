@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 /**
  * Clase de prueba para Tabla Diamantes.
  *
- * @author jbautista
+ * @author jbautista, ecancino
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TablasReferenciaApplication.class)
@@ -42,9 +42,9 @@ public class ReferenciaDiamanteServiceEndpointITest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenciaDiamanteServiceEndpointITest.class);
 
     private static final BigDecimal PRECIO_PESOS = new BigDecimal(2700.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal VALOR_COMERCIAL_MINIMO_PESOS = new BigDecimal(810.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal VALOR_COMERCIAL_MEDIO_PESOS = new BigDecimal(1080.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal VALOR_COMERCIAL_MAXIMO_PESOS = new BigDecimal(1350.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MINIMO_PESOS = new BigDecimal(36.4500D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MEDIO_PESOS = new BigDecimal(48.6000D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal VALOR_COMERCIAL_MAXIMO_PESOS = new BigDecimal(60.7500D).setScale(4, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
@@ -55,10 +55,10 @@ public class ReferenciaDiamanteServiceEndpointITest {
     /**
      * Referencia al conector con microservicio de tipo cambiario.
      */
-    @Mock
-    private Convertidor convertidor;
+    //@Mock
+    //private Convertidor convertidor;
 
-    /**
+	/**
      * Referencia al endpoint del servicio de diamantes.
      */
     @Inject
@@ -81,7 +81,7 @@ public class ReferenciaDiamanteServiceEndpointITest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
+        //ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
     }
 
     @Test
@@ -90,14 +90,16 @@ public class ReferenciaDiamanteServiceEndpointITest {
     public void obtenerValorComercialTest() {
         LOGGER.info(">> obtenerValorComercialTest");
 
-        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
-            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);
+        /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);*/
 
         ObtenerValorComercialRequest parameters = new ObtenerValorComercialRequest();
         parameters.setCorte("Oval");
         parameters.setColor("D");
         parameters.setClaridad("IF");
         parameters.setQuilatesCt(new BigDecimal(0.95).setScale(2, BigDecimal.ROUND_HALF_UP));
+        parameters.setQuilatesDesde(new BigDecimal(0.90).setScale(2, BigDecimal.ROUND_HALF_UP));
+        parameters.setQuilatesHasta(new BigDecimal(0.96).setScale(2, BigDecimal.ROUND_HALF_UP));
         ObtenerValorComercialResponse response = referenciaDiamanteServiceEndPoint.obtenerValorComercial(parameters);
 
         assertEquals(VALOR_COMERCIAL_MINIMO_PESOS, response.getValorComercial().getValorMinimo());

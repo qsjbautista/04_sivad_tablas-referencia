@@ -22,29 +22,10 @@ import java.math.BigDecimal;
 public interface ValorComercialDiamanteJPARepository extends JpaRepository<ValorComercialDiamanteJPA, Long> {
 
     /**
-     * Utilizado para obtener la entidad que coincida exactamente con los atributos "corte", "color", "claridad"
-     * y "quilatesCt" indicados.
-     *
-     * @param corte El tipo de corte del diamante.
-     * @param color El tipo de color del diamante.
-     * @param claridad El tipo de claridad del diamante.
-     * @param quilatesCt El valor en quilates del diamante.
-     * @return La entidad que coincida con los valores de los atributos indicados.
-     */
-    @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd " +
-        "WHERE vcd.corte = :corte " +
-        "AND vcd.color = :color " +
-        "AND vcd.claridad = :claridad " +
-        "AND vcd.tamanioInferior <= :quilatesCt " +
-        "AND vcd.tamanioSuperior >= :quilatesCt")
-    @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
-    ValorComercialDiamanteJPA obtenerValorComercial(
-        @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesCt") BigDecimal quilatesCt);
-
-    /**
-     * Utilizado para obtener la entidad que coincida exactamente con los atributos "color", "claridad",
+     * Utilizado para obtener la entidad que coincida exactamente con los atributos "corte", "color", "claridad",
      * "quilatesDesde" y "quilatesHasta" indicados.
      *
+     * @param corte El tipo de corte del diamante.
      * @param color El tipo de color del diamante.
      * @param claridad El tipo de claridad del diamante.
      * @param quilatesDesde El valor inferior en quilates del diamante.
@@ -52,13 +33,13 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
     @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd " +
-        "WHERE (vcd.colorFijo IS NOT NULL AND vcd.colorFijo = :color) " +
-        "OR (vcd.colorFijo IS NULL AND vcd.colorDesde = :color OR vcd.colorHasta = :color) " +
+        "WHERE vcd.corte = :corte " +
+        "AND vcd.color = :color " +
         "AND vcd.claridad = :claridad " +
         "AND vcd.tamanioInferior <= :quilatesDesde " +
         "AND vcd.tamanioSuperior >= :quilatesHasta")
     @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
     ValorComercialDiamanteJPA obtenerValorComercial(
-        @Param("color") String color, @Param("claridad") String claridad, @Param("quilatesDesde") BigDecimal quilatesDesde,
-        @Param("quilatesHasta") BigDecimal quilatesHasta);
+        @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad,
+        @Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
 }

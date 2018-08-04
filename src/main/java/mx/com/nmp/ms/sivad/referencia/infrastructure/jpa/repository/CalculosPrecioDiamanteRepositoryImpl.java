@@ -7,13 +7,21 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.conector.ConsultaTipoCambio;
 import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorDepreciacionNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.TipoCambioNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPesoDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -67,13 +75,19 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
      */
     @Override
     public Diamante calcularColumnas(PrecioCorteDetalleBatch precioCorteDetalle) {
-        Diamante diamante = null;
+        Diamante diamante;
 
         //CALCULOS DE LOS VALORES
 
         //1. TIPO DE CAMBIO
         BigDecimal tipoCambio = consultaTipoCambio.valorPorUnidad(
             TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo());
+
+        if (ObjectUtils.isEmpty(tipoCambio)) {
+            String msg = "No existe un tipo de cambio.";
+            LOGGER.warn(msg);
+            throw new TipoCambioNoEncontradoException(ConsultaTipoCambio.class, msg);
+        }
 
 
         //2. MONTOVBD (Valor base de datos convertido a pesos con depreciacion), CON LA FORMULA 'VBD = VR * 100 * TC * FD
@@ -86,13 +100,28 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
             TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo(), montoVbd);
 
         //VR * 100 * TC * FD: APLICAR EL FD (Factor de depreciacion)
-        montoVbd = montoVbd.multiply(factorDepreciacionDiamanteJPARepository.obtenerFactorDepreciacion().getFactor());
+        FactorDepreciacionDiamanteJPA factorDepreciacionDiamanteJPA = factorDepreciacionDiamanteJPARepository.obtenerFactorDepreciacion();
+
+        if (ObjectUtils.isEmpty(factorDepreciacionDiamanteJPA)) {
+            String msg = "No existe un factor de depreciacion.";
+            LOGGER.warn(msg);
+            throw new FactorDepreciacionNoEncontradoException(FactorDepreciacionDiamanteJPA.class, msg);
+        }
+
+        montoVbd = montoVbd.multiply(factorDepreciacionDiamanteJPA.getFactor());
 
 
         //3. MONTOFCASTIGOXRANGO: CAMPO montoVbd, APLICANDO EL CASTIGO POR RANGO DE PESO
-        BigDecimal montofCastigoxRango = montoVbd.multiply(
-            castigoRangoPesoDiamanteJPARepository.obtenerCastigoRangoPeso(precioCorteDetalle.getTamanioInferior(),
-                precioCorteDetalle.getTamanioSuperior()).getFactor());
+        CastigoRangoPesoDiamanteJPA castigoRangoPesoDiamanteJPA = castigoRangoPesoDiamanteJPARepository.obtenerCastigoRangoPeso(
+            precioCorteDetalle.getTamanioInferior(), precioCorteDetalle.getTamanioSuperior());
+
+        if (ObjectUtils.isEmpty(castigoRangoPesoDiamanteJPA)) {
+            String msg = "No existe un porcentaje de castigo por rango de peso para las características de diamante solicitadas.";
+            LOGGER.warn(msg);
+            throw new CastigoRangoPesoNoEncontradoException(CastigoRangoPesoDiamanteJPA.class, msg);
+        }
+
+        BigDecimal montofCastigoxRango = montoVbd.multiply(castigoRangoPesoDiamanteJPA.getFactor());
 
 
         diamante = DiamanteFactory.create(precioCorteDetalle.getCorte(),

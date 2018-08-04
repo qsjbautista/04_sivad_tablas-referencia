@@ -5,6 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FechaVigenciaFuturaException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ListadoValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
@@ -102,7 +103,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         //SE EJECUTA EL QUERY
         ValorComercialDiamanteJPA valorComercialDiamanteJPA =
-            valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getColor(),
+            valorComercialDiamanteJPARepository.obtenerValorComercial(diamanteVO.getCorte(), diamanteVO.getColor(),
                 diamanteVO.getClaridad(), diamanteVO.getQuilatesDesde(), diamanteVO.getQuilatesHasta());
 
         if (ObjectUtils.isEmpty(valorComercialDiamanteJPA)) {
@@ -115,13 +116,19 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         CastigoCorteDiamanteJPA castigoCorteDiamaneJPA =
             castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getCorte());
 
+        if (ObjectUtils.isEmpty(castigoCorteDiamaneJPA)) {
+            String msg = "No existe un porcentaje de castigo por tipo de corte para las características de diamante solicitadas.";
+            LOGGER.warn(msg);
+            throw new CastigoCorteNoEncontradoException(CastigoCorteDiamanteJPA.class, msg);
+        }
+
         //SE MULTIPLICA EL MONTOFCASTIGOXRANGO POR EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
         BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango().multiply(castigoCorteDiamaneJPA.getFactor());
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),
-            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamante, valorComercialDiamanteJPA.getTipoCambio(),
-            valorComercialDiamanteJPA.getMontoVbd(), valorComercialDiamanteJPA.getMontofCastigoxRango());
+            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamante.setScale(4, BigDecimal.ROUND_HALF_UP),
+            valorComercialDiamanteJPA.getTipoCambio(), valorComercialDiamanteJPA.getMontoVbd(), valorComercialDiamanteJPA.getMontofCastigoxRango());
     }
 
     /**
