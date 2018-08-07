@@ -5,6 +5,9 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +31,12 @@ public interface CastigoCorteDiamanteJPARepository extends JpaRepository<Castigo
         "WHERE ccd.corte = :corte " +
         "AND ccd.fecha = (SELECT MAX(ccd2.fecha) FROM CastigoCorteDiamanteJPA ccd2)")
     CastigoCorteDiamanteJPA obtenerCastigoCorte(@Param("corte") String corte);
+    
+    /**
+     * Utilizado para obtner todos los factores de castigo por tipo de corte
+     * @return totas las entidades.
+     */
+    @Query("SELECT ccd FROM CastigoCorteDiamanteJPA ccd " +
+            "WHERE ccd.fecha = (SELECT MAX(ccd2.fecha) FROM CastigoCorteDiamanteJPA ccd2)")
+    List<CastigoCorteDiamanteJPA> busquedaUltimaActualizacion();
 }

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Expone los metodos de acceso a datos para la entidad CastigoRangoPesoDiamanteJPA.
@@ -34,4 +35,9 @@ public interface CastigoRangoPesoDiamanteJPARepository extends JpaRepository<Cas
         "AND cpd.fecha = (SELECT MAX(cpd2.fecha) FROM CastigoRangoPesoDiamanteJPA cpd2)")
     CastigoRangoPesoDiamanteJPA obtenerCastigoRangoPeso(@Param("quilatesDesde") BigDecimal quilatesDesde,
                                                     @Param("quilatesHasta") BigDecimal quilatesHasta);
+    
+    
+	@Query("SELECT crpd FROM CastigoRangoPesoDiamanteJPA crpd "
+			+ "WHERE cpd.fecha = (SELECT MAX(crpd2.fecha) FROM CastigoRangoPesoDiamanteJPA crpd2)")
+	List<CastigoRangoPesoDiamanteJPA> busquedaUltimaActualizacion();
 }
