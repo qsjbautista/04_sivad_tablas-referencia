@@ -24,13 +24,13 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 	@Inject
 	private CastigoRangoPesoDiamanteJPARepository castigoRangoPesoDiamanteJPARepository;
 
-	public List<CastigoRangoPesoDiamanteJPA> ObtenerTodo() {
+	public List<CastigoRangoPesoDiamanteJPA> obtenerTodo() {
 		List<CastigoRangoPesoDiamanteJPA> castigoRango = castigoRangoPesoDiamanteJPARepository.findAll();
 
 		return castigoRango;
 	}
 
-	public List<CastigoRangoPesoDiamanteJPA> ObtenerTodoUltimaActualizacion() {
+	public List<CastigoRangoPesoDiamanteJPA> obtenerTodoUltimaActualizacion() {
 
 		List<CastigoRangoPesoDiamanteJPA> fechaUltimaActualizacion = castigoRangoPesoDiamanteJPARepository
 				.busquedaUltimaActualizacion();
@@ -39,7 +39,7 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 
 	}
 
-	public CastigoRangoPesoDiamanteJPA ObtenerCastigoRango(BigDecimal quilatesDesde, BigDecimal quilatesHasta) {
+	public CastigoRangoPesoDiamanteJPA obtenerCastigoRango(BigDecimal quilatesDesde, BigDecimal quilatesHasta) {
 
 		if (quilatesDesde == null) {
 			String msg = "No puede ir nulo el campo Quilates Desde.";

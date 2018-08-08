@@ -22,13 +22,13 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 	@Inject
 	private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
 
-	public List<ParametrosQuilatesJPA> ObtenerTodo() {
+	public List<ParametrosQuilatesJPA> obtenerTodo() {
 		List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findAll();
 
 		return parametrosQuilates;
 	}
 
-	public List<ParametrosQuilatesJPA> ObtenerTodoUltimaActualizacion() {
+	public List<ParametrosQuilatesJPA> obtenerTodoUltimaActualizacion() {
 
 		List<ParametrosQuilatesJPA> fechaUltimaActualizacion = parametrosQuilatesRepositoryJPA
 				.busquedaUltimaActualizacion();

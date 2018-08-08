@@ -7,9 +7,9 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilat
 
 public interface ParametrosQuilatesRepository {
 	
-	public List<ParametrosQuilatesJPA> ObtenerTodo();
+	public List<ParametrosQuilatesJPA> obtenerTodo();
 	
-	public List<ParametrosQuilatesJPA> ObtenerTodoUltimaActualizacion();
+	public List<ParametrosQuilatesJPA> obtenerTodoUltimaActualizacion();
 	
 	public List<ParametrosQuilatesJPA> busquedaQuilatesDesdeQuilatesHasta(BigDecimal quilatesDesde, BigDecimal quilatesHasta);
 	

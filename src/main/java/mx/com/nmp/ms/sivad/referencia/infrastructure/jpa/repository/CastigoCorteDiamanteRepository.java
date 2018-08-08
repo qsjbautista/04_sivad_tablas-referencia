@@ -6,11 +6,11 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiam
 
 public interface CastigoCorteDiamanteRepository {
 	
-	public List<CastigoCorteDiamanteJPA> ObtenerTodo();
+	public List<CastigoCorteDiamanteJPA> obtenerTodo();
 	
-	public List<CastigoCorteDiamanteJPA> ObtenerTodoUltimaActualizacion();
+	public List<CastigoCorteDiamanteJPA> obtenerTodoUltimaActualizacion();
 	
-	public CastigoCorteDiamanteJPA ObtenerCastigoCorte(String corte);
+	public CastigoCorteDiamanteJPA obtenerCastigoCorte(String corte);
 	
 	public CastigoCorteDiamanteJPA guardaActualizaCastigoCorte(CastigoCorteDiamanteJPA castigoCorteDiamanteJPA);
 

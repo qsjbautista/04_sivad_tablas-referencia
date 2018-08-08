@@ -21,13 +21,13 @@ public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteR
 	@Inject
 	private CastigoCorteDiamanteJPARepository castigoCorteDiamanteJPARepository;
 
-	public List<CastigoCorteDiamanteJPA> ObtenerTodo() {
+	public List<CastigoCorteDiamanteJPA> obtenerTodo() {
 		List<CastigoCorteDiamanteJPA> castigoCorte = castigoCorteDiamanteJPARepository.findAll();
 
 		return castigoCorte;
 	}
 
-	public List<CastigoCorteDiamanteJPA> ObtenerTodoUltimaActualizacion() {
+	public List<CastigoCorteDiamanteJPA> obtenerTodoUltimaActualizacion() {
 
 		List<CastigoCorteDiamanteJPA> fechaUltimaActualizacion = castigoCorteDiamanteJPARepository
 				.busquedaUltimaActualizacion();
@@ -36,7 +36,7 @@ public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteR
 
 	}
 
-	public CastigoCorteDiamanteJPA ObtenerCastigoCorte(String corte) {
+	public CastigoCorteDiamanteJPA obtenerCastigoCorte(String corte) {
 
 		if (corte == null) {
 			String msg = "No puede ir nulo el campo Corte.";

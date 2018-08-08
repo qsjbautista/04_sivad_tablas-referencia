@@ -7,11 +7,11 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPeso
 
 public interface CastigoRangoPesoRepository {
 	
-	public List<CastigoRangoPesoDiamanteJPA> ObtenerTodo();
+	public List<CastigoRangoPesoDiamanteJPA> obtenerTodo();
 	
-	public List<CastigoRangoPesoDiamanteJPA> ObtenerTodoUltimaActualizacion();
+	public List<CastigoRangoPesoDiamanteJPA> obtenerTodoUltimaActualizacion();
 	
-	public CastigoRangoPesoDiamanteJPA ObtenerCastigoRango(BigDecimal quilatesDesde, BigDecimal quilatesHasta);
+	public CastigoRangoPesoDiamanteJPA obtenerCastigoRango(BigDecimal quilatesDesde, BigDecimal quilatesHasta);
 	
 	public CastigoRangoPesoDiamanteJPA guardaActualizaCastigoRango(CastigoRangoPesoDiamanteJPA castigoRangoPesoDiamanteJPA);
 
