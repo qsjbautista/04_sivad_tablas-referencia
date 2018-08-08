@@ -76,6 +76,26 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 		ParametrosQuilatesJPA entidad = null;
 
 		if (parametrosQuilatesJPA.getId() != null && parametrosQuilatesJPA.getId() > 0) {
+			
+			if (parametrosQuilatesJPA.getQuilatesDesde() == null)
+				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo QuilatesDesde.",
+						ParametrosQuilatesJPA.class);
+
+			if (parametrosQuilatesJPA.getQuilatesHasta() == null)
+				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo QuilatesHasta.",
+						ParametrosQuilatesJPA.class);
+
+			if (parametrosQuilatesJPA.getQuilatesBaseDesde() == null)
+				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo QuilatesBaseDesde.",
+						ParametrosQuilatesJPA.class);
+
+			if (parametrosQuilatesJPA.getQuilatesBaseHasta() == null)
+				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo QuilatesBaseHasta.",
+						ParametrosQuilatesJPA.class);
+
+			if (parametrosQuilatesJPA.getPorcentaje() == null)
+				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo Porcentaje.",
+						ParametrosQuilatesJPA.class);
 
 			entidad = parametrosQuilatesRepositoryJPA.findOne(parametrosQuilatesJPA.getId());
 
