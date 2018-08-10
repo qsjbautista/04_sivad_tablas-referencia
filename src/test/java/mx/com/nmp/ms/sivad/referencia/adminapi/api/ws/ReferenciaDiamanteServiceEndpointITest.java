@@ -5,10 +5,7 @@ import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.ReferenciaDiamanteService;
-import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerModificadorRequest;
-import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerModificadorResponse;
-import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerValorComercialRequest;
-import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.ObtenerValorComercialResponse;
+import mx.com.nmp.ms.sivad.referencia.ws.diamantes.datatypes.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +42,9 @@ public class ReferenciaDiamanteServiceEndpointITest {
     private static final BigDecimal VALOR_COMERCIAL_MINIMO_PESOS = new BigDecimal(36.4500D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal VALOR_COMERCIAL_MEDIO_PESOS = new BigDecimal(48.6000D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal VALOR_COMERCIAL_MAXIMO_PESOS = new BigDecimal(60.7500D).setScale(4, BigDecimal.ROUND_HALF_UP);
+
+    private static final BigDecimal RANGO_PESO_INFERIOR = new BigDecimal(0.90D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal RANGO_PESO_SUPERIOR = new BigDecimal(0.96D).setScale(2, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
@@ -117,6 +117,21 @@ public class ReferenciaDiamanteServiceEndpointITest {
         parameters.setCertificadoDiamante("Certificado 1");
         ObtenerModificadorResponse response = referenciaDiamanteServiceEndPoint.obtenerModificador(parameters);
         assertEquals(response.getFactor(), new BigDecimal(5.00).setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
+    public void obtenerRangoPesoTest() {
+        LOGGER.info(">> obtenerModificadorTest");
+
+        ObtenerRangoPesoRequest parameters = new ObtenerRangoPesoRequest();
+        parameters.setCantidad(2);
+        parameters.setQuilataje(new BigDecimal(0.95).setScale(2, BigDecimal.ROUND_HALF_UP));
+        ObtenerRangoPesoResponse response = referenciaDiamanteServiceEndPoint.obtenerRangoPeso(parameters);
+        assertEquals(response.getQuilatesDesde(), RANGO_PESO_INFERIOR);
+        assertEquals(response.getQuilatesHasta(), RANGO_PESO_SUPERIOR);
+        assertEquals(response.getPesoAproximado(), (BigDecimal.valueOf(parameters.getCantidad()).multiply(parameters.getQuilataje())).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
 }

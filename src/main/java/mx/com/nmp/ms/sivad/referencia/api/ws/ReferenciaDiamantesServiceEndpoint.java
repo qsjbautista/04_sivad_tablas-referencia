@@ -85,7 +85,7 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR010.getCodeException(), WebServiceExceptionCodes.NMPR010.getMessageException());
             }
         } else {
-            LOGGER.info("Valores nulos o vacios, parameters: ({}), corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
+            LOGGER.info("Valores nulos o vacios, parameters: corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
                 parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
             throwWebServiceException();
         }

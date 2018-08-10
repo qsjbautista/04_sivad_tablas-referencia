@@ -642,7 +642,7 @@ public class DiamanteIntTest {
         assertEquals(CLARIDAD, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR, result.getTamanioSuperior());
-        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
 
         ValorComercialDiamanteVO valorComercialDiamanteVO = result.obtenerValorComercial();
         assertNotNull(valorComercialDiamanteVO);

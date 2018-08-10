@@ -13,3 +13,9 @@ INSERT INTO hist_cfg_diamante_valor_comercial (id, corte, color, claridad, taman
 INSERT INTO hist_cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, tipo_cambio, montovbd, montofcastigoxrango, listado) VALUES (6, 'Oval', 'D', 'VVS1', 0.90, 0.99, 110.0000, 19.35, 110.0000, 110.0000, 3);
 INSERT INTO hist_cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, tipo_cambio, montovbd, montofcastigoxrango, listado) VALUES (7, 'Oval', 'E', 'IF', 0.90, 0.99, 106.0000, 19.35, 106.0000, 106.0000, 3);
 INSERT INTO hist_cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, tipo_cambio, montovbd, montofcastigoxrango, listado) VALUES (8, 'Oval', 'E', 'VVS1', 0.90, 0.99, 98.0000, 19.35, 98.0000, 98.0000, 3);
+
+
+--
+-- FACTOR DE DEPRECIACION
+--
+INSERT INTO cfg_diamante_factor_depreciacion (fecha, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 0.3);

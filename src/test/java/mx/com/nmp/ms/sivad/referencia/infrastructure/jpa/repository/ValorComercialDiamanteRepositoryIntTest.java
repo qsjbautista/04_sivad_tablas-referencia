@@ -436,7 +436,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**
@@ -465,7 +465,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**
@@ -494,7 +494,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**

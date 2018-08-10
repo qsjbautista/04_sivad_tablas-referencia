@@ -127,7 +127,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),
-            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamante.setScale(4, BigDecimal.ROUND_HALF_UP),
+            valorComercialDiamanteJPA.getTamanioSuperior(), precioDiamante,
             valorComercialDiamanteJPA.getTipoCambio(), valorComercialDiamanteJPA.getMontoVbd(), valorComercialDiamanteJPA.getMontofCastigoxRango());
     }
 
