@@ -5,6 +5,8 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
+
+import org.joda.time.LocalDate;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Expone los metodos de acceso a datos para la entidad ValorComercialDiamanteJPA.
@@ -42,4 +46,5 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
     ValorComercialDiamanteJPA obtenerValorComercial(
         @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad,
         @Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
+
 }

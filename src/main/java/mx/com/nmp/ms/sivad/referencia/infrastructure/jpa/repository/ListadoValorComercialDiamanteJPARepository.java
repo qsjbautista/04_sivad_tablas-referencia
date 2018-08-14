@@ -12,7 +12,9 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -48,5 +50,16 @@ public interface ListadoValorComercialDiamanteJPARepository extends
      * @return La lista de históricos que coincidan con la fecha indicada.
      */
     Set<ListadoValorComercialDiamanteJPA> findByFechaCargaBetween(DateTime fechaInicial, DateTime fechaFinal);
+    
+    
+	/**
+	 * Permite obtener el listado de valor comercial del diamante vigente.
+	 *
+	 * @return Listado vigente.
+	 */
+	@Query("SELECT lvcd FROM ListadoValorComercialDiamanteJPA lvcd" + "WHERE lvcd.tamanioInferior = :tamanioInferior"
+			+ "AND lvcd.tamanioSuperior = :tamanioSuperior")
+	ListadoValorComercialDiamanteJPA obtListadoVigente(@Param("tamanioInferior") BigDecimal tamanioInferior,
+			@Param("tamanioSuperior") BigDecimal tamanioSuperior);
 
 }

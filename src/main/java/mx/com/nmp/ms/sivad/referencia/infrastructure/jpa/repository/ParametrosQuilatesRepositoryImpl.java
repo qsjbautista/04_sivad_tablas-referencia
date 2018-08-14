@@ -1,7 +1,10 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -9,9 +12,16 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ParametrosQuilatesNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
 @Repository
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
@@ -21,6 +31,12 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 	@Inject
 	private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
+	
+    @Inject
+    private ValorComercialDiamanteJPARepository valorComercialDiamanteJPARepository;
+    
+    @Inject
+    private ListadoValorComercialDiamanteJPARepository listadoJpaRepository;
 
 	public List<ParametrosQuilatesJPA> obtenerTodo() {
 		List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findAll();
@@ -150,6 +166,58 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 		return entidad;
 
+	}
+	
+	
+	@Override
+	public List<ValorComercialDiamanteJPA> obtenerValorComercial() {
+		LOGGER.info(">> obtenerValorComercial({})");
+
+		List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.busquedaUltimaActualizacion();
+
+		if (ObjectUtils.isEmpty(parametrosQuilates)) {
+			String msg = "No existe ningun registro en Parametros Quilates.";
+			LOGGER.warn(msg);
+			throw new ParametrosQuilatesNoEncontradoException(msg, ParametrosQuilatesJPA.class);
+		}
+
+		List<ValorComercialDiamanteJPA> valorComerJPA = new ArrayList<ValorComercialDiamanteJPA>();
+
+		for (ParametrosQuilatesJPA parametrosQuilatesJPA : parametrosQuilates) {
+
+			ListadoValorComercialDiamanteJPA listadoValorComercialDiamanteJPA = listadoJpaRepository.obtListadoVigente(
+					parametrosQuilatesJPA.getQuilatesBaseDesde(), parametrosQuilatesJPA.getQuilatesBaseHasta());
+
+			Set<ValorComercialDiamanteJPA> listado = listadoValorComercialDiamanteJPA.getValoresComerciales();
+
+			if (ObjectUtils.isEmpty(listado)) {
+				String msg = "No existe ningun registro en Valor Comercial.";
+				LOGGER.warn(msg);
+				throw new ValorComercialNoEncontradoException(ValorComercialDiamanteJPA.class, msg);
+			}
+
+			for (ValorComercialDiamanteJPA vComerDiamanteJPA : listado) {
+
+				if (vComerDiamanteJPA.getTamanioInferior() != parametrosQuilatesJPA.getQuilatesBaseDesde()
+						&& vComerDiamanteJPA.getTamanioSuperior() != parametrosQuilatesJPA.getQuilatesBaseHasta()) {
+
+					// Insertar registro en valor comercial
+					ValorComercialDiamanteJPA vc = new ValorComercialDiamanteJPA();
+
+					vc.setTamanioInferior(parametrosQuilatesJPA.getQuilatesBaseDesde());
+					vc.setTamanioSuperior(parametrosQuilatesJPA.getQuilatesBaseHasta());
+					vc.setPrecio(vComerDiamanteJPA.getPrecio().multiply(parametrosQuilatesJPA.getPorcentaje()));
+
+					valorComerJPA.add(vc);
+
+					valorComercialDiamanteJPARepository.save(valorComerJPA);
+				}
+
+			}
+
+		}
+
+		return valorComerJPA;
 	}
 
 }
