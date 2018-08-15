@@ -2,7 +2,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,10 +15,6 @@ import org.springframework.util.ObjectUtils;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ParametrosQuilatesNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistValorComercialDiamanteJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
@@ -185,18 +180,16 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 		for (ParametrosQuilatesJPA parametrosQuilatesJPA : parametrosQuilates) {
 
-			ListadoValorComercialDiamanteJPA listadoValorComercialDiamanteJPA = listadoJpaRepository.obtListadoVigente(
+			Set<ValorComercialDiamanteJPA> listadoValorComercialDiamanteJPA = listadoJpaRepository.obtListadoVigente(
 					parametrosQuilatesJPA.getQuilatesBaseDesde(), parametrosQuilatesJPA.getQuilatesBaseHasta());
 
-			Set<ValorComercialDiamanteJPA> listado = listadoValorComercialDiamanteJPA.getValoresComerciales();
-
-			if (ObjectUtils.isEmpty(listado)) {
+			if (ObjectUtils.isEmpty(listadoValorComercialDiamanteJPA)) {
 				String msg = "No existe ningun registro en Valor Comercial.";
 				LOGGER.warn(msg);
 				throw new ValorComercialNoEncontradoException(ValorComercialDiamanteJPA.class, msg);
 			}
 
-			for (ValorComercialDiamanteJPA vComerDiamanteJPA : listado) {
+			for (ValorComercialDiamanteJPA vComerDiamanteJPA : listadoValorComercialDiamanteJPA) {
 
 				if (vComerDiamanteJPA.getTamanioInferior() != parametrosQuilatesJPA.getQuilatesBaseDesde()
 						&& vComerDiamanteJPA.getTamanioSuperior() != parametrosQuilatesJPA.getQuilatesBaseHasta()) {

@@ -5,6 +5,8 @@
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
+
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  * Expone los metodos de acceso a datos para el listado del valor comercial del diamante.
@@ -57,9 +61,16 @@ public interface ListadoValorComercialDiamanteJPARepository extends
 	 *
 	 * @return Listado vigente.
 	 */
-	@Query("SELECT lvcd FROM ListadoValorComercialDiamanteJPA lvcd" + "WHERE lvcd.tamanioInferior = :tamanioInferior"
-			+ "AND lvcd.tamanioSuperior = :tamanioSuperior")
-	ListadoValorComercialDiamanteJPA obtListadoVigente(@Param("tamanioInferior") BigDecimal tamanioInferior,
+	@Query("SELECT lvcd FROM ValorComercialDiamanteJPA lvcd WHERE lvcd.tamanioInferior = :tamanioInferior AND lvcd.tamanioSuperior = :tamanioSuperior")
+	Set<ValorComercialDiamanteJPA> obtListadoVigente(@Param("tamanioInferior") BigDecimal tamanioInferior,
 			@Param("tamanioSuperior") BigDecimal tamanioSuperior);
+	
+	/**
+	 * Permite obtener el listado de valor comercial del diamante vigente en base al color.
+	 *
+	 * @return Listado vigente.
+	 */
+	@Query("SELECT lvcd FROM ValorComercialDiamanteJPA lvcd WHERE lvcd.color = :color")
+	Set<ValorComercialDiamanteJPA> obtListadoVigenteColor(@Param("color") String color);
 
 }

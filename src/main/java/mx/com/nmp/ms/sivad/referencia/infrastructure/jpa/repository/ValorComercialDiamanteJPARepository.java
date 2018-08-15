@@ -36,12 +36,7 @@ public interface ValorComercialDiamanteJPARepository extends JpaRepository<Valor
      * @param quilatesHasta El valor inferior en quilates del diamante.
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd " +
-        "WHERE vcd.corte = :corte " +
-        "AND vcd.color = :color " +
-        "AND vcd.claridad = :claridad " +
-        "AND vcd.tamanioInferior <= :quilatesDesde " +
-        "AND vcd.tamanioSuperior >= :quilatesHasta")
+    @Query("SELECT vcd FROM ValorComercialDiamanteJPA vcd WHERE vcd.corte = :corte AND vcd.color = :color AND vcd.claridad = :claridad AND vcd.tamanioInferior <= :quilatesDesde AND vcd.tamanioSuperior >= :quilatesHasta")
     @Cacheable("ValorComercialDiamanteJPARepository.obtenerValorComercial")
     ValorComercialDiamanteJPA obtenerValorComercial(
         @Param("corte") String corte, @Param("color") String color, @Param("claridad") String claridad,
