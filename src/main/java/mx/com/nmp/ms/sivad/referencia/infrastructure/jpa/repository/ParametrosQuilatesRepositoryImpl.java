@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ParametrosQuilatesNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorComercialNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
@@ -42,7 +41,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 	public List<ParametrosQuilatesJPA> obtenerTodoUltimaActualizacion() {
 
 		List<ParametrosQuilatesJPA> fechaUltimaActualizacion = parametrosQuilatesRepositoryJPA
-				.busquedaUltimaActualizacion();
+				.findByUltimaActualizacion();
 
 		return fechaUltimaActualizacion;
 
@@ -59,7 +58,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 					ParametrosQuilatesJPA.class);
 
 		List<ParametrosQuilatesJPA> bQuilatesDesdeQuilatesHasta = parametrosQuilatesRepositoryJPA
-				.busquedaQdQh(quilatesDesde, quilatesHasta);
+				.findByQuilatesDesdeAndQuilatesHasta(quilatesDesde, quilatesHasta);
 
 		return bQuilatesDesdeQuilatesHasta;
 
@@ -76,7 +75,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 					ParametrosQuilatesJPA.class);
 		
 		List<ParametrosQuilatesJPA> bQuilatesBaseDesdeQuilatesBaseHasta = parametrosQuilatesRepositoryJPA
-				.busquedaQbDQbH(quilatesBaseDesde, quilatesBaseHasta);
+				.findByQuilatesBaseDesdeAndQuilatesBaseHasta(quilatesBaseDesde, quilatesBaseHasta);
 		
 		return bQuilatesBaseDesdeQuilatesBaseHasta;
 		
@@ -168,7 +167,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 	public List<ValorComercialDiamanteJPA> obtenerValorComercial() {
 		LOGGER.info(">> obtenerValorComercial({})");
 
-		List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.busquedaUltimaActualizacion();
+		List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
 
 		if (ObjectUtils.isEmpty(parametrosQuilates)) {
 			String msg = "No existe ningun registro en Parametros Quilates.";
@@ -180,14 +179,8 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 		for (ParametrosQuilatesJPA parametrosQuilatesJPA : parametrosQuilates) {
 
-			Set<ValorComercialDiamanteJPA> listadoValorComercialDiamanteJPA = listadoJpaRepository.obtListadoVigente(
+			Set<ValorComercialDiamanteJPA> listadoValorComercialDiamanteJPA = listadoJpaRepository.findByListadoVigente(
 					parametrosQuilatesJPA.getQuilatesBaseDesde(), parametrosQuilatesJPA.getQuilatesBaseHasta());
-
-			if (ObjectUtils.isEmpty(listadoValorComercialDiamanteJPA)) {
-				String msg = "No existe ningun registro en Valor Comercial.";
-				LOGGER.warn(msg);
-				throw new ValorComercialNoEncontradoException(ValorComercialDiamanteJPA.class, msg);
-			}
 
 			for (ValorComercialDiamanteJPA vComerDiamanteJPA : listadoValorComercialDiamanteJPA) {
 

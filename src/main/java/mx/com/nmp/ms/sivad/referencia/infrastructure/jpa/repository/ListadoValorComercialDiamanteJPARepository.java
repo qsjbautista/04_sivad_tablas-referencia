@@ -62,8 +62,10 @@ public interface ListadoValorComercialDiamanteJPARepository extends
 	 * @return Listado vigente.
 	 */
 	@Query("SELECT lvcd FROM ValorComercialDiamanteJPA lvcd WHERE lvcd.tamanioInferior = :tamanioInferior AND lvcd.tamanioSuperior = :tamanioSuperior")
-	Set<ValorComercialDiamanteJPA> obtListadoVigente(@Param("tamanioInferior") BigDecimal tamanioInferior,
+	Set<ValorComercialDiamanteJPA> findByListadoVigente(@Param("tamanioInferior") BigDecimal tamanioInferior,
 			@Param("tamanioSuperior") BigDecimal tamanioSuperior);
+	
+	//obtListadoVigente
 	
 	/**
 	 * Permite obtener el listado de valor comercial del diamante vigente en base al color.
@@ -71,6 +73,8 @@ public interface ListadoValorComercialDiamanteJPARepository extends
 	 * @return Listado vigente.
 	 */
 	@Query("SELECT lvcd FROM ValorComercialDiamanteJPA lvcd WHERE lvcd.color = :color")
-	Set<ValorComercialDiamanteJPA> obtListadoVigenteColor(@Param("color") String color);
+	Set<ValorComercialDiamanteJPA> findByColor(@Param("color") String color);
+	
+	//obtListadoVigenteColor
 
 }

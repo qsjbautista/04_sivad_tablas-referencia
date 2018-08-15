@@ -19,18 +19,17 @@ public interface ParametrosQuilatesRepositoryJPA extends JpaRepository<Parametro
 	 */
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq "
 			+ "WHERE pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
-	  List<ParametrosQuilatesJPA> busquedaUltimaActualizacion();
+	  List<ParametrosQuilatesJPA> findByUltimaActualizacion();
 	
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
 	        "WHERE pq.quilatesDesde = :quilatesDesde " +
 	        "AND pq.quilatesHasta = :quilatesHasta " +
 	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
-	List<ParametrosQuilatesJPA> busquedaQdQh(@Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
+	List<ParametrosQuilatesJPA> findByQuilatesDesdeAndQuilatesHasta(@Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
 	
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
 	        "WHERE pq.quilatesBaseDesde = :quilatesBaseDesde " +
 	        "AND pq.quilatesBaseHasta = :quilatesBaseHasta " +
 	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
-	List<ParametrosQuilatesJPA> busquedaQbDQbH(@Param("quilatesBaseDesde") BigDecimal quilatesBaseDesde, @Param("quilatesBaseHasta") BigDecimal quilatesBaseHasta);
-
+	List<ParametrosQuilatesJPA> findByQuilatesBaseDesdeAndQuilatesBaseHasta(@Param("quilatesBaseDesde") BigDecimal quilatesBaseDesde, @Param("quilatesBaseHasta") BigDecimal quilatesBaseHasta);
 }
