@@ -30,7 +30,7 @@ public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteR
 	public List<CastigoCorteDiamanteJPA> obtenerTodoUltimaActualizacion() {
 
 		List<CastigoCorteDiamanteJPA> fechaUltimaActualizacion = castigoCorteDiamanteJPARepository
-				.busquedaUltimaActualizacion();
+				.findByUltimaActualizacion();
 
 		return fechaUltimaActualizacion;
 
