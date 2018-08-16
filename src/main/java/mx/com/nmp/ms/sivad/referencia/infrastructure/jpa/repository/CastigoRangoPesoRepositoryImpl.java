@@ -33,7 +33,7 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 	public List<CastigoRangoPesoDiamanteJPA> obtenerTodoUltimaActualizacion() {
 
 		List<CastigoRangoPesoDiamanteJPA> fechaUltimaActualizacion = castigoRangoPesoDiamanteJPARepository
-				.busquedaUltimaActualizacion();
+				.findByUltimaActualizacion();
 
 		return fechaUltimaActualizacion;
 
@@ -52,7 +52,7 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 		}
 
 		CastigoRangoPesoDiamanteJPA oCastigoRango = castigoRangoPesoDiamanteJPARepository
-				.obtenerCastigoRangoPeso(quilatesDesde, quilatesHasta);
+				.findByCastigoRangoPeso(quilatesDesde, quilatesHasta);
 
 		return oCastigoRango;
 
