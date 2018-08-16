@@ -52,7 +52,7 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 		}
 
 		CastigoRangoPesoDiamanteJPA oCastigoRango = castigoRangoPesoDiamanteJPARepository
-				.findByCastigoRangoPeso(quilatesDesde, quilatesHasta);
+				.obtenerCastigoRangoPeso(quilatesDesde, quilatesHasta);
 
 		return oCastigoRango;
 

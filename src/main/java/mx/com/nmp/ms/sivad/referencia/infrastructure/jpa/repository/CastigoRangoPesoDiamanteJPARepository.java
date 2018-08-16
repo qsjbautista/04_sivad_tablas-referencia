@@ -33,7 +33,7 @@ public interface CastigoRangoPesoDiamanteJPARepository extends JpaRepository<Cas
         "WHERE cpd.quilatesDesde <= :quilatesDesde " +
         "AND cpd.quilatesHasta >= :quilatesHasta " +
         "AND cpd.fecha = (SELECT MAX(cpd2.fecha) FROM CastigoRangoPesoDiamanteJPA cpd2)")
-    CastigoRangoPesoDiamanteJPA findByCastigoRangoPeso(@Param("quilatesDesde") BigDecimal quilatesDesde,
+    CastigoRangoPesoDiamanteJPA obtenerCastigoRangoPeso(@Param("quilatesDesde") BigDecimal quilatesDesde,
                                                     @Param("quilatesHasta") BigDecimal quilatesHasta);
 
 	@Query("SELECT crpd FROM CastigoRangoPesoDiamanteJPA crpd "
