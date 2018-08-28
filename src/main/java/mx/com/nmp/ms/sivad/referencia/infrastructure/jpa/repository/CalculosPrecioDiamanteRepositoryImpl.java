@@ -130,9 +130,9 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
             precioCorteDetalle.getTamanioInferior(),
             precioCorteDetalle.getTamanioSuperior(),
             precioCorteDetalle.getPrecio(),
-            tipoCambio,
-            montoVbd,
-            montofCastigoxRango);
+            tipoCambio.setScale(4, BigDecimal.ROUND_HALF_UP),
+            montoVbd.setScale(4, BigDecimal.ROUND_HALF_UP),
+            montofCastigoxRango.setScale(4, BigDecimal.ROUND_HALF_UP));
 
         return diamante;
     }

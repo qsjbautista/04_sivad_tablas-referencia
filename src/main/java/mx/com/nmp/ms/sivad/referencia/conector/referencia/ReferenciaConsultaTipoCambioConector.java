@@ -4,8 +4,8 @@
  */
 package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
-import mx.com.nmp.ms.sivad.cambiario.ws.consulta.ConsultaTipoCambio;
-import mx.com.nmp.ms.sivad.cambiario.ws.consulta.ConsultaTipoCambioService;
+import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioEndpointService;
+import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,19 +54,19 @@ public class ReferenciaConsultaTipoCambioConector {
      * Crea una referencia hacia el Servicio Web
      */
     private void crearReferenciaConsultaTipoCambio() {
-        ConsultaTipoCambio tipoCambio;
+        ConsultaTipoCambioEndpointService tipoCambio;
 
         URL url = getURL();
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
-            tipoCambio = new ConsultaTipoCambio();
+            tipoCambio = new ConsultaTipoCambioEndpointService();
         } else {
             LOGGER.info("Creando referencia al WS con URL {}", url);
-            tipoCambio = new ConsultaTipoCambio(url);
+            tipoCambio = new ConsultaTipoCambioEndpointService(url);
         }
 
-        wsConsultaTipoCambio = tipoCambio.getConsultaTipoCambioService();
+        wsConsultaTipoCambio = tipoCambio.getConsultaTipoCambioEndpointPort();
     }
 
     /**
