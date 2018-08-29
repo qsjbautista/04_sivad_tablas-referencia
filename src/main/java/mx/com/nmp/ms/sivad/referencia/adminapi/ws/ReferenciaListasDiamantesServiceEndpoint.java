@@ -147,7 +147,9 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
             if (execution.getStatus() == BatchStatus.FAILED) {
                 String mensajesError = "";
                 for (Throwable excepcion : execution.getAllFailureExceptions()) {
-                    mensajesError = mensajesError.concat(excepcion.getMessage());
+                    if (excepcion.getMessage() != null) {
+                        mensajesError = mensajesError.concat(excepcion.getMessage());
+                    }
                 }
                 throw WebServiceExceptionFactory
                     .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
