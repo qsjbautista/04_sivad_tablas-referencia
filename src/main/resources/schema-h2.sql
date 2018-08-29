@@ -453,4 +453,16 @@ CREATE TABLE `cfg_diamante_parametros_quilates` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
+--
+-- Table structure for table `cfg_diamante_factor_depreciacion`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_factor_depreciacion`;
+CREATE TABLE `cfg_diamante_factor_depreciacion` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FACTOR` decimal(10,1) NOT NULL,
+  `FECHA` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 -- Fin Nuevas tablas para Siva Diamantes F2
