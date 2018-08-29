@@ -3,6 +3,9 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
+
+import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,6 +18,8 @@ public class ValorComercialDiamanteProcessor
     private final String _COLOR = "Color";
     private final String _CLARITY = "Clarity";
     private final String _SHAPE = "Shape";
+    
+    
 
 
     /**
@@ -35,10 +40,27 @@ public class ValorComercialDiamanteProcessor
         try {
 
             if (precioCorteDetalle != null) {
+
                 validaString(precioCorteDetalle.getCorte(), _SHAPE);
                 validaString(precioCorteDetalle.getColor(), _COLOR);
                 validaString(precioCorteDetalle.getClaridad(), _CLARITY);
-
+                
+// ---> multiplicar por el factor  
+                
+//				if (precioCorteDetalle.getNuevoRegistroBase() == true) {
+//
+//					precioCorteDetalle.setPrecio(
+//							precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorParametros()));
+//
+//				}
+//
+//				if (precioCorteDetalle.getNuevoRegistroColor() == true) {
+//
+//					precioCorteDetalle
+//							.setPrecio(precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+//
+//				}
+                
                 diamante = calculosPrecioDiamanteRepository.calcularColumnas(precioCorteDetalle);
             }
 

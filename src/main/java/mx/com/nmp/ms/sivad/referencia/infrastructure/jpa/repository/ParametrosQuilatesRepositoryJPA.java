@@ -32,4 +32,11 @@ public interface ParametrosQuilatesRepositoryJPA extends JpaRepository<Parametro
 	        "AND pq.quilatesBaseHasta = :quilatesBaseHasta " +
 	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
 	List<ParametrosQuilatesJPA> findByQuilatesBaseDesdeAndQuilatesBaseHasta(@Param("quilatesBaseDesde") BigDecimal quilatesBaseDesde, @Param("quilatesBaseHasta") BigDecimal quilatesBaseHasta);
+	
+	
+	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
+	        "WHERE pq.quilatesDesde = :quilatesDesde " +
+	        "AND pq.quilatesHasta = :quilatesHasta " +
+	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
+	ParametrosQuilatesJPA findByQtesDesdeAndQtesHasta(@Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
 }
