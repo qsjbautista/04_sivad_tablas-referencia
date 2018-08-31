@@ -41,6 +41,7 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -113,34 +114,30 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 		validarDatosEntrada(parameters.getListado());
 
 		try {
-			LOGGER.debug("iniciando ejecución...");
+			LOGGER.debug("iniciando ejecuciÃƒÆ’Ã‚Â³n...");
 
 			// Preparar lista para el Reader
 			List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
 			Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
 			
+//			List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
+//			List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
 			
 
 			for (PrecioCorte pc : listaPrecios) {
 				for (PrecioCorteDetalle pcd : pc.getPrecioCorte()) {
 					PrecioCorteDetalleBatch pcdb = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-//					LOGGER.debug(">>>>> Entra a for", pcdb);
-//					List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
-//					List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
-//					
-//					LOGGER.debug(">>>>> Lee listas factor y parametros", parametrosQuilates, factoresRangoColor);
-//
-//					// --> Nuevos registros
+					
+					preciosDiamantes.add(pcdb);
+					
+					// --> Nuevos registros
 //					Queue<PrecioCorteDetalleBatch> pq = obtenerParametrosQuilates(pcd, pc, parametrosQuilates, preciosDiamantes);
 //					preciosDiamantes.addAll(pq);
 //					
-//					LOGGER.debug(">>>>> Entra a primer metodo obtenerParametrosQuilates", pq);
+//					
 //					Queue<PrecioCorteDetalleBatch> frc = obtenerFactoresRangoColor(pcd, pc, factoresRangoColor, preciosDiamantes);
 //					preciosDiamantes.addAll(frc);
-//					LOGGER.debug(">>>>> Entra a segundo metodo obtenerFactoresRangoColor", frc);
-//					
-//					preciosDiamantes.add(pcdb);
-//					LOGGER.debug(">>>>> Entrega lista armada", preciosDiamantes.add(pcdb));
+					
 				}
 			}
 
@@ -258,17 +255,22 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     
 //	private Queue<PrecioCorteDetalleBatch> obtenerParametrosQuilates(PrecioCorteDetalle pcd, PrecioCorte pc, List<ParametrosQuilatesJPA> parametrosQuilates, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
 //
+//		PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+//		
 //		for (ParametrosQuilatesJPA param : parametrosQuilates) {
 //
 //			if (param.getQuilatesBaseDesde().compareTo(pcd.getTamanioInferior()) == 0
 //					&& param.getQuilatesBaseHasta().compareTo(pcd.getTamanioSuperior()) == 0) {
-//
-//				PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+//				
+//				
 //
 //				pcBase.setNuevoRegistroBase(true);
+//				pcBase.setClaridad("Claridad");
+//				pcBase.setColor("Color");
 //				pcBase.setTamanioInferior(param.getQuilatesDesde());
 //				pcBase.setTamanioSuperior(param.getQuilatesHasta());
 //				pcBase.setFactorParametros(param.getPorcentaje());
+//				pcBase.setPrecio(new BigDecimal("0"));
 //
 //				preciosDiamantes.add(pcBase);
 //
@@ -283,23 +285,35 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 //    
 //	private Queue<PrecioCorteDetalleBatch> obtenerFactoresRangoColor(PrecioCorteDetalle pcd, PrecioCorte pc, List<FactoresRangoColorJPA> factoresRangoColor, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
 //
+//		PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+//		PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+//		
 //		for (FactoresRangoColorJPA param : factoresRangoColor) {
 //
 //			if (param.getRangoColorBase() == pcd.getColor()) {
 //
-//				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-//
+//				
+//				
 //				pcColor.setNuevoRegistroColor(true);
+//				pcColor.setClaridad("claridad");
 //				pcColor.setFactorColor(param.getFactor());
 //				pcColor.setColor(param.getColorDesde());
+//				pcColor.setTamanioInferior(new BigDecimal("0"));
+//				pcColor.setTamanioSuperior(new BigDecimal("0"));
+//				pcColor.setPrecio(new BigDecimal("0"));
+//				
 //				
 //				preciosDiamantes.add(pcColor);
 //				
-//				PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+//				
 //
 //				pColor.setNuevoRegistroColor(true);
+//				pColor.setClaridad("claridad");
 //				pColor.setFactorColor(param.getFactor());
 //				pColor.setColor(param.getColorHasta());
+//				pColor.setTamanioInferior(new BigDecimal("0"));
+//				pColor.setTamanioSuperior(new BigDecimal("0"));
+//				pColor.setPrecio(new BigDecimal("0"));
 //
 //				preciosDiamantes.add(pColor);
 //
