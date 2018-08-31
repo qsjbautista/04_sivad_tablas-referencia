@@ -47,19 +47,19 @@ public class ValorComercialDiamanteProcessor
                 
 // ---> multiplicar por el factor  
                 
-//				if (precioCorteDetalle.getNuevoRegistroBase() == true) {
-//
-//					precioCorteDetalle.setPrecio(
-//							precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorParametros()));
-//
-//				}
-//
-//				if (precioCorteDetalle.getNuevoRegistroColor() == true) {
-//
-//					precioCorteDetalle
-//							.setPrecio(precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
-//
-//				}
+				if (precioCorteDetalle.getNuevoRegistroBase() == true) {
+
+					precioCorteDetalle.setPrecio(
+							precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorParametros()));
+
+				}
+
+				if (precioCorteDetalle.getNuevoRegistroColor() == true) {
+
+					precioCorteDetalle
+							.setPrecio(precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+
+				}
                 
                 diamante = calculosPrecioDiamanteRepository.calcularColumnas(precioCorteDetalle);
             }
