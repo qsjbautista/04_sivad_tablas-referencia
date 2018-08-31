@@ -120,8 +120,8 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 			List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
 			Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
 			
-//			List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
-//			List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
+			List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
+			List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
 			
 
 			for (PrecioCorte pc : listaPrecios) {
@@ -131,12 +131,12 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 					preciosDiamantes.add(pcdb);
 					
 					// --> Nuevos registros
-//					Queue<PrecioCorteDetalleBatch> pq = obtenerParametrosQuilates(pcd, pc, parametrosQuilates, preciosDiamantes);
-//					preciosDiamantes.addAll(pq);
-//					
-//					
-//					Queue<PrecioCorteDetalleBatch> frc = obtenerFactoresRangoColor(pcd, pc, factoresRangoColor, preciosDiamantes);
-//					preciosDiamantes.addAll(frc);
+					Queue<PrecioCorteDetalleBatch> pq = obtenerParametrosQuilates(pcd, pc, parametrosQuilates, preciosDiamantes);
+					preciosDiamantes.addAll(pq);
+					
+					
+					Queue<PrecioCorteDetalleBatch> frc = obtenerFactoresRangoColor(pcd, pc, factoresRangoColor, preciosDiamantes);
+					preciosDiamantes.addAll(frc);
 					
 				}
 			}
@@ -253,75 +253,75 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 WebServiceExceptionCodes.NMPR004.getMessageException());
     }
     
-//	private Queue<PrecioCorteDetalleBatch> obtenerParametrosQuilates(PrecioCorteDetalle pcd, PrecioCorte pc, List<ParametrosQuilatesJPA> parametrosQuilates, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
-//
-//		PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-//		
-//		for (ParametrosQuilatesJPA param : parametrosQuilates) {
-//
-//			if (param.getQuilatesBaseDesde().compareTo(pcd.getTamanioInferior()) == 0
-//					&& param.getQuilatesBaseHasta().compareTo(pcd.getTamanioSuperior()) == 0) {
-//				
-//				
-//
-//				pcBase.setNuevoRegistroBase(true);
-//				pcBase.setClaridad("Claridad");
-//				pcBase.setColor("Color");
-//				pcBase.setTamanioInferior(param.getQuilatesDesde());
-//				pcBase.setTamanioSuperior(param.getQuilatesHasta());
-//				pcBase.setFactorParametros(param.getPorcentaje());
-//				pcBase.setPrecio(new BigDecimal("0"));
-//
-//				preciosDiamantes.add(pcBase);
-//
-//				break;
-//
-//			}
-//
-//		}
-//		return preciosDiamantes;
-//
-//	}
-//    
-//	private Queue<PrecioCorteDetalleBatch> obtenerFactoresRangoColor(PrecioCorteDetalle pcd, PrecioCorte pc, List<FactoresRangoColorJPA> factoresRangoColor, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
-//
-//		PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-//		PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-//		
-//		for (FactoresRangoColorJPA param : factoresRangoColor) {
-//
-//			if (param.getRangoColorBase() == pcd.getColor()) {
-//
-//				
-//				
-//				pcColor.setNuevoRegistroColor(true);
-//				pcColor.setClaridad("claridad");
-//				pcColor.setFactorColor(param.getFactor());
-//				pcColor.setColor(param.getColorDesde());
-//				pcColor.setTamanioInferior(new BigDecimal("0"));
-//				pcColor.setTamanioSuperior(new BigDecimal("0"));
-//				pcColor.setPrecio(new BigDecimal("0"));
-//				
-//				
-//				preciosDiamantes.add(pcColor);
-//				
-//				
-//
-//				pColor.setNuevoRegistroColor(true);
-//				pColor.setClaridad("claridad");
-//				pColor.setFactorColor(param.getFactor());
-//				pColor.setColor(param.getColorHasta());
-//				pColor.setTamanioInferior(new BigDecimal("0"));
-//				pColor.setTamanioSuperior(new BigDecimal("0"));
-//				pColor.setPrecio(new BigDecimal("0"));
-//
-//				preciosDiamantes.add(pColor);
-//
-//				break;
-//
-//			}
-//		}
-//
-//		return preciosDiamantes;
-//	}
+	private Queue<PrecioCorteDetalleBatch> obtenerParametrosQuilates(PrecioCorteDetalle pcd, PrecioCorte pc, List<ParametrosQuilatesJPA> parametrosQuilates, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
+
+		PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+		
+		for (ParametrosQuilatesJPA param : parametrosQuilates) {
+
+			if (param.getQuilatesBaseDesde().compareTo(pcd.getTamanioInferior()) == 0
+					&& param.getQuilatesBaseHasta().compareTo(pcd.getTamanioSuperior()) == 0) {
+				
+				
+
+				pcBase.setNuevoRegistroBase(true);
+				pcBase.setClaridad("Claridad");
+				pcBase.setColor("Color");
+				pcBase.setTamanioInferior(param.getQuilatesDesde());
+				pcBase.setTamanioSuperior(param.getQuilatesHasta());
+				pcBase.setFactorParametros(param.getPorcentaje());
+				pcBase.setPrecio(new BigDecimal("0"));
+
+				preciosDiamantes.add(pcBase);
+
+				break;
+
+			}
+
+		}
+		return preciosDiamantes;
+
+	}
+    
+	private Queue<PrecioCorteDetalleBatch> obtenerFactoresRangoColor(PrecioCorteDetalle pcd, PrecioCorte pc, List<FactoresRangoColorJPA> factoresRangoColor, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
+
+		PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+		PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+		
+		for (FactoresRangoColorJPA param : factoresRangoColor) {
+
+			if (param.getRangoColorBase() == pcd.getColor()) {
+
+				
+				
+				pcColor.setNuevoRegistroColor(true);
+				pcColor.setClaridad("claridad");
+				pcColor.setFactorColor(param.getFactor());
+				pcColor.setColor(param.getColorDesde());
+				pcColor.setTamanioInferior(new BigDecimal("0"));
+				pcColor.setTamanioSuperior(new BigDecimal("0"));
+				pcColor.setPrecio(new BigDecimal("0"));
+				
+				
+				preciosDiamantes.add(pcColor);
+				
+				
+
+				pColor.setNuevoRegistroColor(true);
+				pColor.setClaridad("claridad");
+				pColor.setFactorColor(param.getFactor());
+				pColor.setColor(param.getColorHasta());
+				pColor.setTamanioInferior(new BigDecimal("0"));
+				pColor.setTamanioSuperior(new BigDecimal("0"));
+				pColor.setPrecio(new BigDecimal("0"));
+
+				preciosDiamantes.add(pColor);
+
+				break;
+
+			}
+		}
+
+		return preciosDiamantes;
+	}
 }
