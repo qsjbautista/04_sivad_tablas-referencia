@@ -155,8 +155,8 @@ CREATE TABLE hist_cfg_diamante_valor_comercial
     precio DECIMAL(10, 4) NOT NULL,
     listado BIGINT,
     tipo_cambio DECIMAL(12,4) NOT NULL,
-    montovbd DECIMAL(10, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(10, 4) NOT NULL,
+    montovbd DECIMAL(12, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(12, 4) NOT NULL,
     PRIMARY KEY (id)
 );
 
