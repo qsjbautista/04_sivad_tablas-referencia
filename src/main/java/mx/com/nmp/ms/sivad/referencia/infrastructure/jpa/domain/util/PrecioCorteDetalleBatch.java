@@ -12,24 +12,15 @@ import org.springframework.beans.BeanUtils;
  * @author osanchez
  */
 public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
-    private String corte;
+    	
+	private String corte;
     
     // Inicio ---> Nuevos valores de interfaz
-    
-    private BigDecimal pQuilatajeBaseDesde;
-    
-    private BigDecimal pQuilatajeBaseHasta;
-    
-    private String fRangoColor;
-    
-    private BigDecimal factorColor;
-    
-    private BigDecimal factorParametros;
-    
-    private Boolean nuevoRegistroBase;
-    
-    private Boolean nuevoRegistroColor;
-    
+
+    private BigDecimal factor;
+    private TipoNuevoRegistro tipo;
+
+
     // Fin ---> Nuevos valores de interfaz
 
     public PrecioCorteDetalleBatch(String corte, PrecioCorteDetalle pcd) {
@@ -52,6 +43,16 @@ public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
 //		BeanUtils.copyProperties(pcd, this);
 //	}
 
+	public void setNuevoRegistro(TipoNuevoRegistro tipo, BigDecimal factor) {
+		this.tipo = tipo;
+		this.factor = factor;
+	}
+
+	public boolean isNuevoRegistro(TipoNuevoRegistro tipo) {
+		return this.tipo != null && this.tipo.equals(tipo);
+	}
+
+
     public String getCorte() {
         return corte;
     }
@@ -60,60 +61,20 @@ public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
         this.corte = corte;
     }
 
-	public BigDecimal getpQuilatajeBaseDesde() {
-		return pQuilatajeBaseDesde;
+	public BigDecimal getFactor() {
+		return factor;
 	}
 
-	public void setpQuilatajeBaseDesde(BigDecimal pQuilatajeBaseDesde) {
-		this.pQuilatajeBaseDesde = pQuilatajeBaseDesde;
+	public void setFactor(BigDecimal factor) {
+		this.factor = factor;
 	}
 
-	public BigDecimal getpQuilatajeBaseHasta() {
-		return pQuilatajeBaseHasta;
+	public TipoNuevoRegistro getTipo() {
+		return tipo;
 	}
 
-	public void setpQuilatajeBaseHasta(BigDecimal pQuilatajeBaseHasta) {
-		this.pQuilatajeBaseHasta = pQuilatajeBaseHasta;
+	public void setTipo(TipoNuevoRegistro tipo) {
+		this.tipo = tipo;
 	}
 
-	public String getfRangoColor() {
-		return fRangoColor;
-	}
-
-	public void setfRangoColor(String fRangoColor) {
-		this.fRangoColor = fRangoColor;
-	}
-
-	public Boolean getNuevoRegistroBase() {
-		return nuevoRegistroBase;
-	}
-
-	public void setNuevoRegistroBase(Boolean nuevoRegistroBase) {
-		this.nuevoRegistroBase = nuevoRegistroBase;
-	}
-
-	public Boolean getNuevoRegistroColor() {
-		return nuevoRegistroColor;
-	}
-
-	public void setNuevoRegistroColor(Boolean nuevoRegistroColor) {
-		this.nuevoRegistroColor = nuevoRegistroColor;
-	}
-
-	public BigDecimal getFactorColor() {
-		return factorColor;
-	}
-
-	public void setFactorColor(BigDecimal factorColor) {
-		this.factorColor = factorColor;
-	}
-
-	public BigDecimal getFactorParametros() {
-		return factorParametros;
-	}
-
-	public void setFactorParametros(BigDecimal factorParametros) {
-		this.factorParametros = factorParametros;
-	}
-    
 }

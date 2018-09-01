@@ -11,9 +11,9 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorFecha;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactoresRangoColorJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemReader;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.TipoNuevoRegistro;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteBatchProcessor;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.FactoresRangoColorJPARepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.ParametrosQuilatesRepositoryJPA;
@@ -41,8 +41,6 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -114,7 +112,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 		validarDatosEntrada(parameters.getListado());
 
 		try {
-			LOGGER.debug("iniciando ejecuciÃƒÆ’Ã‚Â³n...");
+			LOGGER.debug("iniciando ejecucion...");
 
 			// Preparar lista para el Reader
 			List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
@@ -131,13 +129,13 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 					preciosDiamantes.add(pcdb);
 					
 					// --> Nuevos registros
-					Queue<PrecioCorteDetalleBatch> pq = obtenerParametrosQuilates(pcd, pc, parametrosQuilates, preciosDiamantes);
+					Queue<PrecioCorteDetalleBatch> pq = crearNuevosRegistrosQuilates(pcdb, parametrosQuilates);
 					preciosDiamantes.addAll(pq);
 					
 					
-					Queue<PrecioCorteDetalleBatch> frc = obtenerFactoresRangoColor(pcd, pc, factoresRangoColor, preciosDiamantes);
+					Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, factoresRangoColor);
 					preciosDiamantes.addAll(frc);
-					
+
 				}
 			}
 
@@ -253,24 +251,19 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 WebServiceExceptionCodes.NMPR004.getMessageException());
     }
     
-	private Queue<PrecioCorteDetalleBatch> obtenerParametrosQuilates(PrecioCorteDetalle pcd, PrecioCorte pc, List<ParametrosQuilatesJPA> parametrosQuilates, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
+	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
 
-		PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-		
+		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
+
 		for (ParametrosQuilatesJPA param : parametrosQuilates) {
 
-			if (param.getQuilatesBaseDesde().compareTo(pcd.getTamanioInferior()) == 0
-					&& param.getQuilatesBaseHasta().compareTo(pcd.getTamanioSuperior()) == 0) {
-				
-				
+			if (param.getQuilatesBaseDesde().compareTo(pcdb.getTamanioInferior()) == 0
+					&& param.getQuilatesBaseHasta().compareTo(pcdb.getTamanioSuperior()) == 0) {
 
-				pcBase.setNuevoRegistroBase(true);
-				pcBase.setClaridad("Claridad");
-				pcBase.setColor("Color");
+				PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+				pcBase.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
 				pcBase.setTamanioInferior(param.getQuilatesDesde());
 				pcBase.setTamanioSuperior(param.getQuilatesHasta());
-				pcBase.setFactorParametros(param.getPorcentaje());
-				pcBase.setPrecio(new BigDecimal("0"));
 
 				preciosDiamantes.add(pcBase);
 
@@ -282,38 +275,25 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 		return preciosDiamantes;
 
 	}
-    
-	private Queue<PrecioCorteDetalleBatch> obtenerFactoresRangoColor(PrecioCorteDetalle pcd, PrecioCorte pc, List<FactoresRangoColorJPA> factoresRangoColor, Queue<PrecioCorteDetalleBatch> preciosDiamantes) {
 
-		PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-		PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-		
+
+
+	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, List<FactoresRangoColorJPA> factoresRangoColor) {
+
+		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
 		for (FactoresRangoColorJPA param : factoresRangoColor) {
 
-			if (param.getRangoColorBase() == pcd.getColor()) {
+			if (param.getRangoColorBase() == pcdb.getColor()) {
 
-				
-				
-				pcColor.setNuevoRegistroColor(true);
-				pcColor.setClaridad("claridad");
-				pcColor.setFactorColor(param.getFactor());
+				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
 				pcColor.setColor(param.getColorDesde());
-				pcColor.setTamanioInferior(new BigDecimal("0"));
-				pcColor.setTamanioSuperior(new BigDecimal("0"));
-				pcColor.setPrecio(new BigDecimal("0"));
-				
 				
 				preciosDiamantes.add(pcColor);
 				
-				
-
-				pColor.setNuevoRegistroColor(true);
-				pColor.setClaridad("claridad");
-				pColor.setFactorColor(param.getFactor());
+				PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
 				pColor.setColor(param.getColorHasta());
-				pColor.setTamanioInferior(new BigDecimal("0"));
-				pColor.setTamanioSuperior(new BigDecimal("0"));
-				pColor.setPrecio(new BigDecimal("0"));
 
 				preciosDiamantes.add(pColor);
 

@@ -1,401 +1,401 @@
 
-DROP TABLE IF EXISTS JOURNAL_ENTITY_EVENT;
-CREATE TABLE JOURNAL_ENTITY_EVENT
+DROP TABLE IF EXISTS journal_entity_event;
+CREATE TABLE journal_entity_event
 (
-    ID BIGINT NOT NULL,
-    CLASS VARCHAR(255) NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT NOT NULL,
+    class VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS JOURNAL_CUSTOM_EVENT;
-CREATE TABLE JOURNAL_CUSTOM_EVENT
+DROP TABLE IF EXISTS journal_custom_event;
+CREATE TABLE journal_custom_event
 (
-    ID BIGINT NOT NULL,
-    COMMENT VARCHAR(255) NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT NOT NULL,
+    comment VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS JOURNAL_EVENT_DATA;
-CREATE TABLE JOURNAL_EVENT_DATA
+DROP TABLE IF EXISTS journal_event_data;
+CREATE TABLE journal_event_data
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    EVENT BIGINT NOT NULL,
-    PROPERTY VARCHAR(255) NOT NULL,
-    VALUE VARCHAR(255) NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    event BIGINT NOT NULL,
+    property VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS JOURNAL_EVENT;
-CREATE TABLE JOURNAL_EVENT
+DROP TABLE IF EXISTS journal_event;
+CREATE TABLE journal_event
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    PRINCIPAL VARCHAR(50) NOT NULL,
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    principal VARCHAR(50) NOT NULL,
     DATE TIMESTAMP,
-    TYPE VARCHAR(255),
-    PRIMARY KEY (ID)
+    type VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_DIAMANTE_FACTOR;
-CREATE TABLE CFG_DIAMANTE_FACTOR
+DROP TABLE IF EXISTS cfg_diamante_factor;
+CREATE TABLE cfg_diamante_factor
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    FACTOR_MAXIMO DECIMAL(10, 3) NOT NULL,
-    FACTOR_MEDIO DECIMAL(10, 3) NOT NULL,
-    FACTOR_MINIMO DECIMAL(10, 3) NOT NULL,
-    FECHA_CARGA TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    factor_maximo DECIMAL(10, 3) NOT NULL,
+    factor_medio DECIMAL(10, 3) NOT NULL,
+    factor_minimo DECIMAL(10, 3) NOT NULL,
+    fecha_carga TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_FACTOR_ALHAJA;
-CREATE TABLE CFG_FACTOR_ALHAJA
+DROP TABLE IF EXISTS cfg_factor_alhaja;
+CREATE TABLE cfg_factor_alhaja
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    METAL VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20),
-    RANGO VARCHAR(20) NOT NULL,
-    FACTOR DECIMAL(8, 2) NOT NULL,
-    DESPLAZAMIENTO DECIMAL(8, 2) NOT NULL,
-    LIMITE_INFERIOR DECIMAL(8, 2) NOT NULL,
-    LIMITE_SUPERIOR DECIMAL(8, 2) NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    metal VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20),
+    rango VARCHAR(20) NOT NULL,
+    factor DECIMAL(8, 2) NOT NULL,
+    desplazamiento DECIMAL(8, 2) NOT NULL,
+    limite_inferior DECIMAL(8, 2) NOT NULL,
+    limite_superior DECIMAL(8, 2) NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_ALHAJA_LISTADO_FACTOR;
-CREATE TABLE CFG_ALHAJA_LISTADO_FACTOR
+DROP TABLE IF EXISTS cfg_alhaja_listado_factor;
+CREATE TABLE cfg_alhaja_listado_factor
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_FACTOR_ALHAJA;
-CREATE TABLE HIST_CFG_FACTOR_ALHAJA
+DROP TABLE IF EXISTS hist_cfg_factor_alhaja;
+CREATE TABLE hist_cfg_factor_alhaja
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    METAL VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20),
-    RANGO VARCHAR(20) NOT NULL,
-    FACTOR DECIMAL(8, 2) NOT NULL,
-    DESPLAZAMIENTO DECIMAL(8, 2) NOT NULL,
-    LIMITE_INFERIOR DECIMAL(8, 2) NOT NULL,
-    LIMITE_SUPERIOR DECIMAL(8, 2) NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    metal VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20),
+    rango VARCHAR(20) NOT NULL,
+    factor DECIMAL(8, 2) NOT NULL,
+    desplazamiento DECIMAL(8, 2) NOT NULL,
+    limite_inferior DECIMAL(8, 2) NOT NULL,
+    limite_superior DECIMAL(8, 2) NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_ALHAJA_LISTADO_FACTOR;
-CREATE TABLE HIST_CFG_ALHAJA_LISTADO_FACTOR
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_factor;
+CREATE TABLE hist_cfg_alhaja_listado_factor
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_DIAMANTE_VALOR_CERTIFICADO;
-CREATE TABLE CFG_DIAMANTE_VALOR_CERTIFICADO
+DROP TABLE IF EXISTS cfg_diamante_valor_certificado;
+CREATE TABLE cfg_diamante_valor_certificado
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    CERTIFICADO VARCHAR(20) NOT NULL,
-    FACTOR DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    certificado VARCHAR(20) NOT NULL,
+    factor DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO;
-CREATE TABLE CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO
+DROP TABLE IF EXISTS cfg_diamante_listado_valor_certificado;
+CREATE TABLE cfg_diamante_listado_valor_certificado
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_VALOR_CERTIFICADO;
-CREATE TABLE HIST_CFG_DIAMANTE_VALOR_CERTIFICADO
+DROP TABLE IF EXISTS hist_cfg_diamante_valor_certificado;
+CREATE TABLE hist_cfg_diamante_valor_certificado
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    CERTIFICADO VARCHAR(20) NOT NULL,
-    FACTOR DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    certificado VARCHAR(20) NOT NULL,
+    factor DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO;
-CREATE TABLE HIST_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO
+DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_certificado;
+CREATE TABLE hist_cfg_diamante_listado_valor_certificado
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- ----------------------------------------------------------------------------------------------------------------------
--- INICIA - TABLAS: VALOR COMERCIAL 'DIAMANTE'
+-- inicia - tablas: valor comercial 'diamante'
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- HISTÓRICOS
+-- históricos
 --
 
-DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_VALOR_COMERCIAL;
-CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
+DROP TABLE IF EXISTS hist_cfg_diamante_valor_comercial;
+CREATE TABLE hist_cfg_diamante_valor_comercial
 (
-    ID BIGINT NOT NULL,
-    CORTE VARCHAR(20) NOT NULL,
-    COLOR VARCHAR(20) NOT NULL,
-    CLARIDAD VARCHAR(20) NOT NULL,
-    TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
-    TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
-    PRECIO DECIMAL(10, 4) NOT NULL,
-    LISTADO BIGINT,
-    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
-    MONTOVBD DECIMAL(10, 4) NOT NULL,
-    MONTOFCASTIGOXRANGO DECIMAL(10, 4) NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT NOT NULL,
+    corte VARCHAR(20) NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    claridad VARCHAR(20) NOT NULL,
+    tamanio_inferior DECIMAL(6, 2) NOT NULL,
+    tamanio_superior DECIMAL(6, 2) NOT NULL,
+    precio DECIMAL(10, 4) NOT NULL,
+    listado BIGINT,
+    tipo_cambio DECIMAL(12,4) NOT NULL,
+    montovbd DECIMAL(10, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(10, 4) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL;
-CREATE TABLE HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL
+DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_comercial;
+CREATE TABLE hist_cfg_diamante_listado_valor_comercial
 (
-    ID BIGINT NOT NULL,
-    FECHA_CARGA TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT NOT NULL,
+    fecha_carga TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
 --
--- VIGENTES
+-- vigentes
 --
 
-DROP TABLE IF EXISTS CFG_DIAMANTE_VALOR_COMERCIAL;
-CREATE TABLE CFG_DIAMANTE_VALOR_COMERCIAL
+DROP TABLE IF EXISTS cfg_diamante_valor_comercial;
+CREATE TABLE cfg_diamante_valor_comercial
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    CORTE VARCHAR(20) NOT NULL,
-    COLOR VARCHAR(20) NOT NULL,
-    CLARIDAD VARCHAR(20) NOT NULL,
-    TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
-    TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
-    PRECIO DECIMAL(10, 4) NOT NULL,
-    LISTADO BIGINT,
-    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
-    MONTOVBD DECIMAL(12, 4) NOT NULL,
-    MONTOFCASTIGOXRANGO DECIMAL(12, 4) NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    corte VARCHAR(20) NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    claridad VARCHAR(20) NOT NULL,
+    tamanio_inferior DECIMAL(6, 2) NOT NULL,
+    tamanio_superior DECIMAL(6, 2) NOT NULL,
+    precio DECIMAL(10, 4) NOT NULL,
+    listado BIGINT,
+    tipo_cambio DECIMAL(12,4) NOT NULL,
+    montovbd DECIMAL(12, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(12, 4) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS TMP_DIAMANTE_VALOR_COMERCIAL;
-CREATE TABLE TMP_DIAMANTE_VALOR_COMERCIAL
+DROP TABLE IF EXISTS tmp_diamante_valor_comercial;
+CREATE TABLE tmp_diamante_valor_comercial
 (
-    CORTE VARCHAR(20) NOT NULL,
-    COLOR VARCHAR(20) NOT NULL,
-    CLARIDAD VARCHAR(20) NOT NULL,
-    TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
-    TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
-    PRECIO DECIMAL(10, 4) NOT NULL,
-    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
-    MONTOVBD DECIMAL(12, 4) NOT NULL,
-    MONTOFCASTIGOXRANGO DECIMAL(12, 4) NOT NULL
+    corte VARCHAR(20) NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    claridad VARCHAR(20) NOT NULL,
+    tamanio_inferior DECIMAL(6, 2) NOT NULL,
+    tamanio_superior DECIMAL(6, 2) NOT NULL,
+    precio DECIMAL(10, 4) NOT NULL,
+    tipo_cambio DECIMAL(12,4) NOT NULL,
+    montovbd DECIMAL(12, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(12, 4) NOT NULL
 );
 
-DROP TABLE IF EXISTS CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL;
-CREATE TABLE CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL
+DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
+CREATE TABLE cfg_diamante_listado_valor_comercial
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    FECHA_CARGA TIMESTAMP NOT NULL,
-    FECHA_LISTADO DATE NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    fecha_carga TIMESTAMP NOT NULL,
+    fecha_listado DATE NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- ----------------------------------------------------------------------------------------------------------------------
--- TERMINA - TABLAS: VALOR COMERCIAL 'DIAMANTE'
--- ----------------------------------------------------------------------------------------------------------------------
-
-
-
--- ----------------------------------------------------------------------------------------------------------------------
--- INICIA - TABLAS: VALOR COMERCIAL 'ORO'
--- ----------------------------------------------------------------------------------------------------------------------
-
---
--- HISTÓRICOS
---
-
-DROP TABLE IF EXISTS HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO;
-CREATE TABLE HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO
-(
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    COLOR VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20) NOT NULL,
-    PRECIO DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
-);
-
-DROP TABLE IF EXISTS HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO;
-CREATE TABLE HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO
-(
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    PRIMARY KEY (ID)
-);
-
---
--- VIGENTES
---
-
-DROP TABLE IF EXISTS CFG_ALHAJA_VALOR_COMERCIAL_ORO;
-CREATE TABLE CFG_ALHAJA_VALOR_COMERCIAL_ORO
-(
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    COLOR VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20) NOT NULL,
-    PRECIO DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
-);
-
-DROP TABLE IF EXISTS CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO;
-CREATE TABLE CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO
-(
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    PRIMARY KEY (ID)
-);
-
--- ----------------------------------------------------------------------------------------------------------------------
--- TERMINA - TABLAS: VALOR COMERCIAL 'ORO'
+-- termina - tablas: valor comercial 'diamante'
 -- ----------------------------------------------------------------------------------------------------------------------
 
 
 
 -- ----------------------------------------------------------------------------------------------------------------------
--- INICIA - TABLAS: VALOR COMERCIAL 'METAL'
+-- inicia - tablas: valor comercial 'oro'
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- HISTÓRICOS
+-- históricos
 --
 
-DROP TABLE IF EXISTS HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL;
-CREATE TABLE HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL
+DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_oro;
+CREATE TABLE hist_cfg_alhaja_valor_comercial_oro
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    METAL VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20),
-    PRECIO DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20) NOT NULL,
+    precio DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL;
-CREATE TABLE HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_oro;
+CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_oro
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
 );
 
 --
--- VIGENTES
+-- vigentes
 --
 
-DROP TABLE IF EXISTS CFG_ALHAJA_VALOR_COMERCIAL_METAL;
-CREATE TABLE CFG_ALHAJA_VALOR_COMERCIAL_METAL
+DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_oro;
+CREATE TABLE cfg_alhaja_valor_comercial_oro
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    METAL VARCHAR(20) NOT NULL,
-    CALIDAD VARCHAR(20),
-    PRECIO DECIMAL(10, 3) NOT NULL,
-    LISTADO BIGINT,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20) NOT NULL,
+    precio DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL;
-CREATE TABLE CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL
+DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_oro;
+CREATE TABLE cfg_alhaja_listado_valor_comercial_oro
 (
-    ID BIGINT AUTO_INCREMENT NOT NULL,
-    ULTIMA_ACTUALIZACION TIMESTAMP NOT NULL,
-    PRIMARY KEY (ID)
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
 );
 
 -- ----------------------------------------------------------------------------------------------------------------------
--- TERMINA - TABLAS: VALOR COMERCIAL 'METAL'
+-- termina - tablas: valor comercial 'oro'
 -- ----------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE JOURNAL_ENTITY_EVENT ADD FOREIGN KEY (ID) REFERENCES JOURNAL_EVENT (ID);
-ALTER TABLE JOURNAL_CUSTOM_EVENT ADD FOREIGN KEY (ID) REFERENCES JOURNAL_EVENT (ID);
-ALTER TABLE JOURNAL_EVENT_DATA ADD FOREIGN KEY (EVENT) REFERENCES JOURNAL_EVENT (ID);
-
-CREATE INDEX IDX_CFG_DIAMANTE_FACTOR_ID ON CFG_DIAMANTE_FACTOR(ID);
-CREATE INDEX IDX_CFG_DIAMANTE_FACTOR_FECHA_CARGA ON CFG_DIAMANTE_FACTOR(FECHA_CARGA);
-
-CREATE INDEX IDX_CFG_ALHAJA_LISTADO_FACTOR_ID ON CFG_ALHAJA_LISTADO_FACTOR(ID);
-
-CREATE INDEX IDX_CFG_FACTOR_ALHAJA_ID ON CFG_FACTOR_ALHAJA(ID);
-ALTER TABLE CFG_FACTOR_ALHAJA ADD CONSTRAINT FK_CFG_FACTOR_ALHAJA_CFG_ALHAJA_LISTADO_FACTOR
-FOREIGN KEY(LISTADO) REFERENCES CFG_ALHAJA_LISTADO_FACTOR(ID);
-
-CREATE INDEX IDX_HIST_CFG_FACTOR_ALHAJA_ID ON HIST_CFG_FACTOR_ALHAJA(ID);
-ALTER TABLE HIST_CFG_FACTOR_ALHAJA ADD CONSTRAINT FK_HIST_CFG_FACTOR_ALHAJA_HIST_CFG_ALHAJA_LISTADO_FACTOR
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_ALHAJA_LISTADO_FACTOR(ID);
-
-CREATE INDEX IDX_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO_ID ON CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO(ID);
-
-CREATE INDEX IDX_CFG_DIAMANTE_VALOR_CERTIFICADO_ID ON CFG_DIAMANTE_VALOR_CERTIFICADO(ID);
-ALTER TABLE CFG_DIAMANTE_VALOR_CERTIFICADO ADD CONSTRAINT FK_CFG_DIAMANTE_VALOR_CERTIFICADO_LISTADO
-FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO(ID);
-
-CREATE INDEX IDX_HIST_CFG_DIAMANTE_VALOR_CERTIFICADO_ID ON HIST_CFG_DIAMANTE_VALOR_CERTIFICADO(ID);
-ALTER TABLE HIST_CFG_DIAMANTE_VALOR_CERTIFICADO ADD CONSTRAINT FK_HIST_CFG_DIAMANTE_VALOR_CERTIFICADO
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_CERTIFICADO(ID);
-
-CREATE INDEX IDX_HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL_ID ON HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
-
-CREATE INDEX IDX_HIST_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON HIST_CFG_DIAMANTE_VALOR_COMERCIAL(ID);
-ALTER TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_HIST_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
-
-CREATE INDEX IDX_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL_ID ON CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
-
-CREATE INDEX IDX_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON CFG_DIAMANTE_VALOR_COMERCIAL(ID);
-ALTER TABLE CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
-
-CREATE INDEX IDX_HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO_ID ON HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO(ID);
-
-CREATE INDEX IDX_HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO_ID ON HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO(ID);
-ALTER TABLE HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO ADD CONSTRAINT FK_HIST_CFG_ALHAJA_VALOR_COMERCIAL_ORO
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO(ID);
-
-CREATE INDEX IDX_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO_ID ON CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO(ID);
-
-CREATE INDEX IDX_CFG_ALHAJA_VALOR_COMERCIAL_ORO_ID ON CFG_ALHAJA_VALOR_COMERCIAL_ORO(ID);
-ALTER TABLE CFG_ALHAJA_VALOR_COMERCIAL_ORO ADD CONSTRAINT FK_CFG_ALHAJA_VALOR_COMERCIAL_ORO
-FOREIGN KEY(LISTADO) REFERENCES CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_ORO(ID);
-
-CREATE INDEX IDX_HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL_ID ON HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
-
-CREATE INDEX IDX_HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL_ID ON HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL(ID);
-ALTER TABLE HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL ADD CONSTRAINT FK_HIST_CFG_ALHAJA_VALOR_COMERCIAL_METAL
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
-
-CREATE INDEX IDX_CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL_ID ON CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
-
-CREATE INDEX IDX_CFG_ALHAJA_VALOR_COMERCIAL_METAL_ID ON CFG_ALHAJA_VALOR_COMERCIAL_METAL(ID);
-ALTER TABLE CFG_ALHAJA_VALOR_COMERCIAL_METAL ADD CONSTRAINT FK_CFG_ALHAJA_VALOR_COMERCIAL_METAL
-FOREIGN KEY(LISTADO) REFERENCES CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
 
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_generar_historico;
+-- ----------------------------------------------------------------------------------------------------------------------
+-- inicia - tablas: valor comercial 'metal'
+-- ----------------------------------------------------------------------------------------------------------------------
+
+--
+-- históricos
+--
+
+DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_metal;
+CREATE TABLE hist_cfg_alhaja_valor_comercial_metal
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    metal VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20),
+    precio DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_metal;
+CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_metal
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
+);
+
+--
+-- vigentes
+--
+
+DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_metal;
+CREATE TABLE cfg_alhaja_valor_comercial_metal
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    metal VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20),
+    precio DECIMAL(10, 3) NOT NULL,
+    listado BIGINT,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_metal;
+CREATE TABLE cfg_alhaja_listado_valor_comercial_metal
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    ultima_actualizacion TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
+);
+
+-- ----------------------------------------------------------------------------------------------------------------------
+-- termina - tablas: valor comercial 'metal'
+-- ----------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE journal_entity_event add FOREIGN KEY (id) REFERENCES journal_event (id);
+ALTER TABLE journal_custom_event add FOREIGN KEY (id) REFERENCES journal_event (id);
+ALTER TABLE journal_event_data add FOREIGN KEY (event) REFERENCES journal_event (id);
+
+CREATE INDEX idx_cfg_diamante_factor_id ON cfg_diamante_factor(id);
+CREATE INDEX idx_cfg_diamante_factor_fecha_carga ON cfg_diamante_factor(fecha_carga);
+
+CREATE INDEX idx_cfg_alhaja_listado_factor_id ON cfg_alhaja_listado_factor(id);
+
+CREATE INDEX idx_cfg_factor_alhaja_id ON cfg_factor_alhaja(id);
+ALTER TABLE cfg_factor_alhaja ADD CONSTRAINT fk_cfg_factor_alhaja_cfg_alhaja_listado_factor
+FOREIGN KEY(listado) REFERENCES cfg_alhaja_listado_factor(id);
+
+CREATE INDEX idx_hist_cfg_factor_alhaja_id ON hist_cfg_factor_alhaja(id);
+ALTER TABLE hist_cfg_factor_alhaja ADD CONSTRAINT fk_hist_cfg_factor_alhaja_hist_cfg_alhaja_listado_factor
+FOREIGN KEY(listado) REFERENCES hist_cfg_alhaja_listado_factor(id);
+
+CREATE INDEX idx_cfg_diamante_listado_valor_certificado_id ON cfg_diamante_listado_valor_certificado(id);
+
+CREATE INDEX idx_cfg_diamante_valor_certificado_id ON cfg_diamante_valor_certificado(id);
+ALTER TABLE cfg_diamante_valor_certificado ADD CONSTRAINT fk_cfg_diamante_valor_certificado_listado
+FOREIGN KEY(listado) REFERENCES cfg_diamante_listado_valor_certificado(id);
+
+CREATE INDEX idx_hist_cfg_diamante_valor_certificado_id ON hist_cfg_diamante_valor_certificado(id);
+ALTER TABLE hist_cfg_diamante_valor_certificado ADD CONSTRAINT fk_hist_cfg_diamante_valor_certificado
+FOREIGN KEY(listado) REFERENCES hist_cfg_diamante_listado_valor_certificado(id);
+
+CREATE INDEX idx_hist_cfg_diamante_listado_valor_comercial_id ON hist_cfg_diamante_listado_valor_comercial(id);
+
+CREATE INDEX idx_hist_cfg_diamante_valor_comercial_id ON hist_cfg_diamante_valor_comercial(id);
+ALTER TABLE hist_cfg_diamante_valor_comercial ADD CONSTRAINT fk_hist_cfg_diamante_valor_comercial
+FOREIGN KEY(listado) REFERENCES hist_cfg_diamante_listado_valor_comercial(id) ON DELETE cascade;
+
+CREATE INDEX idx_cfg_diamante_listado_valor_comercial_id ON cfg_diamante_listado_valor_comercial(id);
+
+CREATE INDEX idx_cfg_diamante_valor_comercial_id ON cfg_diamante_valor_comercial(id);
+ALTER TABLE cfg_diamante_valor_comercial ADD CONSTRAINT fk_cfg_diamante_valor_comercial
+FOREIGN KEY(listado) REFERENCES cfg_diamante_listado_valor_comercial(id) ON DELETE cascade;
+
+CREATE INDEX idx_hist_cfg_alhaja_listado_valor_comercial_oro_id ON hist_cfg_alhaja_listado_valor_comercial_oro(id);
+
+CREATE INDEX idx_hist_cfg_alhaja_valor_comercial_oro_id ON hist_cfg_alhaja_valor_comercial_oro(id);
+ALTER TABLE hist_cfg_alhaja_valor_comercial_oro ADD CONSTRAINT fk_hist_cfg_alhaja_valor_comercial_oro
+FOREIGN KEY(listado) REFERENCES hist_cfg_alhaja_listado_valor_comercial_oro(id);
+
+CREATE INDEX idx_cfg_alhaja_listado_valor_comercial_oro_id ON cfg_alhaja_listado_valor_comercial_oro(id);
+
+CREATE INDEX idx_cfg_alhaja_valor_comercial_oro_id ON cfg_alhaja_valor_comercial_oro(id);
+ALTER TABLE cfg_alhaja_valor_comercial_oro ADD CONSTRAINT fk_cfg_alhaja_valor_comercial_oro
+FOREIGN KEY(listado) REFERENCES cfg_alhaja_listado_valor_comercial_oro(id);
+
+CREATE INDEX idx_hist_cfg_alhaja_listado_valor_comercial_metal_id ON hist_cfg_alhaja_listado_valor_comercial_metal(id);
+
+CREATE INDEX idx_hist_cfg_alhaja_valor_comercial_metal_id ON hist_cfg_alhaja_valor_comercial_metal(id);
+ALTER TABLE hist_cfg_alhaja_valor_comercial_metal ADD CONSTRAINT fk_hist_cfg_alhaja_valor_comercial_metal
+FOREIGN KEY(listado) REFERENCES hist_cfg_alhaja_listado_valor_comercial_metal(id);
+
+CREATE INDEX idx_cfg_alhaja_listado_valor_comercial_metal_id ON cfg_alhaja_listado_valor_comercial_metal(id);
+
+CREATE INDEX idx_cfg_alhaja_valor_comercial_metal_id ON cfg_alhaja_valor_comercial_metal(id);
+ALTER TABLE cfg_alhaja_valor_comercial_metal ADD CONSTRAINT fk_cfg_alhaja_valor_comercial_metal
+FOREIGN KEY(listado) REFERENCES cfg_alhaja_listado_valor_comercial_metal(id);
+
+
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_generar_historico;
 DELIMITER //
-CREATE PROCEDURE sp_diamante_valor_comercial_generar_historico(IN _listado BIGINT)
+CREATE PROCEDURE sp_diamante_valor_comercial_generar_historico(in _listado BIGINT)
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -404,29 +404,29 @@ CREATE PROCEDURE sp_diamante_valor_comercial_generar_historico(IN _listado BIGIN
         END;
 
         START TRANSACTION;
-            -- Se pasa el listado vigente a la tabla de historicos
+            -- se pasa el listado vigente a la tabla de historicos
             INSERT INTO hist_cfg_diamante_listado_valor_comercial
                 SELECT * FROM cfg_diamante_listado_valor_comercial
                 WHERE id = _listado;
 
-            -- Se pasan los valores comerciales vigentes a la tabla de historicos
+            -- se pasan los valores comerciales vigentes a la tabla de historicos
             INSERT INTO hist_cfg_diamante_valor_comercial
                 SELECT * FROM cfg_diamante_valor_comercial
                 WHERE listado = _listado;
 
-            -- Se elimina el listado y valores comerciales vigentes
+            -- se elimina el listado y valores comerciales vigentes
             DELETE FROM cfg_diamante_listado_valor_comercial
             WHERE id = _listado;
         COMMIT;
     END //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_generar_vigente;
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_generar_vigente;
 DELIMITER //
-CREATE PROCEDURE sp_diamante_valor_comercial_generar_vigente(IN _fechaListado DATE)
+CREATE PROCEDURE sp_diamante_valor_comercial_generar_vigente(in _fechalistado DATE)
     BEGIN
-        DECLARE idListadoVigeneteActual BIGINT;
-        DECLARE idListadoVigeneteNuevo BIGINT;
+        DECLARE idlistadovigeneteactual BIGINT;
+        DECLARE idlistadovigenetenuevo BIGINT;
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -435,37 +435,37 @@ CREATE PROCEDURE sp_diamante_valor_comercial_generar_vigente(IN _fechaListado DA
         END;
 
         START TRANSACTION;
-            -- Se selecciona el identificador del listado vigente
-            SELECT MAX(id) INTO idListadoVigeneteActual FROM cfg_diamante_listado_valor_comercial;
+            -- se selecciona el identificador del listado vigente
+            SELECT max(id) INTO idlistadovigeneteactual FROM cfg_diamante_listado_valor_comercial;
 
-            -- Se generan los historicos
-            CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
+            -- se generan los historicos
+            CALL sp_diamante_valor_comercial_generar_historico(idlistadovigeneteactual);
 
-            -- Se inserta el nuevo listado vigente
-            INSERT INTO cfg_diamante_listado_valor_comercial(fecha_listado) VALUES (_fechaListado);
+            -- se inserta el nuevo listado vigente
+            INSERT INTO cfg_diamante_listado_valor_comercial(fecha_listado) values (_fechalistado);
 
-            -- Se recupera el identificador del listado vigente
-            SET idListadoVigeneteNuevo = last_insert_id();
+            -- se recupera el identificador del listado vigente
+            SET idlistadovigenetenuevo = last_insert_id();
 
-            -- Se insertan los valores comerciales vigentes con el listado vigente
+            -- se insertan los valores comerciales vigentes con el listado vigente
             INSERT INTO
                 cfg_diamante_valor_comercial(corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado,
                     tipo_cambio, montovbd, montofcastigoxrango)
-                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo,
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idlistadovigenetenuevo,
                     tipo_cambio, montovbd, montofcastigoxrango
                 FROM tmp_diamante_valor_comercial;
 
-            -- Se limpia la tabla temporal
-            TRUNCATE tmp_diamante_valor_comercial;
+            -- se limpia la tabla temporal
+            truncate table tmp_diamante_valor_comercial;
         COMMIT;
     END //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_historico;
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_restaurar_historico;
 DELIMITER //
-CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIGINT)
+CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(in _listado BIGINT)
     BEGIN
-        DECLARE idListadoVigeneteNuevo BIGINT;
+        DECLARE idlistadovigenetenuevo BIGINT;
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -474,19 +474,19 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIG
         END;
 
         START TRANSACTION;
-            -- Se pasa el listado historico a la tabla de vigentes
+            -- se pasa el listado historico a la tabla de vigentes
             INSERT INTO cfg_diamante_listado_valor_comercial (fecha_listado)
                 SELECT fecha_listado FROM hist_cfg_diamante_listado_valor_comercial
                 WHERE id = _listado;
 
-            -- Se recupera el identificador del listado vigente
-            SET idListadoVigeneteNuevo = last_insert_id();
+            -- se recupera el identificador del listado vigente
+            SET idlistadovigenetenuevo = last_insert_id();
 
-            -- Se pasan los valores comerciales historicos a la tabla de vigentes
+            -- se pasan los valores comerciales historicos a la tabla de vigentes
             INSERT INTO
                 cfg_diamante_valor_comercial (corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado,
                     tipo_cambio, montovbd, montofcastigoxrango)
-                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idListadoVigeneteNuevo,
+                SELECT corte, color, claridad, tamanio_inferior, tamanio_superior, precio, idlistadovigenetenuevo,
                     tipo_cambio, montovbd, montofcastigoxrango
                 FROM hist_cfg_diamante_valor_comercial
                 WHERE listado = _listado;
@@ -494,12 +494,12 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_historico(IN _listado BIG
     END //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_anterior;
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_restaurar_anterior;
 DELIMITER //
 CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_anterior()
     BEGIN
-        DECLARE idListadoVigeneteActual BIGINT;
-        DECLARE idListadoHistorico BIGINT;
+        DECLARE idlistadovigeneteactual BIGINT;
+        DECLARE idlistadohistorico BIGINT;
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -508,34 +508,34 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_anterior()
         END;
 
         START TRANSACTION;
-            -- Recupera el id y fecha carga del listado vigente
-            CALL sp_diamante_valor_comercial_recuperar_vigente(idListadoVigeneteActual);
+            -- recupera el id y fecha carga del listado vigente
+            CALL sp_diamante_valor_comercial_recuperar_vigente(idlistadovigeneteactual);
 
-            -- Selecciona el identificador del listado historico donde la fecha de
+            -- selecciona el identificador del listado historico donde la fecha de
             -- carga se menor a la del lisdado vigente
-            SELECT id INTO idListadoHistorico
+            SELECT id INTO idlistadohistorico
             FROM hist_cfg_diamante_listado_valor_comercial
             ORDER BY fecha_carga DESC LIMIT 1;
 
-            -- Verifica si no hay una fecha de carga menor a la vigente
-            IF idListadoHistorico IS NULL THEN
-                SIGNAL SQLSTATE '02000'
-                SET MESSAGE_TEXT = 'No existe un listado de precios anterior.',
-                MYSQL_ERRNO = 1329;
+            -- verifica si no hay una fecha de carga menor a la vigente
+            IF idlistadohistorico IS NULL THEN
+                signal sqlstate '02000'
+                SET message_text = 'no existe un listado de precios anterior.',
+                mysql_errno = 1329;
             END IF;
 
-            CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
-            CALL sp_diamante_valor_comercial_restaurar_historico(idListadoHistorico);
+            CALL sp_diamante_valor_comercial_generar_historico(idlistadovigeneteactual);
+            CALL sp_diamante_valor_comercial_restaurar_historico(idlistadohistorico);
         COMMIT;
     END //
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_restaurar_fecha;
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_restaurar_fecha;
 DELIMITER //
-CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_fecha(IN _fechaIni TIMESTAMP, IN _fechaFin TIMESTAMP)
+CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_fecha(in _fechaini TIMESTAMP, in _fechafin TIMESTAMP)
     BEGIN
-        DECLARE idListadoVigeneteActual BIGINT;
-        DECLARE idListadoHistorico BIGINT;
+        DECLARE idlistadovigeneteactual BIGINT;
+        DECLARE idlistadohistorico BIGINT;
 
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -544,137 +544,137 @@ CREATE PROCEDURE sp_diamante_valor_comercial_restaurar_fecha(IN _fechaIni TIMEST
         END;
 
         START TRANSACTION;
-            -- Recupera el id y fecha carga del listado vigente
-            CALL sp_diamante_valor_comercial_recuperar_vigente(idListadoVigeneteActual);
+            -- recupera el id y fecha carga del listado vigente
+            CALL sp_diamante_valor_comercial_recuperar_vigente(idlistadovigeneteactual);
 
-            -- Selecciona el identificador del listado historico donde la fecha de
+            -- selecciona el identificador del listado historico donde la fecha de
             -- carga este en el rango de los parametros
-            SELECT id INTO idListadoHistorico
+            SELECT id INTO idlistadohistorico
             FROM hist_cfg_diamante_listado_valor_comercial
-            WHERE fecha_carga BETWEEN _fechaIni AND _fechaFin ORDER BY fecha_carga DESC LIMIT 1;
+            WHERE fecha_carga between _fechaini and _fechafin ORDER BY fecha_carga DESC LIMIT 1;
 
-        -- Verifica si existe un listado historico para la fecha
-        IF idListadoHistorico IS NULL THEN
-            SIGNAL SQLSTATE '02000'
-            SET MESSAGE_TEXT = 'No existe un listado de precios para la fecha.',
-            MYSQL_ERRNO = 1329;
+        -- verifica si existe un listado historico para la fecha
+        IF idlistadohistorico IS NULL THEN
+            signal sqlstate '02000'
+            SET message_text = 'no existe un listado de precios para la fecha.',
+            mysql_errno = 1329;
         END IF;
 
-        CALL sp_diamante_valor_comercial_generar_historico(idListadoVigeneteActual);
-        CALL sp_diamante_valor_comercial_restaurar_historico(idListadoHistorico);
+        CALL sp_diamante_valor_comercial_generar_historico(idlistadovigeneteactual);
+        CALL sp_diamante_valor_comercial_restaurar_historico(idlistadohistorico);
         COMMIT;
     END //
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS sp_diamante_valor_comercial_recuperar_vigente;
+DROP PROCEDURE IF exists sp_diamante_valor_comercial_recuperar_vigente;
 DELIMITER //
-CREATE PROCEDURE sp_diamante_valor_comercial_recuperar_vigente(OUT idListadoVigeneteActual BIGINT)
+CREATE PROCEDURE sp_diamante_valor_comercial_recuperar_vigente(OUT idlistadovigeneteactual BIGINT)
     BEGIN
-        -- Se selecciona el identificador y la fecha de carga del listado vigente
-        SELECT id INTO idListadoVigeneteActual
+        -- se selecciona el identificador y la fecha de carga del listado vigente
+        SELECT id INTO idlistadovigeneteactual
         FROM cfg_diamante_listado_valor_comercial ORDER BY id DESC LIMIT 1;
 
-        -- Verifica si existe un listado vigente
-        IF idListadoVigeneteActual IS NULL THEN
-            SIGNAL SQLSTATE '02000'
-            SET MESSAGE_TEXT = 'No existe un listado de precios vigente.',
-            MYSQL_ERRNO = 1329;
+        -- verifica si existe un listado vigente
+        IF idlistadovigeneteactual IS NULL THEN
+            signal sqlstate '02000'
+            SET message_text = 'no existe un listado de precios vigente.',
+            mysql_errno = 1329;
         END IF;
     END //
 DELIMITER ;
 
--- Inicio Nuevas tablas para Siva Diamantes F2
+-- inicio nuevas tablas para siva diamantes f2
 
 --
--- Table structure for table `cfg_diamante_factores_x_rango_de_color`
+-- table structure for table `cfg_diamante_factores_x_rango_de_color`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_factores_x_rango_de_color`;
 CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FECHA` date NOT NULL,
-  `COLOR_DESDE` varchar(20) NOT NULL,
-  `COLOR_HASTA` varchar(20) NOT NULL,
-  `RANGO_COLOR_BASE` varchar(20) NOT NULL,
-  `FACTOR` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `color_desde` VARCHAR(20) NOT NULL,
+  `color_hasta` VARCHAR(20) NOT NULL,
+  `rango_color_base` VARCHAR(20) NOT NULL,
+  `factor` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
 --
--- Table structure for table `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`
+-- table structure for table `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FECHA` date NOT NULL,
-  `QUILATES_DESDE` decimal(10,2) NOT NULL,
-  `QUILATES_HASTA` decimal(10,2) NOT NULL,
-  `FACTOR` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `quilates_desde` DECIMAL(10,2) NOT NULL,
+  `quilates_hasta` DECIMAL(10,2) NOT NULL,
+  `factor` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 
 --
--- Table structure for table `cfg_diamante_porcentaje_castigo_x_tipo_corte`
+-- table structure for table `cfg_diamante_porcentaje_castigo_x_tipo_corte`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_tipo_corte`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FECHA` date NOT NULL,
-  `CORTE` varchar(20) NOT NULL,
-  `FACTOR` decimal(10,4) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `corte` VARCHAR(20) NOT NULL,
+  `factor` DECIMAL(10,4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 --
--- Table structure for table `cfg_diamante_rango_pesos`
+-- table structure for table `cfg_diamante_rango_pesos`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_rango_pesos`;
 CREATE TABLE `cfg_diamante_rango_pesos` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FECHA` date NOT NULL,
-  `QUILATES_DESDE` decimal(10,4) NOT NULL,
-  `QUILATES_HASTA` decimal(10,4) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `quilates_desde` DECIMAL(10,4) NOT NULL,
+  `quilates_hasta` DECIMAL(10,4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 
 --
--- Table structure for table `cfg_diamante_parametros_quilates`
+-- table structure for table `cfg_diamante_parametros_quilates`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_parametros_quilates`;
 CREATE TABLE `cfg_diamante_parametros_quilates` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FECHA` date NOT NULL,
-  `QUILATES_DESDE` decimal(10,2) NOT NULL,
-  `QUILATES_HASTA` decimal(10,2) NOT NULL,
-  `QUILATES_BASE_DESDE` decimal(10,2) NOT NULL,
-  `QUILATES_BASE_HASTA` decimal(10,2) NOT NULL,
-  `PORCENTAJE` decimal(10,3) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NOT NULL,
+  `quilates_desde` DECIMAL(10,2) NOT NULL,
+  `quilates_hasta` DECIMAL(10,2) NOT NULL,
+  `quilates_base_desde` DECIMAL(10,2) NOT NULL,
+  `quilates_base_hasta` DECIMAL(10,2) NOT NULL,
+  `porcentaje` DECIMAL(10,3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 --
--- Table structure for table `cfg_diamante_factor_depreciacion`
+-- table structure for table `cfg_diamante_factor_depreciacion`
 --
 
 DROP TABLE IF EXISTS `cfg_diamante_factor_depreciacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cfg_diamante_factor_depreciacion` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `FACTOR` decimal(10,1) NOT NULL,
-  `FECHA` date DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `factor` DECIMAL(10,1) NOT NULL,
+  `fecha` DATE DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
--- Fin Nuevas tablas para Siva Diamantes F2
+-- fin nuevas tablas para siva diamantes f2

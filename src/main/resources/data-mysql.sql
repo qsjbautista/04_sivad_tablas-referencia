@@ -258,5 +258,9 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QU
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (4,'2018-08-28',1.50,1.99,0.45);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (5,'2018-08-28',2.00,100.00,0.35);
 
+/*
+cfg_diamante_factor_depreciacion
+*/
+INSERT INTO `cfg_diamante_factor_depreciacion` (`ID`,`FACTOR`,`FECHA`) VALUES (1,0.3,'2018-08-28');
 
 -- Fin configuración de tablas de referencia
