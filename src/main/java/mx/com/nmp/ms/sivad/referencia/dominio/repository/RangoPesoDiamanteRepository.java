@@ -4,8 +4,14 @@
  */
 package mx.com.nmp.ms.sivad.referencia.dominio.repository;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import mx.com.nmp.ms.arquetipo.annotation.validation.NotNull;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.RangoPesoDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.RangoPesoDiamanteVO;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.RangoPesoDiamanteJPA;
 
 /**
  * Utilizado para canalizar el acceso a datos de rangos de peso del diamante.
@@ -21,5 +27,37 @@ public interface RangoPesoDiamanteRepository {
      * @return La entidad obtenida con el peso del diamante.
      */
     RangoPesoDiamante obtenerRangoPeso(RangoPesoDiamanteVO rangoPesoDiamanteVO);
+
+    /**
+     * Permite agregar un elemento nuevo al catálogo.
+     *
+     * @param elemento Elemento a guardar.
+     *
+     * @return El objeto {@link T} que fue creado.
+     */
+    public RangoPesoDiamanteJPA save(@Valid RangoPesoDiamanteJPA elemento);
+
+    /**
+     * Permite modificar un elemento del catálogo.
+     *
+     * @return El objeto {@link T} que fue actualizado.
+     *
+     * @throws CatalogoNotFoundException Cuando no existe el elemento a actualizar.
+     */
+    public RangoPesoDiamanteJPA update(@NotNull Long idRangoPesos, @NotNull RangoPesoDiamanteJPA rangoPesos);
+
+    /**
+     * Permite eliminar un elemento del catálogo.
+     *
+     * @return El objeto {@link T} que fue eliminado.
+     *
+     * @throws CatalogoNotFoundException Cuando no existe el elemento a eliminar.
+     */
+    public RangoPesoDiamanteJPA delete(@NotNull Long idRangoPesos);
+
+    /**
+     * Obtiene todos los elementos del catalogo
+     */
+    public List<RangoPesoDiamanteJPA> getAll();
 
 }

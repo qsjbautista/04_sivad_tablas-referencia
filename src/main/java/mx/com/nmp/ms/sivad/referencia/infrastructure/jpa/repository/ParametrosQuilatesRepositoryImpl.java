@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
-
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ParametrosQuilatesNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.ParametrosQuilatesRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
@@ -205,5 +205,52 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 		return valorComerJPA;
 	}
+
+	@Override
+	public ParametrosQuilatesJPA update(Long idParametro, ParametrosQuilatesJPA elemento) {
+		ParametrosQuilatesJPA pq = this.parametrosQuilatesRepositoryJPA.findOne(idParametro);
+        actualizarCatalogo(pq, elemento);
+
+        return this.parametrosQuilatesRepositoryJPA.saveAndFlush(pq);
+	}
+
+    /**
+     * Actualiza un objeto {@link T} apartir de otro.
+     *
+     * @param original Objeto original a ser actualizado.
+     * @param nuevo Objeto con las modificaciones.
+     */
+    private void actualizarCatalogo(ParametrosQuilatesJPA original, ParametrosQuilatesJPA nuevo) {
+        if (ObjectUtils.isEmpty(nuevo.getQuilatesDesde())) {
+            LOGGER.warn("{}.quilatesDesde = null, se deja valor anterior {}");
+        } else {
+            original.setQuilatesDesde(nuevo.getQuilatesDesde());
+        }
+
+        if (ObjectUtils.isEmpty(nuevo.getQuilatesHasta())) {
+            LOGGER.warn("{}.quilatesHasta = null, se deja valor anterior {}");
+        } else {
+            original.setQuilatesHasta(nuevo.getQuilatesHasta());
+        }
+
+        if (ObjectUtils.isEmpty(nuevo.getQuilatesBaseDesde())) {
+            LOGGER.warn("{}.quilatesBaseDesde = null, se deja valor anterior {}");
+        } else {
+            original.setQuilatesBaseDesde(nuevo.getQuilatesBaseDesde());
+        }
+
+        if (ObjectUtils.isEmpty(nuevo.getQuilatesBaseHasta())) {
+            LOGGER.warn("{}.quilatesBaseHasta = null, se deja valor anterior {}");
+        } else {
+            original.setQuilatesBaseHasta(nuevo.getQuilatesBaseHasta());
+        }
+
+        if (ObjectUtils.isEmpty(nuevo.getPorcentaje())) {
+            LOGGER.warn("{}.porcentaje = null, se deja valor anterior {}");
+        } else {
+            original.setPorcentaje(nuevo.getPorcentaje());
+        }
+
+    }
 
 }

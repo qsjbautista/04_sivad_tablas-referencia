@@ -8,12 +8,10 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
 
 @Repository
-@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CastigoCorteDiamanteRepositoryImpl.class);

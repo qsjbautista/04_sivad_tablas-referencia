@@ -2,7 +2,6 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPesoDiamanteJPA;
 
 public interface CastigoRangoPesoRepository {

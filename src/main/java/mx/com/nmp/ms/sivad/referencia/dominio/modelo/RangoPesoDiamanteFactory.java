@@ -5,6 +5,8 @@
 package mx.com.nmp.ms.sivad.referencia.dominio.modelo;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorNumero;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.RangoPesoDiamanteJPA;
+
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -38,5 +40,12 @@ public final class RangoPesoDiamanteFactory {
         ValidadorNumero.validarPositivo(tamanioSuperior);
         return new RangoPesoDiamante(tamanioInferior, tamanioSuperior);
     }
+
+
+
+	public static RangoPesoDiamante create(RangoPesoDiamanteJPA rp) {
+		RangoPesoDiamante rpd = new RangoPesoDiamante(rp.getQuilatesDesde(), rp.getQuilatesHasta());
+		return rpd;
+	}
 
 }

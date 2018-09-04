@@ -39,5 +39,7 @@ public interface CastigoCorteDiamanteJPARepository extends JpaRepository<Castigo
     @Query("SELECT ccd FROM CastigoCorteDiamanteJPA ccd " +
             "WHERE ccd.fecha = (SELECT MAX(ccd2.fecha) FROM CastigoCorteDiamanteJPA ccd2)")
     List<CastigoCorteDiamanteJPA> findByUltimaActualizacion();
+
+    CastigoCorteDiamanteJPA findByCorte(String corte);
     
 }

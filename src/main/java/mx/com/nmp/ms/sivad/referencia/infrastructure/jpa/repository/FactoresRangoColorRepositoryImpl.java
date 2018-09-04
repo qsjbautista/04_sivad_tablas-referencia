@@ -6,11 +6,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactoresRangoColorNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactoresRangoColorJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
@@ -62,6 +64,72 @@ public class FactoresRangoColorRepositoryImpl implements FactoresRangoColorRepos
 		}
 
 		return valorComerJPA;
+	}
+
+	@Override
+	public List<FactoresRangoColorJPA> obtenerTodo() {
+		List<FactoresRangoColorJPA> elementos = factoresRangoColorJPARepository.findAll();
+
+		return elementos;
+
+	}
+
+	@Override
+	public FactoresRangoColorJPA guardaActualizaFactorRangoColor(FactoresRangoColorJPA castigoRangoColorDiamanteJPA) {
+
+		FactoresRangoColorJPA entidad = null;
+
+		if (castigoRangoColorDiamanteJPA.getId() != null && castigoRangoColorDiamanteJPA.getId() > 0) {
+
+			entidad = factoresRangoColorJPARepository.findOne(castigoRangoColorDiamanteJPA.getId());
+
+			if (entidad == null) {
+
+				String msg = "No existe un id para Rango Colors";
+				throw new CastigoRangoPesoNoEncontradoException(FactoresRangoColorJPA.class, msg);
+
+			}
+
+			entidad.setColorDesde(castigoRangoColorDiamanteJPA.getColorDesde() != null
+					? castigoRangoColorDiamanteJPA.getColorDesde()
+					: entidad.getColorDesde());
+			entidad.setColorHasta(castigoRangoColorDiamanteJPA.getColorHasta() != null
+					? castigoRangoColorDiamanteJPA.getColorHasta()
+					: entidad.getColorHasta());
+			entidad.setFactor(castigoRangoColorDiamanteJPA.getFactor() != null ? castigoRangoColorDiamanteJPA.getFactor()
+					: entidad.getFactor());
+			entidad.setRangoColorBase(castigoRangoColorDiamanteJPA.getRangoColorBase() != null ? castigoRangoColorDiamanteJPA.getRangoColorBase()
+					: entidad.getRangoColorBase());
+			entidad.setFecha(DateTime.now());
+
+			factoresRangoColorJPARepository.save(entidad);
+
+		} else {
+
+			if (castigoRangoColorDiamanteJPA.getColorDesde() == null)
+				throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class,
+						"No debe ser nulo el campo Color Desde.");
+
+			if (castigoRangoColorDiamanteJPA.getColorHasta() == null)
+				throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class,
+						"No debe ser nulo el campo Color Hasta.");
+
+			if (castigoRangoColorDiamanteJPA.getFactor() == null)
+				throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class,
+						"No debe ser nulo el campo Factor.");
+
+			if (castigoRangoColorDiamanteJPA.getRangoColorBase() == null)
+				throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class,
+						"No debe ser nulo el campo Color Base.");
+
+			castigoRangoColorDiamanteJPA.setId(null);
+			castigoRangoColorDiamanteJPA.setFecha(DateTime.now());
+
+			entidad = factoresRangoColorJPARepository.save(castigoRangoColorDiamanteJPA);
+		}
+
+		return entidad;
+
 	}
 
 }

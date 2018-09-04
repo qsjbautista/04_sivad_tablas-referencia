@@ -11,10 +11,14 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.RangoPesoDiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.RangoPesoDiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.RangoPesoDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.RangoPesoDiamanteJPA;
+
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -61,5 +65,56 @@ public class RangoPesoDiamanteRepositoryImpl implements RangoPesoDiamanteReposit
         return RangoPesoDiamanteFactory.create(rangoPesoDiamanteJPA.getQuilatesDesde(),
             rangoPesoDiamanteJPA.getQuilatesHasta());
     }
+
+
+
+	@Override
+	public RangoPesoDiamanteJPA save(RangoPesoDiamanteJPA elemento) {
+		RangoPesoDiamanteJPA rangoPesoDiamanteJPA = new RangoPesoDiamanteJPA();
+		rangoPesoDiamanteJPA.setFecha(new DateTime());
+		rangoPesoDiamanteJPA.setQuilatesDesde(elemento.getQuilatesDesde());
+		rangoPesoDiamanteJPA.setQuilatesHasta(elemento.getQuilatesHasta());
+		this.rangoPesoDiamanteJPARepository.save(rangoPesoDiamanteJPA);
+		return elemento;
+	}
+
+
+
+	@Override
+	public RangoPesoDiamanteJPA update(Long idRangoPesos, RangoPesoDiamanteJPA rangoPesos) {
+		
+		RangoPesoDiamanteJPA rp = this.rangoPesoDiamanteJPARepository.findOne(idRangoPesos);
+        if (ObjectUtils.isEmpty(rangoPesos.getQuilatesDesde())) {
+            LOGGER.warn("{}.quilatesDesde = null, se deja valor anterior {}");
+        } else {
+            rp.setQuilatesDesde(rangoPesos.getQuilatesDesde());
+        }
+
+        if (ObjectUtils.isEmpty(rangoPesos.getQuilatesHasta())) {
+            LOGGER.warn("{}.quilatesHasta = null, se deja valor anterior {}");
+        } else {
+            rp.setQuilatesHasta(rangoPesos.getQuilatesHasta());
+        }
+        
+        rp.setFecha(new DateTime());
+
+		return this.rangoPesoDiamanteJPARepository.saveAndFlush(rp);
+	}
+
+
+
+	@Override
+	public RangoPesoDiamanteJPA delete(Long idRangoPesos) {
+		RangoPesoDiamanteJPA rp = this.rangoPesoDiamanteJPARepository.findOne(idRangoPesos);
+		this.rangoPesoDiamanteJPARepository.delete(rp);
+		return rp;
+	}
+
+
+
+	@Override
+	public List<RangoPesoDiamanteJPA> getAll() {
+		return rangoPesoDiamanteJPARepository.findAll();
+	}
 
 }
