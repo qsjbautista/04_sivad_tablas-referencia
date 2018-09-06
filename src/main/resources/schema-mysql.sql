@@ -193,6 +193,7 @@ CREATE TABLE cfg_diamante_valor_comercial
 DROP TABLE IF EXISTS tmp_diamante_valor_comercial;
 CREATE TABLE tmp_diamante_valor_comercial
 (
+	id BIGINT AUTO_INCREMENT NOT NULL,
     corte VARCHAR(20) NOT NULL,
     color VARCHAR(20) NOT NULL,
     claridad VARCHAR(20) NOT NULL,

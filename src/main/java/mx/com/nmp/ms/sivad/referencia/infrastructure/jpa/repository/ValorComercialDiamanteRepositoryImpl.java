@@ -53,6 +53,8 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
     private static final String TMP_TABLA = "tmp_diamante_valor_comercial";
     private static final String[] PROP = new  String[]{"corte", "color", "claridad",
         "tamanioInferior", "tamanioSuperior", "precio", "tipoCambio", "montoVbd", "montofCastigoxRango"};
+    private static final String[] COLS = new  String[]{"corte", "color", "claridad",
+            "tamanio_inferior", "tamanio_superior", "precio", "tipo_cambio", "montovbd", "montofcastigoxrango"};
 
     private static final String CLEAR_QUERY = "TRUNCATE tmp_diamante_valor_comercial";
 
@@ -267,7 +269,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         DiamanteJdbcBulkInsert bulkInsertQuery = new DiamanteJdbcBulkInsert();
 
-        bulkInsertQuery.withTableName(TMP_TABLA).usingValues(lista, PROP);
+        bulkInsertQuery.withTableName(TMP_TABLA).withColumnNames(COLS).usingValues(lista, PROP);
         jdbcTemplate.execute(bulkInsertQuery.generateQuery());
     }
 
