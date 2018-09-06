@@ -263,4 +263,17 @@ cfg_diamante_factor_depreciacion
 */
 INSERT INTO `cfg_diamante_factor_depreciacion` (`ID`,`FACTOR`,`FECHA`) VALUES (1,0.3,'2018-08-28');
 
+/*
+cfg_diamante_rango_pesos
+*/
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (1,'2018-09-05',0.0100,0.0300);
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (8,'2018-09-05',0.0400,0.0700);
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (15,'2018-09-05',0.0800,0.1400);
+
+/*
+cfg_diamante_porcentaje_castigo_x_tipo_corte
+*/
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','brillante redondo',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05','acojinado',0.9000);
+
 -- Fin configuración de tablas de referencia
