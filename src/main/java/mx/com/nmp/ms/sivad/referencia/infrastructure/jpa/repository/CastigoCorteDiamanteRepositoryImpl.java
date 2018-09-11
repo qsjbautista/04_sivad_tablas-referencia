@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
+import org.springframework.util.ObjectUtils;
 
 @Repository
 public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteRepository {
@@ -90,4 +91,20 @@ public class CastigoCorteDiamanteRepositoryImpl implements CastigoCorteDiamanteR
 
 	}
 
+    public CastigoCorteDiamanteJPA delete(Long idCastigoCorte) throws CastigoCorteNoEncontradoException {
+        CastigoCorteDiamanteJPA cc = castigoCorteDiamanteJPARepository.findOne(idCastigoCorte);
+
+        if(ObjectUtils.isEmpty(cc)) {
+            String mensaje = "El catalogo CastigoCorte no contiene un elemento con el identificador [" + idCastigoCorte + "].";
+            throw new CastigoCorteNoEncontradoException(CastigoCorteDiamanteJPA.class, mensaje);
+        }
+
+        castigoCorteDiamanteJPARepository.delete(cc);
+
+        return cc;
+    }
+
+    public CastigoCorteDiamanteJPA obtenerElemento(Long idCastigoCorte) {
+        return castigoCorteDiamanteJPARepository.findOne(idCastigoCorte);
+    }
 }
