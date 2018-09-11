@@ -7,6 +7,8 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.RangoPesoNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.RangoPesoDiamanteRepository
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.RangoPesoDiamanteJPA
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.FactorDepreciacionRepository
 import org.crsh.cli.Argument
@@ -47,7 +49,7 @@ class rangoPesos{
     def elemento(InvocationContext context,
                 @Usage("Identificador del rango pesos")
     			@Required @Argument int idRangoPesos) {
-        def catalogo = getServicio(context).getOne(idRangoPesos)
+        def catalogo = getServicio(context).findOne(idRangoPesos)
 
         if (catalogo) {
             mostrarTablaResultados(catalogo)
@@ -59,9 +61,25 @@ class rangoPesos{
     @Usage("Permite agregar un nuevo elemento al catálogo")
     @Command
     def agregar(InvocationContext context,
-                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) BigDecimal quilatesDesde,
-                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) BigDecimal quilatesHasta) {
-        def rp = new RangoPesoDiamanteJPA([quilatesDesde: quilatesDesde, quilatesHasta: quilatesHasta])
+                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) String quilatesHasta) {
+        BigDecimal quilatesDesdeConvert
+        try {
+            quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior del peso [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            quilatesHastaConvert = new BigDecimal(quilatesHasta)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior del peso [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def rp = new RangoPesoDiamanteJPA([quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert])
 
         try {
             def elemento = getServicio(context).save(rp)
@@ -80,21 +98,41 @@ class rangoPesos{
     @Command
     def modificar(InvocationContext context,
     			@Usage("Identificador del rango peso") @Required @Argument int idRangoPesos,
-                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) BigDecimal quilatesDesde,
-                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) BigDecimal quilatesHasta) {
-        if (ObjectUtils.isEmpty(idRangoPesos) || ObjectUtils.isEmpty(quilatesDesde) || ObjectUtils.isEmpty(quilatesHasta)) {
+                @Usage("Quilates Desde") @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                @Usage("Quilates Hasta") @Option(names = ["h", "quilatesHasta"]) String quilatesHasta) {
+        if (ObjectUtils.isEmpty(quilatesDesde) && ObjectUtils.isEmpty(quilatesHasta) || ObjectUtils.isEmpty(idRangoPesos)) {
             out.println("Se requiere al menos uno de los atributos ([d, quilatesDesde], [h, quilatesHasta]) " +
                 "para realizar la actualización.")
             return
         }
 
-        def rp = new RangoPesoDiamanteJPA([quilatesDesde: quilatesDesde, quilatesHasta: quilatesHasta])
+        BigDecimal quilatesDesdeConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesDesde)) {
+                quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesHasta)) {
+                quilatesHastaConvert = new BigDecimal(quilatesHasta)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def rp = new RangoPesoDiamanteJPA([quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert])
 
         try {
             def elemento = getServicio(context).update(idRangoPesos, rp)
             out.println("El elemento con [" + idRangoPesos + "," + quilatesDesde + ", " + quilatesHasta + "] ha sido modificado.")
             mostrarTablaResultados([elemento])
-        } catch (CatalogoNotFoundException e) {
+        } catch (RangoPesoNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
             out.println("El elemento del catálogo con [${idRangoPesos}, ${quilatesDesde}, ${quilatesHasta}] no existe.")
         } catch (DataIntegrityViolationException e) {
@@ -113,14 +151,12 @@ class rangoPesos{
         try {
             getServicio(context).delete(idRangoPesos)
             out.println("El elemento con idFactor [${idRangoPesos}] fue eliminado correctamente del cat\u00e1logo.")
-        } catch (CatalogoNotFoundException e) {
+        } catch (RangoPesoNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("El elemento del cat\u00e1logo con idFactor [${idRangoPesos}] no existe.")
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
-            out.println("""Ocurrió un error al eliminar el elemento idRangoPesos: ${idRangoPesos}
-Violación de integridad referencial.
-Existen referencias a éste elemento en el catálogo.""")
+            out.println("Ocurrió un error al eliminar el elemento idRangoPesos: ${idRangoPesos}")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("Ocurrió un error al eliminar el elemento con idFactor: ${idRangoPesos}")
@@ -159,7 +195,7 @@ Existen referencias a éste elemento en el catálogo.""")
      *
      * @return Servicio a utilizar.
      */
-    private static FactorDepreciacionRepository getServicio(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(FactorDepreciacionRepository)
+    private static RangoPesoDiamanteRepository getServicio(InvocationContext context) {
+        context.attributes['spring.beanfactory'].getBean(RangoPesoDiamanteRepository)
     }
 }

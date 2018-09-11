@@ -70,20 +70,27 @@ public class RangoPesoDiamanteRepositoryImpl implements RangoPesoDiamanteReposit
 
 	@Override
 	public RangoPesoDiamanteJPA save(RangoPesoDiamanteJPA elemento) {
+        RangoPesoDiamanteJPA entidad;
 		RangoPesoDiamanteJPA rangoPesoDiamanteJPA = new RangoPesoDiamanteJPA();
 		rangoPesoDiamanteJPA.setFecha(new DateTime());
 		rangoPesoDiamanteJPA.setQuilatesDesde(elemento.getQuilatesDesde());
 		rangoPesoDiamanteJPA.setQuilatesHasta(elemento.getQuilatesHasta());
-		this.rangoPesoDiamanteJPARepository.save(rangoPesoDiamanteJPA);
-		return elemento;
+		entidad = this.rangoPesoDiamanteJPARepository.save(rangoPesoDiamanteJPA);
+		return entidad;
 	}
 
 
 
 	@Override
 	public RangoPesoDiamanteJPA update(Long idRangoPesos, RangoPesoDiamanteJPA rangoPesos) {
-		
+
 		RangoPesoDiamanteJPA rp = this.rangoPesoDiamanteJPARepository.findOne(idRangoPesos);
+
+        if (rp == null) {
+            String msg = "No existe un rango de peso con el id especificado";
+            throw new RangoPesoNoEncontradoException(RangoPesoDiamanteJPA.class, msg);
+        }
+
         if (ObjectUtils.isEmpty(rangoPesos.getQuilatesDesde())) {
             LOGGER.warn("{}.quilatesDesde = null, se deja valor anterior {}");
         } else {
@@ -95,7 +102,7 @@ public class RangoPesoDiamanteRepositoryImpl implements RangoPesoDiamanteReposit
         } else {
             rp.setQuilatesHasta(rangoPesos.getQuilatesHasta());
         }
-        
+
         rp.setFecha(new DateTime());
 
 		return this.rangoPesoDiamanteJPARepository.saveAndFlush(rp);
@@ -106,6 +113,12 @@ public class RangoPesoDiamanteRepositoryImpl implements RangoPesoDiamanteReposit
 	@Override
 	public RangoPesoDiamanteJPA delete(Long idRangoPesos) {
 		RangoPesoDiamanteJPA rp = this.rangoPesoDiamanteJPARepository.findOne(idRangoPesos);
+
+        if(ObjectUtils.isEmpty(rp)) {
+            String mensaje = "El catalogo RangoPesoDiamanteJPA no contiene un elemento con el identificador [" + idRangoPesos + "].";
+            throw new RangoPesoNoEncontradoException(RangoPesoDiamanteJPA.class, mensaje);
+        }
+
 		this.rangoPesoDiamanteJPARepository.delete(rp);
 		return rp;
 	}
@@ -116,5 +129,9 @@ public class RangoPesoDiamanteRepositoryImpl implements RangoPesoDiamanteReposit
 	public List<RangoPesoDiamanteJPA> getAll() {
 		return rangoPesoDiamanteJPARepository.findAll();
 	}
+
+    public RangoPesoDiamanteJPA findOne(Long idRangoPesos) {
+         return rangoPesoDiamanteJPARepository.findOne(idRangoPesos);
+    }
 
 }
