@@ -7,8 +7,9 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.ParametrosQuilatesNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.ParametrosQuilatesRepository
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.ParametrosQuilatesRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -33,7 +34,7 @@ class parametrosQuilates {
     @Usage("Permite recuperar todos los elementos del catálogo.")
     @Command
     def elementos(InvocationContext context) {
-        def catalogo = getServicio(context).getAll()
+        def catalogo = getServicio(context).obtenerTodo()
 
         if (catalogo) {
             mostrarTablaResultados(catalogo)
@@ -47,7 +48,7 @@ class parametrosQuilates {
     def elemento(InvocationContext context,
                 @Usage("Identificador del parametro")
     			@Required @Argument int idParametro) {
-        def catalogo = getServicio(context).getOne(idParametro)
+        def catalogo = getServicio(context).obtenerElemento(idParametro)
 
         if (catalogo) {
             mostrarTablaResultados(catalogo)
@@ -59,15 +60,55 @@ class parametrosQuilates {
     @Usage("Permite agregar un nuevo elemento al catálogo")
     @Command
     def agregar(InvocationContext context,
-                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) BigDecimal quilatesDesde,
-                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) BigDecimal quilatesHasta,
-                @Usage("Quilates Base Desde") @Required @Option(names = ["e", "quilatesBaseDesde"]) BigDecimal quilatesBaseDesde,
-                @Usage("Quilates Base Hasta") @Required @Option(names = ["t", "quilatesBaseHasta"]) BigDecimal quilatesBaseHasta,
-                @Usage("Porcentaje") @Required @Option(names = ["p", "porcentaje"]) BigDecimal porcentaje) {
-        def pq = new ParametrosQuilatesJPA([quilatesDesde: quilatesDesde, quilatesHasta: quilatesHasta, quilatesBaseDesde: quilatesBaseDesde, quilatesBaseHasta: quilatesBaseHasta, porcentaje: porcentaje])
+                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) String quilatesHasta,
+                @Usage("Quilates Base Desde") @Required @Option(names = ["e", "quilatesBaseDesde"]) String quilatesBaseDesde,
+                @Usage("Quilates Base Hasta") @Required @Option(names = ["t", "quilatesBaseHasta"]) String quilatesBaseHasta,
+                @Usage("Porcentaje") @Required @Option(names = ["p", "porcentaje"]) String porcentaje) {
+        BigDecimal quilatesDesdeConvert
+        try {
+            quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior del peso [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            quilatesHastaConvert = new BigDecimal(quilatesHasta)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior del peso [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesBaseDesdeConvert
+        try {
+            quilatesBaseDesdeConvert = new BigDecimal(quilatesBaseDesde)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango Base inferior del peso [$quilatesBaseDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesBaseHastaConvert
+        try {
+            quilatesBaseHastaConvert = new BigDecimal(quilatesBaseHasta)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango Base superior del peso [$quilatesBaseHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+        BigDecimal porcentajeConvert
+        try {
+            porcentajeConvert = new BigDecimal(porcentaje)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del porcentaje [$porcentaje] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def pq = new ParametrosQuilatesJPA([quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert, quilatesBaseDesde: quilatesBaseDesdeConvert,
+                                            quilatesBaseHasta: quilatesBaseHastaConvert, porcentaje: porcentajeConvert])
 
         try {
-            def elemento = getServicio(context).save(gc)
+            def elemento = getServicio(context).guardaParametrosQuilates(pq)
             out.println("El elemento con [${quilatesDesde}, ${quilatesHasta}, ${quilatesBaseDesde}, ${quilatesBaseHasta}, ${porcentaje}] fue agregado correctamente al catálogo.")
             mostrarTablaResultados([elemento])
         } catch (DataIntegrityViolationException e) {
@@ -83,25 +124,76 @@ class parametrosQuilates {
     @Command
     def modificar(InvocationContext context,
     			@Usage("Identificador del parametro") @Required @Argument int idParametro,
-                @Usage("Quilates Desde") @Required @Option(names = ["d", "quilatesDesde"]) BigDecimal quilatesDesde,
-                @Usage("Quilates Hasta") @Required @Option(names = ["h", "quilatesHasta"]) BigDecimal quilatesHasta,
-                @Usage("Quilates Base Desde") @Required @Option(names = ["e", "quilatesBaseDesde"]) BigDecimal quilatesBaseDesde,
-                @Usage("Quilates Base Hasta") @Required @Option(names = ["t", "quilatesBaseHasta"]) BigDecimal quilatesBaseHasta,
-                @Usage("Porcentaje") @Required @Option(names = ["p", "porcentaje"]) BigDecimal porcentaje) {
-        if (ObjectUtils.isEmpty(idParametro) || ObjectUtils.isEmpty(quilatesDesde) || ObjectUtils.isEmpty(quilatesHasta) || ObjectUtils.isEmpty(quilatesBaseDesde) ||
-        	ObjectUtils.isEmpty(quilatesBaseHasta) || ObjectUtils.isEmpty(porcentaje)) {
+                @Usage("Quilates Desde") @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                @Usage("Quilates Hasta") @Option(names = ["h", "quilatesHasta"]) String quilatesHasta,
+                @Usage("Quilates Base Desde") @Option(names = ["e", "quilatesBaseDesde"]) String quilatesBaseDesde,
+                @Usage("Quilates Base Hasta") @Option(names = ["t", "quilatesBaseHasta"]) String quilatesBaseHasta,
+                @Usage("Porcentaje") @Option(names = ["p", "porcentaje"]) String porcentaje) {
+        if (ObjectUtils.isEmpty(quilatesDesde) && ObjectUtils.isEmpty(quilatesHasta) && ObjectUtils.isEmpty(quilatesBaseDesde) &&
+        	ObjectUtils.isEmpty(quilatesBaseHasta) && ObjectUtils.isEmpty(porcentaje) || ObjectUtils.isEmpty(idParametro)) {
             out.println("Se requiere al menos uno de los atributos ([d, quilatesDesde] o [h, quilatesHasta] o [e, quilatesBaseDesde] o [t, quilatesBaseHasta] o [p, porcentaje]) " +
                 "para realizar la actualización.")
             return
         }
 
-        def pq = new ParametrosQuilatesJPA([quilatesDesde: quilatesDesde, quilatesHasta: quilatesHasta, quilatesBaseDesde: quilatesBaseDesde, quilatesBaseHasta: quilatesBaseHasta, porcentaje: porcentaje])
+        BigDecimal quilatesDesdeConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesDesde)) {
+                quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesHasta)) {
+                quilatesHastaConvert = new BigDecimal(quilatesHasta)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesBaseDesdeConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesBaseDesde)) {
+                quilatesBaseDesdeConvert = new BigDecimal(quilatesBaseDesde)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango base inferior [$quilatesBaseDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesBaseHastaConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesBaseHasta)) {
+                quilatesBaseHastaConvert = new BigDecimal(quilatesBaseHasta)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango base superior [$quilatesBaseHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal porcentajeConvert
+        try {
+            if (!ObjectUtils.isEmpty(porcentaje)) {
+                porcentajeConvert = new BigDecimal(porcentaje)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del porcentaje [$porcentaje] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def pq = new ParametrosQuilatesJPA([id: idParametro, quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert,
+                                            quilatesBaseDesde: quilatesBaseDesdeConvert, quilatesBaseHasta: quilatesBaseHastaConvert, porcentaje: porcentajeConvert])
 
         try {
-            def elemento = getServicio(context).update(idParametro, pq)
+            def elemento = getServicio(context).guardaParametrosQuilates(pq)
             out.println("El elemento con [" + idParametro + "," + quilatesDesde + "," + quilatesHasta + "," + quilatesBaseDesde + "," + quilatesBaseHasta + "," + porcentaje + "] ha sido modificado.")
             mostrarTablaResultados([elemento])
-        } catch (CatalogoNotFoundException e) {
+        } catch (ParametrosQuilatesNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
             out.println("El elemento del catálogo con [${quilatesDesde}, ${quilatesHasta}, ${quilatesBaseDesde}, ${quilatesBaseHasta}, ${porcentaje}] no existe.")
         } catch (DataIntegrityViolationException e) {
@@ -120,14 +212,12 @@ class parametrosQuilates {
         try {
             getServicio(context).delete(idParametro)
             out.println("El elemento con idParametro [${idParametro}] fue eliminado correctamente del cat\u00e1logo.")
-        } catch (CatalogoNotFoundException e) {
+        } catch (ParametrosQuilatesNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
-            out.println("El elemento del cat\u00e1logo con idRango [${idRango}] no existe.")
+            out.println("El elemento del cat\u00e1logo con idParametro [${idParametro}] no existe.")
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
-            out.println("""Ocurrió un error al eliminar el elemento idParametro: ${idParametro}
-Violación de integridad referencial.
-Existen referencias a éste elemento en el catálogo.""")
+            out.println("Ocurrió un error al eliminar el elemento idParametro: ${idParametro} ")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("Ocurrió un error al eliminar el elemento con idParametro: ${idParametro}")
