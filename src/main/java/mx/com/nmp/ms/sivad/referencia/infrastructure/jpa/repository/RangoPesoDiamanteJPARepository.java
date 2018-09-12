@@ -27,9 +27,11 @@ public interface RangoPesoDiamanteJPARepository extends JpaRepository<RangoPesoD
      * @param quilates El valor en quilates del diamante.
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    @Query("SELECT rpd FROM RangoPesoDiamanteJPA rpd " +
+    @Query("SELECT DISTINCT rpd FROM RangoPesoDiamanteJPA rpd " +
         "WHERE rpd.quilatesDesde <= :quilates " +
         "AND rpd.quilatesHasta >= :quilates " +
-        "AND rpd.fecha = (SELECT MAX(rpd2.fecha) FROM RangoPesoDiamanteJPA rpd2)")
+        "AND rpd.fecha = (SELECT MAX(rpd2.fecha) FROM RangoPesoDiamanteJPA rpd2 " +
+            "WHERE rpd2.quilatesDesde <= :quilates " +
+            "AND rpd2.quilatesHasta >= :quilates)")
     RangoPesoDiamanteJPA obtenerRangoPeso(@Param("quilates") BigDecimal quilates);
 }
