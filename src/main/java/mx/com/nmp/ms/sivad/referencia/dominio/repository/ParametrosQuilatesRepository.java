@@ -7,19 +7,23 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilat
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
 public interface ParametrosQuilatesRepository {
-	
+
 	public List<ParametrosQuilatesJPA> obtenerTodo();
-	
+
 	public List<ParametrosQuilatesJPA> obtenerTodoUltimaActualizacion();
-	
+
 	public List<ParametrosQuilatesJPA> busquedaQuilatesDesdeQuilatesHasta(BigDecimal quilatesDesde, BigDecimal quilatesHasta);
-	
+
 	public List<ParametrosQuilatesJPA> busquedaQuilatesBaseDesdeQuilatesBaseHasta(BigDecimal quilatesBaseDesde, BigDecimal quilatesBaseHasta);
-	
+
 	public ParametrosQuilatesJPA guardaParametrosQuilates(ParametrosQuilatesJPA parametrosQuilatesJPA);
 
 	public List<ValorComercialDiamanteJPA> obtenerValorComercial();
 
     public ParametrosQuilatesJPA update(@NotNull Long idParametro, @NotNull ParametrosQuilatesJPA elemento);
+
+    public ParametrosQuilatesJPA delete(@NotNull Long idFactor);
+
+    public ParametrosQuilatesJPA obtenerElemento(Long idFactor);
 
 }

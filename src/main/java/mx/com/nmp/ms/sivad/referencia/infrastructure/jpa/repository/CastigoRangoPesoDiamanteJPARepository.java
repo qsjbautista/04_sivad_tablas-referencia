@@ -29,10 +29,12 @@ public interface CastigoRangoPesoDiamanteJPARepository extends JpaRepository<Cas
      * @param quilatesHasta El valor en quilates superior del diamante.
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    @Query("SELECT cpd FROM CastigoRangoPesoDiamanteJPA cpd " +
+    @Query("SELECT DISTINCT cpd FROM CastigoRangoPesoDiamanteJPA cpd " +
         "WHERE cpd.quilatesDesde <= :quilatesDesde " +
         "AND cpd.quilatesHasta >= :quilatesHasta " +
-        "AND cpd.fecha = (SELECT MAX(cpd2.fecha) FROM CastigoRangoPesoDiamanteJPA cpd2)")
+        "AND cpd.fecha = (SELECT MAX(cpd2.fecha) FROM CastigoRangoPesoDiamanteJPA cpd2 " +
+            "WHERE cpd2.quilatesDesde <= :quilatesDesde " +
+            "AND cpd2.quilatesHasta >= :quilatesHasta)")
     CastigoRangoPesoDiamanteJPA obtenerCastigoRangoPeso(@Param("quilatesDesde") BigDecimal quilatesDesde,
                                                     @Param("quilatesHasta") BigDecimal quilatesHasta);
 

@@ -111,4 +111,21 @@ public class CastigoRangoPesoRepositoryImpl implements CastigoRangoPesoRepositor
 
 	}
 
+    public CastigoRangoPesoDiamanteJPA delete(Long idCastigoRangoPeso) throws CastigoRangoPesoNoEncontradoException {
+        CastigoRangoPesoDiamanteJPA cc = castigoRangoPesoDiamanteJPARepository.findOne(idCastigoRangoPeso);
+
+        if(ObjectUtils.isEmpty(cc)) {
+            String mensaje = "El catalogo CastigoCorte no contiene un elemento con el identificador [" + idCastigoRangoPeso + "].";
+            throw new CastigoRangoPesoNoEncontradoException(CastigoRangoPesoDiamanteJPA.class, mensaje);
+        }
+
+        castigoRangoPesoDiamanteJPARepository.delete(cc);
+
+        return cc;
+    }
+
+    public CastigoRangoPesoDiamanteJPA obtenerElemento(Long idCastigoRangoPeso) {
+        return castigoRangoPesoDiamanteJPARepository.findOne(idCastigoRangoPeso);
+    }
+
 }

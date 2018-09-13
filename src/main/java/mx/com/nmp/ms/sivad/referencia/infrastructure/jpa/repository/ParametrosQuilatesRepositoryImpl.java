@@ -25,10 +25,10 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 
 	@Inject
 	private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
-	
+
     @Inject
     private ValorComercialDiamanteJPARepository valorComercialDiamanteJPARepository;
-    
+
     @Inject
     private ListadoValorComercialDiamanteJPARepository listadoJpaRepository;
 
@@ -63,9 +63,9 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 		return bQuilatesDesdeQuilatesHasta;
 
 	}
-	
+
 	public List<ParametrosQuilatesJPA> busquedaQuilatesBaseDesdeQuilatesBaseHasta(BigDecimal quilatesBaseDesde, BigDecimal quilatesBaseHasta){
-		
+
 		if (quilatesBaseDesde == null)
 			throw new ParametrosQuilatesNoEncontradoException("No puede ir nulo el campo QuilatesBaseDesde.",
 					ParametrosQuilatesJPA.class);
@@ -73,12 +73,12 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 		if (quilatesBaseHasta == null)
 			throw new ParametrosQuilatesNoEncontradoException("No puede ir nulo el campo QuilatesBaseHasta.",
 					ParametrosQuilatesJPA.class);
-		
+
 		List<ParametrosQuilatesJPA> bQuilatesBaseDesdeQuilatesBaseHasta = parametrosQuilatesRepositoryJPA
 				.findByQuilatesBaseDesdeAndQuilatesBaseHasta(quilatesBaseDesde, quilatesBaseHasta);
-		
+
 		return bQuilatesBaseDesdeQuilatesBaseHasta;
-		
+
 	}
 
 	public ParametrosQuilatesJPA guardaParametrosQuilates(ParametrosQuilatesJPA parametrosQuilatesJPA) {
@@ -86,7 +86,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 		ParametrosQuilatesJPA entidad = null;
 
 		if (parametrosQuilatesJPA.getId() != null && parametrosQuilatesJPA.getId() > 0) {
-			
+
 			if (parametrosQuilatesJPA.getQuilatesDesde() == null)
 				throw new ParametrosQuilatesNoEncontradoException("No debe ser nulo el campo QuilatesDesde.",
 						ParametrosQuilatesJPA.class);
@@ -120,7 +120,7 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 					parametrosQuilatesJPA.getQuilatesHasta() != null ? parametrosQuilatesJPA.getQuilatesHasta()
 							: entidad.getQuilatesHasta());
 			entidad.setQuilatesBaseDesde(
-					parametrosQuilatesJPA.getQuilatesBaseDesde() != null ? parametrosQuilatesJPA.getQuilatesBaseHasta()
+					parametrosQuilatesJPA.getQuilatesBaseDesde() != null ? parametrosQuilatesJPA.getQuilatesBaseDesde()
 							: entidad.getQuilatesBaseHasta());
 			entidad.setQuilatesBaseHasta(
 					parametrosQuilatesJPA.getQuilatesBaseHasta() != null ? parametrosQuilatesJPA.getQuilatesBaseHasta()
@@ -161,8 +161,8 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 		return entidad;
 
 	}
-	
-	
+
+
 	@Override
 	public List<ValorComercialDiamanteJPA> obtenerValorComercial() {
 		LOGGER.info(">> obtenerValorComercial({})");
@@ -251,6 +251,23 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
             original.setPorcentaje(nuevo.getPorcentaje());
         }
 
+    }
+
+    public ParametrosQuilatesJPA delete(Long idFactor) {
+        ParametrosQuilatesJPA fd = this.parametrosQuilatesRepositoryJPA.findOne(idFactor);
+
+        if(ObjectUtils.isEmpty(fd)) {
+            String mensaje = "El catalogo ParametrosQuilatesJPA no contiene un elemento con el identificador [" + idFactor + "].";
+            throw new ParametrosQuilatesNoEncontradoException(mensaje, ParametrosQuilatesJPA.class);
+        }
+
+        parametrosQuilatesRepositoryJPA.delete(fd);
+
+        return fd;
+    }
+
+    public ParametrosQuilatesJPA obtenerElemento(Long idFactor) {
+        return parametrosQuilatesRepositoryJPA.findOne(idFactor);
     }
 
 }

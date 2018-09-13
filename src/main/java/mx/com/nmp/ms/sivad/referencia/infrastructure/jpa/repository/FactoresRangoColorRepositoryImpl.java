@@ -9,23 +9,24 @@ import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactoresRangoColorNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactoresRangoColorJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ValorComercialDiamanteJPA;
 
+@Repository
 public class FactoresRangoColorRepositoryImpl implements FactoresRangoColorRepository{
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FactoresRangoColorRepositoryImpl.class);
-	
+
 	@Inject
 	private FactoresRangoColorJPARepository factoresRangoColorJPARepository;
-	
+
 	@Inject
 	private ListadoValorComercialDiamanteJPARepository listadoJpaRepository;
-	
+
 	@Inject
     private ValorComercialDiamanteJPARepository valorComercialDiamanteJPARepository;
 
@@ -53,7 +54,7 @@ public class FactoresRangoColorRepositoryImpl implements FactoresRangoColorRepos
 
 				// Guarda registros en Valor Comercial
 				ValorComercialDiamanteJPA vc = new ValorComercialDiamanteJPA();
-				
+
 				vc.setColor(factoresRangoColorJPA.getRangoColorBase());
 				vc.setPrecio(vComerDiamanteJPA.getPrecio().multiply(factoresRangoColorJPA.getFactor()));
 
@@ -85,8 +86,8 @@ public class FactoresRangoColorRepositoryImpl implements FactoresRangoColorRepos
 
 			if (entidad == null) {
 
-				String msg = "No existe un id para Rango Colors";
-				throw new CastigoRangoPesoNoEncontradoException(FactoresRangoColorJPA.class, msg);
+				String msg = "No existe un id para Factores por Rango Color";
+				throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class, msg);
 
 			}
 
@@ -131,5 +132,24 @@ public class FactoresRangoColorRepositoryImpl implements FactoresRangoColorRepos
 		return entidad;
 
 	}
+
+    @Override
+    public FactoresRangoColorJPA delete(Long idFactor) {
+        FactoresRangoColorJPA fd = this.factoresRangoColorJPARepository.findOne(idFactor);
+
+        if(ObjectUtils.isEmpty(fd)) {
+            String mensaje = "El catalogo FactoresRangoColor no contiene un elemento con el identificador [" + idFactor + "].";
+            throw new FactoresRangoColorNoEncontradoException(FactoresRangoColorJPA.class, mensaje);
+        }
+
+        factoresRangoColorJPARepository.delete(fd);
+
+        return fd;
+    }
+
+    public FactoresRangoColorJPA obtenerElemento(Long idFactor) {
+        return factoresRangoColorJPARepository.findOne(idFactor);
+    }
+
 
 }

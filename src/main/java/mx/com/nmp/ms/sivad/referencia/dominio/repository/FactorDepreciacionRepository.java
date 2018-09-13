@@ -38,4 +38,6 @@ public interface FactorDepreciacionRepository {
 
     public List<FactorDepreciacionDiamanteJPA> getAll();
 
+    public FactorDepreciacionDiamanteJPA obtenerElemento(Long idFactor);
+
 }

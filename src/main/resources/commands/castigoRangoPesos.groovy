@@ -7,9 +7,9 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPesoDiamanteJPA
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.CastigoRangoPesoRepository
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.CastigoRangoPesoRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -46,10 +46,34 @@ class castigoRangoPesos {
     @Usage("Permite agregar un nuevo elemento al catálogo")
     @Command
     def agregar(InvocationContext context,
-                @Usage("quilatesDesde") @Required @Option(names = ["d", "quilatesDesde"]) BigDecimal quilatesDesde,
-                @Usage("quilatesHasta") @Required @Option(names = ["h", "quilatesHasta"]) BigDecimal quilatesHasta,
-                @Usage("Factor") @Required @Option(names = ["f", "factor"]) BigDecimal factor) {
-        def ctc = new CastigoRangoPesoDiamanteJPA([quilatesDesde: quilatesDesde, quilatesHasta: quilatesHasta, factor: factor])
+                @Usage("quilatesDesde") @Required @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                @Usage("quilatesHasta") @Required @Option(names = ["h", "quilatesHasta"]) String quilatesHasta,
+                @Usage("Factor") @Required @Option(names = ["f", "factor"]) String factor) {
+        BigDecimal quilatesDesdeConvert
+        try {
+            quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior del peso [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            quilatesHastaConvert = new BigDecimal(quilatesHasta)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior del peso [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal factorConvert
+        try {
+            factorConvert = new BigDecimal(factor)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def ctc = new CastigoRangoPesoDiamanteJPA([quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert, factor: factorConvert])
 
         try {
             def elemento = getServicio(context).guardaActualizaCastigoRango(ctc)
@@ -61,6 +85,101 @@ class castigoRangoPesos {
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al guardar el elemento", e)
             out.println("Ocurrió un error al guardar el elemento (${quilatesDesde}, ${quilatesHasta}, ${factor}).")
+        }
+    }
+
+    @Usage("Permite recuperar el elemento del catálogo que coincida con el identificador")
+    @Command
+    def elemento(InvocationContext context,
+                 @Usage("Identificador del castigo por rango de peso")
+                 @Required @Argument int idCastigoRangoPeso) {
+        def catalogo = getServicio(context).obtenerElemento(idCastigoRangoPeso)
+
+        if (catalogo) {
+            mostrarTablaResultados(catalogo)
+        } else {
+            out.println("El elemento del catálogo con el identificador [${idCastigoRangoPeso}] no existe.")
+        }
+    }
+
+    @Usage("Permite actualizar un elemento del catálogo")
+    @Command
+    def modificar(InvocationContext context,
+                  @Usage("Identificador del castigo por rango de peso a actualizar") @Required @Argument int idCastigoRangoPeso,
+                  @Usage("quilatesDesde") @Option(names = ["d", "quilatesDesde"]) String quilatesDesde,
+                  @Usage("quilatesHasta") @Option(names = ["h", "quilatesHasta"]) String quilatesHasta,
+                  @Usage("Factor") @Option(names = ["f", "factor"]) String factor) {
+        if (ObjectUtils.isEmpty(factor) && ObjectUtils.isEmpty(quilatesDesde) && ObjectUtils.isEmpty(quilatesHasta) || ObjectUtils.isEmpty(idCastigoRangoPeso)) {
+            out.println("Se requiere al menos uno de los atributos ([d, quilatesDesde], [h, quilatesHasta] o [f, factor] y " +
+                "[Identificador del elemento a actualizar]) para realizar la actualización.")
+            return
+        }
+
+        BigDecimal quilatesDesdeConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesDesde)) {
+                quilatesDesdeConvert = new BigDecimal(quilatesDesde)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango inferior [$quilatesDesde] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal quilatesHastaConvert
+        try {
+            if (!ObjectUtils.isEmpty(quilatesHasta)) {
+                quilatesHastaConvert = new BigDecimal(quilatesHasta)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del rango superior [$quilatesHasta] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        BigDecimal factorConvert
+        try {
+            if (!ObjectUtils.isEmpty(factor)) {
+                factorConvert = new BigDecimal(factor)
+            }
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def ctc = new CastigoRangoPesoDiamanteJPA([id: idCastigoRangoPeso, quilatesDesde: quilatesDesdeConvert, quilatesHasta: quilatesHastaConvert, factor: factorConvert])
+
+        try {
+            def elemento = getServicio(context).guardaActualizaCastigoRango(ctc)
+
+            out.println("El elemento con [" + idCastigoRangoPeso + "," + quilatesDesde + ", " + quilatesHasta + ", " + factorConvert + "] ha sido modificado.")
+            mostrarTablaResultados([elemento])
+        } catch (CastigoRangoPesoNoEncontradoException e) {
+            LOGGER.error("Ocurrió un error al actualizar el elemento", e)
+            out.println("El elemento del catálogo con [${idCastigoRangoPeso}, ${quilatesDesde}, ${quilatesHasta}, ${factor}] no existe.")
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.error("Ocurrió un error al actualizar el elemento", e)
+            out.println("Ya existe un elemento del cat\u00e1logo con [${idCastigoRangoPeso}, ${quilatesDesde}, ${quilatesHasta}, ${factor}].")
+        } catch (Exception e) {
+            LOGGER.error("Ocurrió un error al actualizar el elemento", e)
+            out.println("Ocurrió un error al actualizar el elemento CastigoRangoPesoDiamanteJPA(${idCastigoRangoPeso}, ${quilatesDesde}, ${quilatesHasta}, ${factor}).")
+        }
+    }
+
+    @Usage("Permite eliminar un elemento del catálogo.")
+    @Command
+    def eliminar(InvocationContext context,
+                 @Usage("Identificador del parametro") @Required @Argument int idCastigoRangoPeso) {
+        try {
+            getServicio(context).delete(idCastigoRangoPeso)
+            out.println("El elemento con idCastigoRangoPeso [${idCastigoRangoPeso}] fue eliminado correctamente del cat\u00e1logo.")
+        } catch (CastigoRangoPesoNoEncontradoException e) {
+            LOGGER.error("Ocurrió un error al eliminar el elemento", e)
+            out.println("El elemento del cat\u00e1logo con idCastigoRangoPeso [${idCastigoRangoPeso}] no existe.")
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.error("Ocurrió un error al eliminar el elemento", e)
+            out.println("Ocurrió un error al eliminar el elemento idCastigoRangoPeso: ${idCastigoRangoPeso}")
+        } catch (Exception e) {
+            LOGGER.error("Ocurrió un error al eliminar el elemento", e)
+            out.println("Ocurrió un error al eliminar el elemento con idCastigoRangoPeso: ${idCastigoRangoPeso}")
         }
     }
 

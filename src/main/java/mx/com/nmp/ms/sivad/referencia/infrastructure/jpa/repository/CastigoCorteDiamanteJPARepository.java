@@ -27,11 +27,12 @@ public interface CastigoCorteDiamanteJPARepository extends JpaRepository<Castigo
      * @param corte El corte del diamante.
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    @Query("SELECT ccd FROM CastigoCorteDiamanteJPA ccd " +
+    @Query("SELECT DISTINCT ccd FROM CastigoCorteDiamanteJPA ccd " +
         "WHERE ccd.corte = :corte " +
-        "AND ccd.fecha = (SELECT MAX(ccd2.fecha) FROM CastigoCorteDiamanteJPA ccd2)")
+        "AND ccd.fecha = (SELECT MAX(ccd2.fecha) FROM CastigoCorteDiamanteJPA ccd2 " +
+            "WHERE ccd2.corte = :corte)")
     CastigoCorteDiamanteJPA obtenerCastigoCorte(@Param("corte") String corte);
-    
+
     /**
      * Utilizado para obtner todos los factores de castigo por tipo de corte
      * @return totas las entidades.
@@ -41,5 +42,5 @@ public interface CastigoCorteDiamanteJPARepository extends JpaRepository<Castigo
     List<CastigoCorteDiamanteJPA> findByUltimaActualizacion();
 
     CastigoCorteDiamanteJPA findByCorte(String corte);
-    
+
 }

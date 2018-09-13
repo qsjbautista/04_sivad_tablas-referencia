@@ -7,6 +7,7 @@
  */
 package commands
 
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorDepreciacionNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.FactorDepreciacionRepository
 import org.crsh.cli.Argument
@@ -47,7 +48,7 @@ class factorDepreciacion {
     def elemento(InvocationContext context,
                 @Usage("Identificador del factor")
     			@Required @Argument int idFactor) {
-        def catalogo = getServicio(context).getOne(idFactor)
+        def catalogo = getServicio(context).obtenerElemento(idFactor)
 
         if (catalogo) {
             mostrarTablaResultados(catalogo)
@@ -59,8 +60,16 @@ class factorDepreciacion {
     @Usage("Permite agregar un nuevo elemento al catálogo")
     @Command
     def agregar(InvocationContext context,
-                @Usage("Factor") @Required @Option(names = ["f", "factor"]) BigDecimal factor) {
-        def fd = new FactorDepreciacionDiamanteJPA([factor: factor])
+                @Usage("Factor") @Required @Option(names = ["f", "factor"]) String factor) {
+        BigDecimal factorConvert
+        try {
+            factorConvert = new BigDecimal(factor)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def fd = new FactorDepreciacionDiamanteJPA([factor: factorConvert])
 
         try {
             def elemento = getServicio(context).save(fd)
@@ -79,20 +88,28 @@ class factorDepreciacion {
     @Command
     def modificar(InvocationContext context,
     			@Usage("Identificador del factor") @Required @Argument int idFactor,
-                @Usage("Factor") @Required @Option(names = ["f", "factor"]) BigDecimal factor) {
+                @Usage("Factor") @Required @Option(names = ["f", "factor"]) String factor) {
         if (ObjectUtils.isEmpty(idFactor) || ObjectUtils.isEmpty(factor)) {
             out.println("Se requiere al menos uno de los atributos ([f, factor]) " +
                 "para realizar la actualización.")
             return
         }
 
-        def fd = new FactorDepreciacionDiamanteJPA([factor: factor])
+        BigDecimal factorConvert
+        try {
+            factorConvert = new BigDecimal(factor)
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(
+                "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
+        }
+
+        def fd = new FactorDepreciacionDiamanteJPA([factor: factorConvert])
 
         try {
-            def elemento = getServicio(context).update(idFactor, fd)
+            def elemento = getServicio(context).update(idFactor, factorConvert)
             out.println("El elemento con [" + idFactor + "," + factor + "] ha sido modificado.")
             mostrarTablaResultados([elemento])
-        } catch (CatalogoNotFoundException e) {
+        } catch (FactorDepreciacionNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
             out.println("El elemento del catálogo con [${idFactor}, ${factor}] no existe.")
         } catch (DataIntegrityViolationException e) {
@@ -111,14 +128,12 @@ class factorDepreciacion {
         try {
             getServicio(context).delete(idFactor)
             out.println("El elemento con idFactor [${idFactor}] fue eliminado correctamente del cat\u00e1logo.")
-        } catch (CatalogoNotFoundException e) {
+        } catch (FactorDepreciacionNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("El elemento del cat\u00e1logo con idFactor [${idFactor}] no existe.")
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
-            out.println("""Ocurrió un error al eliminar el elemento idFactor: ${idFactor}
-Violación de integridad referencial.
-Existen referencias a éste elemento en el catálogo.""")
+            out.println("Ocurrió un error al eliminar el elemento idFactor: ${idFactor}")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("Ocurrió un error al eliminar el elemento con idFactor: ${idFactor}")

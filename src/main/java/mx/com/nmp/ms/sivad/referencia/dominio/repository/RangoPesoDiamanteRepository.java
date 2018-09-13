@@ -60,4 +60,6 @@ public interface RangoPesoDiamanteRepository {
      */
     public List<RangoPesoDiamanteJPA> getAll();
 
+    public RangoPesoDiamanteJPA findOne(Long idRangoPesos);
+
 }
