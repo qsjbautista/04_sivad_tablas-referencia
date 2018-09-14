@@ -283,7 +283,7 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
 		for (FactoresRangoColorJPA param : factoresRangoColor) {
 
-			if (param.getRangoColorBase() == pcdb.getColor()) {
+			if (param.getRangoColorBase().equalsIgnoreCase(pcdb.getColor())) {
 
 				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
 				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
@@ -296,9 +296,6 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 				pColor.setColor(param.getColorHasta());
 
 				preciosDiamantes.add(pColor);
-
-				break;
-
 			}
 		}
 
