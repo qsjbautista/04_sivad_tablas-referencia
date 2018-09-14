@@ -291,11 +291,11 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 				
 				preciosDiamantes.add(pcColor);
 				
-				PrecioCorteDetalleBatch pColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+				pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
 				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
-				pColor.setColor(param.getColorHasta());
+				pcColor.setColor(param.getColorHasta());
 
-				preciosDiamantes.add(pColor);
+				preciosDiamantes.add(pcColor);
 			}
 		}
 
