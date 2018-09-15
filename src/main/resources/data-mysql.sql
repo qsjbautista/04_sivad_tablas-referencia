@@ -289,7 +289,7 @@ INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) valu
 /*
 cfg_diamante_porcentaje_castigo_x_tipo_corte
 */
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','brillante redondo',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','brillante',1.0000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05','acojinado',0.9000);
 
 -- Fin configuración de tablas de referencia

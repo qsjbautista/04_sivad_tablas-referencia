@@ -116,7 +116,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         //SE OBTIENE EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
         CastigoCorteDiamanteJPA castigoCorteDiamaneJPA =
-            castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getCorte());
+            castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getSubcorte());
 
         if (ObjectUtils.isEmpty(castigoCorteDiamaneJPA)) {
             String msg = "No existe un porcentaje de castigo por tipo de corte para las características de diamante solicitadas.";

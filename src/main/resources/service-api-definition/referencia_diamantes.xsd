@@ -8,6 +8,7 @@
         <s:complexType>
             <s:sequence>
                 <s:element name="corte" type="s:string"/>
+                <s:element name="subcorte" type="s:string"/>
                 <s:element name="color" type="s:string"/>
                 <s:element name="claridad" type="s:string"/>
                 <s:element name="quilates_ct" type="s:decimal"/>

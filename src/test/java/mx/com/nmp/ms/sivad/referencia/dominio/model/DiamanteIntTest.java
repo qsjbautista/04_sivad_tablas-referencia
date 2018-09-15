@@ -70,6 +70,7 @@ public class DiamanteIntTest {
     private static final String COLOR = "D";
     private static final String COLOR_NUEVO = "K";
     private static final String CORTE = "Oval";
+    private static final String SUBCORTE = "Acojinado";
     private static final String CORTE_NUEVO = "Esmeralda";
     private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
@@ -633,7 +634,7 @@ public class DiamanteIntTest {
         /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
             any(BigDecimal.class))).thenReturn(PRECIO_PESOS);*/
 
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE, SUBCORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
         assertNotNull(result);
@@ -667,7 +668,7 @@ public class DiamanteIntTest {
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante_04-h2.sql")
     public void obtenerValorComercialDiamanteTest02() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE, SUBCORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
