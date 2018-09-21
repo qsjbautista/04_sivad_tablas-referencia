@@ -125,7 +125,10 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         }
 
         //SE MULTIPLICA EL MONTOFCASTIGOXRANGO POR EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
-        BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango().multiply(castigoCorteDiamaneJPA.getFactor());
+        BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango();
+        if (castigoCorteDiamaneJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
+            precioDiamante = precioDiamante.multiply(castigoCorteDiamaneJPA.getFactor());
+        }
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),
