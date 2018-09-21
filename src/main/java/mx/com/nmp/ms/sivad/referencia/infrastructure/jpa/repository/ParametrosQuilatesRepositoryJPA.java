@@ -12,7 +12,7 @@ import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilat
 
 @Repository
 public interface ParametrosQuilatesRepositoryJPA extends JpaRepository<ParametrosQuilatesJPA, Long>{
-	
+
 	/**
 	 * Utilizado para obtener todos los registros con la fecha mas actual.
 	 * @return Todas las entidades con la fecha mas actual
@@ -20,23 +20,29 @@ public interface ParametrosQuilatesRepositoryJPA extends JpaRepository<Parametro
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq "
 			+ "WHERE pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
 	  List<ParametrosQuilatesJPA> findByUltimaActualizacion();
-	
+
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
 	        "WHERE pq.quilatesDesde = :quilatesDesde " +
 	        "AND pq.quilatesHasta = :quilatesHasta " +
-	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
+	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2 " +
+                "WHERE pq2.quilatesDesde = :quilatesDesde " +
+                "AND pq2.quilatesHasta = :quilatesHasta) ")
 	List<ParametrosQuilatesJPA> findByQuilatesDesdeAndQuilatesHasta(@Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
-	
+
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
 	        "WHERE pq.quilatesBaseDesde = :quilatesBaseDesde " +
 	        "AND pq.quilatesBaseHasta = :quilatesBaseHasta " +
-	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
+	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2 " +
+                "WHERE pq2.quilatesBaseDesde = :quilatesBaseDesde " +
+                "AND pq2.quilatesBaseHasta = :quilatesBaseHasta)")
 	List<ParametrosQuilatesJPA> findByQuilatesBaseDesdeAndQuilatesBaseHasta(@Param("quilatesBaseDesde") BigDecimal quilatesBaseDesde, @Param("quilatesBaseHasta") BigDecimal quilatesBaseHasta);
-	
-	
+
+
 	@Query("SELECT pq FROM ParametrosQuilatesJPA pq " +
 	        "WHERE pq.quilatesDesde = :quilatesDesde " +
 	        "AND pq.quilatesHasta = :quilatesHasta " +
-	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2)")
+	        "AND pq.fecha = (SELECT MAX(pq2.fecha) FROM ParametrosQuilatesJPA pq2 " +
+                "WHERE pq2.quilatesDesde = :quilatesDesde " +
+                "AND pq2.quilatesHasta = :quilatesHasta)")
 	ParametrosQuilatesJPA findByQtesDesdeAndQtesHasta(@Param("quilatesDesde") BigDecimal quilatesDesde, @Param("quilatesHasta") BigDecimal quilatesHasta);
 }
