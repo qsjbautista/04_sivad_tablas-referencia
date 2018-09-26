@@ -116,7 +116,7 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
 
         //SE OBTIENE EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
         CastigoCorteDiamanteJPA castigoCorteDiamaneJPA =
-            castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getCorte());
+            castigoCorteDiamanteJPARepository.obtenerCastigoCorte(diamanteVO.getSubcorte());
 
         if (ObjectUtils.isEmpty(castigoCorteDiamaneJPA)) {
             String msg = "No existe un porcentaje de castigo por tipo de corte para las características de diamante solicitadas.";
@@ -125,7 +125,10 @@ public class ValorComercialDiamanteRepositoryImpl implements ValorComercialDiama
         }
 
         //SE MULTIPLICA EL MONTOFCASTIGOXRANGO POR EL PORCENTAJE DE CASTIGO POR TIPO DE CORTE
-        BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango().multiply(castigoCorteDiamaneJPA.getFactor());
+        BigDecimal precioDiamante = valorComercialDiamanteJPA.getMontofCastigoxRango();
+        if (castigoCorteDiamaneJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
+            precioDiamante = precioDiamante.multiply(castigoCorteDiamaneJPA.getFactor());
+        }
 
         return DiamanteFactory.create(valorComercialDiamanteJPA.getCorte(), valorComercialDiamanteJPA.getColor(),
             valorComercialDiamanteJPA.getClaridad(), valorComercialDiamanteJPA.getTamanioInferior(),

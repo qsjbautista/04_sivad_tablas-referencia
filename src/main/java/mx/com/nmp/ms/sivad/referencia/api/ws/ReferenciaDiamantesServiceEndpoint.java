@@ -54,19 +54,19 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
     @Override
     public ObtenerValorComercialResponse obtenerValorComercial(ObtenerValorComercialRequest parameters) {
         if (LOGGER.isInfoEnabled() && parameters != null) {
-            LOGGER.info(">> obtenerValorComercial({},{},{},{},{},{})", new Object[]{
-                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
+            LOGGER.info(">> obtenerValorComercial({},{},{},{},{},{},{})", new Object[]{
+                parameters.getCorte(), parameters.getSubcorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
                 parameters.getQuilatesDesde(), parameters.getQuilatesHasta()
             });
         }
 
         ObtenerValorComercialResponse response = new ObtenerValorComercialResponse();
 
-        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getColor()) &&
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getCorte()) && !ObjectUtils.isEmpty(parameters.getSubcorte()) && !ObjectUtils.isEmpty(parameters.getColor()) &&
             !ObjectUtils.isEmpty(parameters.getClaridad()) && !ObjectUtils.isEmpty(parameters.getQuilatesCt()) && !ObjectUtils.isEmpty(parameters.getQuilatesDesde())
             && !ObjectUtils.isEmpty(parameters.getQuilatesHasta())) {
 
-            DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
+            DiamanteVO diamanteVO = new DiamanteVO(parameters.getCorte(), parameters.getSubcorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(),
                 parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
 
             try {
@@ -80,13 +80,13 @@ public class ReferenciaDiamantesServiceEndpoint implements ReferenciaDiamanteSer
 
                 response.setValorComercial(valorComercial);
             } catch (ValorComercialNoEncontradoException e) {
-                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR010.getMessageException() + " para las entradas: corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
-                    parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR010.getMessageException() + " para las entradas: corte: ({}), subcorte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
+                    parameters.getCorte(), parameters.getSubcorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR010.getCodeException(), WebServiceExceptionCodes.NMPR010.getMessageException());
             }
         } else {
-            LOGGER.info("Valores nulos o vacios, parameters: corte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
-                parameters.getCorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
+            LOGGER.info("Valores nulos o vacios, parameters: corte: ({}), subcorte: ({}), color: ({}), claridad: ({}), Quilates: ({}), RangoPeso: ({},{})",
+                parameters.getCorte(), parameters.getSubcorte(), parameters.getColor(), parameters.getClaridad(), parameters.getQuilatesCt(), parameters.getQuilatesDesde(), parameters.getQuilatesHasta());
             throwWebServiceException();
         }
 

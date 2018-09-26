@@ -19,6 +19,11 @@ public class DiamanteVO {
     private String corte;
 
     /**
+     * El tipo de corte hijo del diamante con base en el catálogo de cortes.
+     */
+    private String subcorte;
+
+    /**
      * El tipo de color del diamante con base en la clasificación GIA.
      */
     private String color;
@@ -66,13 +71,15 @@ public class DiamanteVO {
      * Constructor.
      *
      * @param corte El tipo de corte del diamante.
+     * @param subcorte El tipo de corte hijo del diamante.
      * @param color El tipo de color del diamante.
      * @param claridad El tipo de claridad del diamante.
      * @param quilatesCt El valor en quilates del diamante.
      */
-    public DiamanteVO(String corte, String color, String claridad, BigDecimal quilatesCt,
+    public DiamanteVO(String corte, String subcorte, String color, String claridad, BigDecimal quilatesCt,
                       BigDecimal quilatesDesde, BigDecimal quilatesHasta) {
         this.corte = corte;
+        this.subcorte = subcorte;
         this.color = color;
         this.claridad = claridad;
         this.quilatesCt = quilatesCt;
@@ -90,6 +97,10 @@ public class DiamanteVO {
 
     public String getColor() {
         return color;
+    }
+
+    public String getSubcorte() {
+        return subcorte;
     }
 
     public String getClaridad() {
@@ -112,6 +123,7 @@ public class DiamanteVO {
     public String toString() {
         return "DiamanteVO{" +
             "corte='" + corte + '\'' +
+            ", subcorte='" + subcorte + '\'' +
             ", color='" + color + '\'' +
             ", claridad='" + claridad + '\'' +
             ", quilatesCt='" + quilatesCt + '\'' +

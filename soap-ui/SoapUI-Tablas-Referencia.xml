@@ -22127,6 +22127,7 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="corte" type="xs:string"/>
+            <xs:element name="subcorte" type="xs:string"/>
             <xs:element name="color" type="xs:string"/>
             <xs:element name="claridad" type="xs:string"/>
             <xs:element name="quilates_ct" type="xs:decimal"/>
@@ -22195,6 +22196,7 @@
    <soapenv:Body>
       <dat:obtenerValorComercialRequest>
          <dat:corte>PEAR</dat:corte>
+         <dat:subcorte>Brillante</dat:subcorte>
          <dat:color>D</dat:color>
          <dat:claridad>IF</dat:claridad>
          <dat:quilates_ct>0.20</dat:quilates_ct>
@@ -22495,6 +22497,7 @@
    <soapenv:Body>
       <dat:obtenerValorComercialRequest>
          <dat:corte>Pear</dat:corte>
+         <dat:subcorte>Brillante</dat:subcorte>
          <dat:color>D</dat:color>
          <dat:claridad>IF</dat:claridad>
          <dat:quilates_ct>0.95</dat:quilates_ct>

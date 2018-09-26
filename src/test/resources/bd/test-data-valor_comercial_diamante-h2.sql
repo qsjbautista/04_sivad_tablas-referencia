@@ -44,7 +44,7 @@ INSERT INTO cfg_diamante_factor (factor_minimo, factor_medio, factor_maximo, fec
 --
 -- PORCENTAJES DE CASTIGO POR TIPO DE CORTE
 --
-INSERT INTO cfg_diamante_porcentaje_castigo_x_tipo_corte (fecha, corte, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 'Oval', 0.9000);
+INSERT INTO cfg_diamante_porcentaje_castigo_x_tipo_corte (fecha, corte, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 'Acojinado', 0.9000);
 
 --
 -- RANGO DE PESO

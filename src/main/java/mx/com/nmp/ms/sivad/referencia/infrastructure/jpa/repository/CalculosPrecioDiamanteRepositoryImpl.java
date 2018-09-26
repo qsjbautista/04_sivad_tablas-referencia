@@ -116,7 +116,9 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
             throw new FactorDepreciacionNoEncontradoException(FactorDepreciacionDiamanteJPA.class, msg);
         }
 
-        montoVbd = montoVbd.multiply(factorDepreciacionDiamanteJPA.getFactor());
+        if (factorDepreciacionDiamanteJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
+            montoVbd = montoVbd.multiply(factorDepreciacionDiamanteJPA.getFactor());
+        }
 
 
         //3. MONTOFCASTIGOXRANGO: CAMPO montoVbd, APLICANDO EL CASTIGO POR RANGO DE PESO
@@ -129,7 +131,10 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
             throw new CastigoRangoPesoNoEncontradoException(CastigoRangoPesoDiamanteJPA.class, msg);
         }
 
-        BigDecimal montofCastigoxRango = montoVbd.multiply(castigoRangoPesoDiamanteJPA.getFactor());
+        BigDecimal montofCastigoxRango = montoVbd;
+        if (castigoRangoPesoDiamanteJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
+            montofCastigoxRango = montofCastigoxRango.multiply(castigoRangoPesoDiamanteJPA.getFactor());
+        }
 
 
         diamante = DiamanteFactory.create(precioCorteDetalle.getCorte(),

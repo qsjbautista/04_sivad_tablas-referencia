@@ -95,6 +95,7 @@ public class ReferenciaDiamanteServiceEndpointITest {
 
         ObtenerValorComercialRequest parameters = new ObtenerValorComercialRequest();
         parameters.setCorte("Oval");
+        parameters.setSubcorte("Acojinado");
         parameters.setColor("D");
         parameters.setClaridad("IF");
         parameters.setQuilatesCt(new BigDecimal(0.95).setScale(2, BigDecimal.ROUND_HALF_UP));
