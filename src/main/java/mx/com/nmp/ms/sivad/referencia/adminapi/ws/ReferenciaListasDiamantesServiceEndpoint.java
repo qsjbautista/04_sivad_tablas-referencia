@@ -129,11 +129,12 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 					preciosDiamantes.add(pcdb);
 					
 					// --> Nuevos registros
-					Queue<PrecioCorteDetalleBatch> pq = crearNuevosRegistrosQuilates(pcdb, parametrosQuilates);
-					preciosDiamantes.addAll(pq);
-					
-					
-					Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, factoresRangoColor);
+					PrecioCorteDetalleBatch pq = crearNuevoRegistroQuilates(pcdb, parametrosQuilates);
+					if (pq != null) {
+						preciosDiamantes.add(pq);
+					}
+
+					Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, pq, factoresRangoColor);
 					preciosDiamantes.addAll(frc);
 
 				}
@@ -251,34 +252,31 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 WebServiceExceptionCodes.NMPR004.getMessageException());
     }
     
-	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
+	private PrecioCorteDetalleBatch crearNuevoRegistroQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
 
-		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
+		PrecioCorteDetalleBatch precioDiamantes = null;
 
 		for (ParametrosQuilatesJPA param : parametrosQuilates) {
 
 			if (param.getQuilatesBaseDesde().compareTo(pcdb.getTamanioInferior()) == 0
 					&& param.getQuilatesBaseHasta().compareTo(pcdb.getTamanioSuperior()) == 0) {
 
-				PrecioCorteDetalleBatch pcBase = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
-				pcBase.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
-				pcBase.setTamanioInferior(param.getQuilatesDesde());
-				pcBase.setTamanioSuperior(param.getQuilatesHasta());
-
-				preciosDiamantes.add(pcBase);
+				precioDiamantes = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+				precioDiamantes.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
+				precioDiamantes.setTamanioInferior(param.getQuilatesDesde());
+				precioDiamantes.setTamanioSuperior(param.getQuilatesHasta());
 
 				break;
 
 			}
 
 		}
-		return preciosDiamantes;
-
+		return precioDiamantes;
 	}
 
 
 
-	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, List<FactoresRangoColorJPA> factoresRangoColor) {
+	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, PrecioCorteDetalleBatch pq, List<FactoresRangoColorJPA> factoresRangoColor) {
 
 		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
 		for (FactoresRangoColorJPA param : factoresRangoColor) {
@@ -297,6 +295,23 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 
 				preciosDiamantes.add(pcColor);
 			}
+			
+			// Nuevos registros colores para nuevos rangos quilatajes
+			if (pq != null && param.getRangoColorBase().equalsIgnoreCase(pq.getColor())) {
+
+				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+				pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+				pcColor.setColor(param.getColorDesde());
+				
+				preciosDiamantes.add(pcColor);
+				
+				pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+				pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+				pcColor.setColor(param.getColorHasta());
+
+				preciosDiamantes.add(pcColor);
+			}
+
 		}
 
 		return preciosDiamantes;

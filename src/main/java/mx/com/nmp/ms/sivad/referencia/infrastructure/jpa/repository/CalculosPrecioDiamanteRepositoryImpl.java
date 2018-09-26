@@ -7,17 +7,17 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 import mx.com.nmp.ms.sivad.referencia.conector.ConsultaTipoCambio;
 import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorDepreciacionNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.TipoCambioNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoCorteDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPesoDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.TipoNuevoRegistro;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -70,12 +70,20 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
 
     // METODOS
 
+    /* (non-Javadoc)
+     * @see mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository#calcularPreciosNuevosRegistros(mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch)
+     */
+
+
     /**
      * {@inheritDoc}
      */
     @Override
     public Diamante calcularColumnas(PrecioCorteDetalleBatch precioCorteDetalle) {
         Diamante diamante;
+
+        //0. Calcula precio para los nuevos rangos color y quilates
+        calcularPreciosNuevosRegistros(precioCorteDetalle);
 
         //CALCULOS DE LOS VALORES
 
@@ -136,4 +144,41 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
 
         return diamante;
     }
+
+    /**
+     * Si es un nuevo registro de quilates o color se calcula el precio usando el % factor configurado
+     * @param precioCorteDetalle
+     */
+    private void calcularPreciosNuevosRegistros(PrecioCorteDetalleBatch precioCorteDetalle) {
+
+		// ---> multiplicar por el factor  
+        
+		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.QUILATES)) {
+
+			precioCorteDetalle.setPrecio(
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()));
+
+		}
+
+		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.COLOR)) {
+
+			precioCorteDetalle.setPrecio(
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+
+		}
+
+		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR)) {
+
+			// Factor quilataje
+			precioCorteDetalle.setPrecio(
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()));
+
+			// Factor color
+			precioCorteDetalle.setPrecio(
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+
+		}
+
+    }
+
 }

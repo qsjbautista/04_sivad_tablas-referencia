@@ -41,23 +41,7 @@ public class ValorComercialDiamanteProcessor
                 validaString(precioCorteDetalle.getCorte(), _SHAPE);
                 validaString(precioCorteDetalle.getColor(), _COLOR);
                 validaString(precioCorteDetalle.getClaridad(), _CLARITY);
-                
-// ---> multiplicar por el factor  
-                
-				if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.QUILATES)) {
 
-					precioCorteDetalle.setPrecio(
-							precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactor()));
-
-				}
-
-				if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.COLOR)) {
-
-					precioCorteDetalle
-							.setPrecio(precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactor()));
-
-				}
-                
                 diamante = calculosPrecioDiamanteRepository.calcularColumnas(precioCorteDetalle);
             }
 

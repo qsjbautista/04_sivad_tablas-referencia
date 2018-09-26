@@ -17,7 +17,8 @@ public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
     
     // Inicio ---> Nuevos valores de interfaz
 
-    private BigDecimal factor;
+    private BigDecimal factorColor;
+    private BigDecimal factorQuilates;
     private TipoNuevoRegistro tipo;
 
 
@@ -45,7 +46,12 @@ public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
 
 	public void setNuevoRegistro(TipoNuevoRegistro tipo, BigDecimal factor) {
 		this.tipo = tipo;
-		this.factor = factor;
+		if (tipo == TipoNuevoRegistro.QUILATES) {
+			this.factorQuilates = factor;
+		}
+		else if (tipo == TipoNuevoRegistro.COLOR || tipo == TipoNuevoRegistro.QUILATES_COLOR) {
+			this.factorColor = factor;
+		}
 	}
 
 	public boolean isNuevoRegistro(TipoNuevoRegistro tipo) {
@@ -61,20 +67,28 @@ public class PrecioCorteDetalleBatch extends PrecioCorteDetalle {
         this.corte = corte;
     }
 
-	public BigDecimal getFactor() {
-		return factor;
-	}
-
-	public void setFactor(BigDecimal factor) {
-		this.factor = factor;
-	}
-
 	public TipoNuevoRegistro getTipo() {
 		return tipo;
 	}
 
 	public void setTipo(TipoNuevoRegistro tipo) {
 		this.tipo = tipo;
+	}
+
+	public BigDecimal getFactorColor() {
+		return factorColor;
+	}
+
+	public void setFactorColor(BigDecimal factorColor) {
+		this.factorColor = factorColor;
+	}
+
+	public BigDecimal getFactorQuilates() {
+		return factorQuilates;
+	}
+
+	public void setFactorQuilates(BigDecimal factorQuilates) {
+		this.factorQuilates = factorQuilates;
 	}
 
 }
