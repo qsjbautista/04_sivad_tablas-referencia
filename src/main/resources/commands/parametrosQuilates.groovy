@@ -190,7 +190,7 @@ class parametrosQuilates {
                                             quilatesBaseDesde: quilatesBaseDesdeConvert, quilatesBaseHasta: quilatesBaseHastaConvert, porcentaje: porcentajeConvert])
 
         try {
-            def elemento = getServicio(context).guardaParametrosQuilates(pq)
+            def elemento = getServicio(context).update(idParametro, pq)
             out.println("El elemento con [" + idParametro + "," + quilatesDesde + "," + quilatesHasta + "," + quilatesBaseDesde + "," + quilatesBaseHasta + "," + porcentaje + "] ha sido modificado.")
             mostrarTablaResultados([elemento])
         } catch (ParametrosQuilatesNoEncontradoException e) {

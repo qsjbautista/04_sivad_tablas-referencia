@@ -209,7 +209,11 @@ public class ParametrosQuilatesRepositoryImpl implements ParametrosQuilatesRepos
 	@Override
 	public ParametrosQuilatesJPA update(Long idParametro, ParametrosQuilatesJPA elemento) {
 		ParametrosQuilatesJPA pq = this.parametrosQuilatesRepositoryJPA.findOne(idParametro);
-        actualizarCatalogo(pq, elemento);
+        actualizarCatalogo(pq, elemento);        
+        pq.setFecha(DateTime.now());
+        
+        // TODO: Validar duplicados con otro rango
+        //ParametrosQuilatesJPA pqDup = this.parametrosQuilatesRepositoryJPA.findByQtesDesdeAndQtesHasta(elemento.getQuilatesDesde(), elemento.getQuilatesHasta());
 
         return this.parametrosQuilatesRepositoryJPA.saveAndFlush(pq);
 	}
