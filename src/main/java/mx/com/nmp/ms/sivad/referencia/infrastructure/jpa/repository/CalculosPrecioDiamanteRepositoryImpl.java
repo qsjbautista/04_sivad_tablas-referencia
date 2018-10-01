@@ -100,8 +100,8 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
 
         //2. MONTOVBD (Valor base de datos convertido a pesos con depreciacion), CON LA FORMULA 'VBD = VR * 100 * TC * FD
 
-        //VR * 100: MULTIPLICAR VR (Valor del Rapaport) * 100
-        BigDecimal montoVbd = precioCorteDetalle.getPrecio().multiply(FACTOR);
+        //VR: VR (Valor del Rapaport)
+        BigDecimal montoVbd = precioCorteDetalle.getPrecio();
 
         //VR * 100 * TC: CONVERTIR A PESOS, EL MONTO POR EL TC (Tipo de cambio, precio dolar)
         montoVbd = convertidor.convertir(
@@ -156,8 +156,8 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
      */
     private void calcularPreciosNuevosRegistros(PrecioCorteDetalleBatch precioCorteDetalle) {
 
-		// ---> multiplicar por el factor  
-        
+		// ---> multiplicar por el factor
+
 		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.QUILATES)) {
 
 			precioCorteDetalle.setPrecio(
