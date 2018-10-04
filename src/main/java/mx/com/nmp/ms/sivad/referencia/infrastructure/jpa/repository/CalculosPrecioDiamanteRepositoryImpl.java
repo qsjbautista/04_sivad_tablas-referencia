@@ -103,11 +103,11 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
         //VR: VR (Valor del Rapaport)
         BigDecimal montoVbd = precioCorteDetalle.getPrecio();
 
-        //VR * 100 * TC: CONVERTIR A PESOS, EL MONTO POR EL TC (Tipo de cambio, precio dolar)
+        //VR * TC: CONVERTIR A PESOS, EL MONTO POR EL TC (Tipo de cambio, precio dolar)
         montoVbd = convertidor.convertir(
             TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo(), montoVbd);
 
-        //VR * 100 * TC * FD: APLICAR EL FD (Factor de depreciacion)
+        //VR * TC * FD: APLICAR EL FD (Factor de depreciacion)
         FactorDepreciacionDiamanteJPA factorDepreciacionDiamanteJPA = factorDepreciacionDiamanteJPARepository.obtenerFactorDepreciacion();
 
         if (ObjectUtils.isEmpty(factorDepreciacionDiamanteJPA)) {

@@ -155,8 +155,8 @@ CREATE TABLE hist_cfg_diamante_valor_comercial
     precio DECIMAL(10, 4) NOT NULL,
     listado BIGINT,
     tipo_cambio DECIMAL(12,4) NOT NULL,
-    montovbd DECIMAL(12, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(12, 4) NOT NULL,
+    montovbd DECIMAL(15, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(15, 4) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -185,8 +185,8 @@ CREATE TABLE cfg_diamante_valor_comercial
     precio DECIMAL(10, 4) NOT NULL,
     listado BIGINT,
     tipo_cambio DECIMAL(12,4) NOT NULL,
-    montovbd DECIMAL(12, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(12, 4) NOT NULL,
+    montovbd DECIMAL(15, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(15, 4) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -201,8 +201,8 @@ CREATE TABLE tmp_diamante_valor_comercial
     tamanio_superior DECIMAL(6, 2) NOT NULL,
     precio DECIMAL(10, 4) NOT NULL,
     tipo_cambio DECIMAL(12,4) NOT NULL,
-    montovbd DECIMAL(12, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(12, 4) NOT NULL
+    montovbd DECIMAL(15, 4) NOT NULL,
+    montofcastigoxrango DECIMAL(15, 4) NOT NULL
 );
 
 DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
