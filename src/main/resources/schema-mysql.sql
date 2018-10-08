@@ -202,7 +202,8 @@ CREATE TABLE tmp_diamante_valor_comercial
     precio DECIMAL(10, 4) NOT NULL,
     tipo_cambio DECIMAL(12,4) NOT NULL,
     montovbd DECIMAL(15, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(15, 4) NOT NULL
+    montofcastigoxrango DECIMAL(15, 4) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
