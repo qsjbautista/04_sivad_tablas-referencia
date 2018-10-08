@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="http://ws.api.cambiario.sivad.ms.nmp.com.mx/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:ns3="http://schemas.xmlsoap.org/soap/http"
+                  xmlns:ns2="http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/datatypes/" name="ConsultaTipoCambioEndpointService"
+                  targetNamespace="http://ws.api.cambiario.sivad.ms.nmp.com.mx/">
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/datatypes/" version="1.0">
+            <xs:element name="valorPorUnidadRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="base" type="xs:string" />
+                        <xs:element name="destino" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="valorPorUnidadResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="valorPorUnidad" type="xs:decimal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="ValorPorUnidadIn">
+        <wsdl:part name="parameters" element="ns2:valorPorUnidadRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ValorPorUnidadOut">
+        <wsdl:part name="parameters" element="ns2:valorPorUnidadResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ConsultaTipoCambioService">
+        <wsdl:operation name="valorPorUnidad">
+            <wsdl:input message="tns:ValorPorUnidadIn" />
+            <wsdl:output message="tns:ValorPorUnidadOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ConsultaTipoCambioEndpointServiceSoapBinding" type="tns:ConsultaTipoCambioService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="valorPorUnidad">
+            <soap:operation soapAction="http://nmp.com.mx/ms/cambiario/ws/consulta/valorPorUnidad" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ConsultaTipoCambioEndpointService">
+        <wsdl:port name="ConsultaTipoCambioEndpointPort" binding="tns:ConsultaTipoCambioEndpointServiceSoapBinding">
+            <soap:address location="http://localhost:8083/soap-api/ConsultaTipoCambioService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

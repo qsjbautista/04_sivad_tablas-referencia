@@ -58,5 +58,8 @@
     <cache name="ModificadorValorDiamanteRepositoryJpa.consultar"
            timeToLiveSeconds="3600">
     </cache>
+    <cache name="ConsultaTipoCambioProxy.valorPorUnidad"
+           timeToLiveSeconds="3600">
+    </cache>
 
 </ehcache>

@@ -187,13 +187,16 @@ CREATE TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL
     TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
     PRECIO DECIMAL(10, 4) NOT NULL,
-    LISTADO BIGINT
+    LISTADO BIGINT,
+    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
+    MONTOVBD DECIMAL(12, 4) NOT NULL,
+    MONTOFCASTIGOXRANGO DECIMAL(12, 4) NOT NULL,
+    PRIMARY KEY (ID)
 );
 
-ALTER TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT PK_HIST_CFG_DIAMANTE_VALOR_COMERCIAL_ID PRIMARY KEY(ID);
 CREATE INDEX IDX_HIST_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON HIST_CFG_DIAMANTE_VALOR_COMERCIAL(ID);
 ALTER TABLE HIST_CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_HIST_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
+FOREIGN KEY(LISTADO) REFERENCES HIST_CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
 
 --
 -- VIGENTES
@@ -220,13 +223,16 @@ CREATE TABLE CFG_DIAMANTE_VALOR_COMERCIAL
     TAMANIO_INFERIOR DECIMAL(6, 2) NOT NULL,
     TAMANIO_SUPERIOR DECIMAL(6, 2) NOT NULL,
     PRECIO DECIMAL(10, 4) NOT NULL,
-    LISTADO BIGINT
+    LISTADO BIGINT,
+    TIPO_CAMBIO DECIMAL(12,4) NOT NULL,
+    MONTOVBD DECIMAL(12, 4) NOT NULL,
+    MONTOFCASTIGOXRANGO DECIMAL(12, 4) NOT NULL,
+    PRIMARY KEY (ID)
 );
 
-ALTER TABLE CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT PK_CFG_DIAMANTE_VALOR_COMERCIAL_ID PRIMARY KEY(ID);
 CREATE INDEX IDX_CFG_DIAMANTE_VALOR_COMERCIAL_ID ON CFG_DIAMANTE_VALOR_COMERCIAL(ID);
 ALTER TABLE CFG_DIAMANTE_VALOR_COMERCIAL ADD CONSTRAINT FK_CFG_DIAMANTE_VALOR_COMERCIAL
-FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID);
+FOREIGN KEY(LISTADO) REFERENCES CFG_DIAMANTE_LISTADO_VALOR_COMERCIAL(ID) ON DELETE CASCADE;
 
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - TABLAS: VALOR COMERCIAL 'DIAMANTE'
@@ -367,3 +373,96 @@ FOREIGN KEY(LISTADO) REFERENCES CFG_ALHAJA_LISTADO_VALOR_COMERCIAL_METAL(ID);
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - TABLAS: VALOR COMERCIAL 'METAL'
 ------------------------------------------------------------------------------------------------------------------------
+
+-- Inicio Nuevas tablas para Siva Diamantes F2
+
+--
+-- Table structure for table `cfg_diamante_factores_x_rango_de_color`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_factores_x_rango_de_color`;
+CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FECHA` date NOT NULL,
+  `COLOR_DESDE` varchar(20) NOT NULL,
+  `COLOR_HASTA` varchar(20) NOT NULL,
+  `RANGO_COLOR_BASE` varchar(20) NOT NULL,
+  `FACTOR` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+
+--
+-- Table structure for table `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`;
+CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FECHA` date NOT NULL,
+  `QUILATES_DESDE` decimal(10,2) NOT NULL,
+  `QUILATES_HASTA` decimal(10,2) NOT NULL,
+  `FACTOR` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+
+
+--
+-- Table structure for table `cfg_diamante_porcentaje_castigo_x_tipo_corte`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_tipo_corte`;
+CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FECHA` date NOT NULL,
+  `CORTE` varchar(20) NOT NULL,
+  `FACTOR` decimal(10,4) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `cfg_diamante_rango_pesos`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_rango_pesos`;
+CREATE TABLE `cfg_diamante_rango_pesos` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FECHA` date NOT NULL,
+  `QUILATES_DESDE` decimal(10,4) NOT NULL,
+  `QUILATES_HASTA` decimal(10,4) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `cfg_diamante_parametros_quilates`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_parametros_quilates`;
+CREATE TABLE `cfg_diamante_parametros_quilates` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FECHA` date NOT NULL,
+  `QUILATES_DESDE` decimal(10,2) NOT NULL,
+  `QUILATES_HASTA` decimal(10,2) NOT NULL,
+  `QUILATES_BASE_DESDE` decimal(10,2) NOT NULL,
+  `QUILATES_BASE_HASTA` decimal(10,2) NOT NULL,
+  `PORCENTAJE` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `cfg_diamante_factor_depreciacion`
+--
+
+DROP TABLE IF EXISTS `cfg_diamante_factor_depreciacion`;
+CREATE TABLE `cfg_diamante_factor_depreciacion` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FACTOR` decimal(10,1) NOT NULL,
+  `FECHA` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- Fin Nuevas tablas para Siva Diamantes F2

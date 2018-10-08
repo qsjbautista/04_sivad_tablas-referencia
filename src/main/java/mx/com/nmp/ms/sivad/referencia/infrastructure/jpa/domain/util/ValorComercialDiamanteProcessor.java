@@ -2,7 +2,7 @@ package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util;
 
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -15,6 +15,20 @@ public class ValorComercialDiamanteProcessor
     private final String _COLOR = "Color";
     private final String _CLARITY = "Clarity";
     private final String _SHAPE = "Shape";
+    
+    
+
+
+    /**
+     * Referencia al repositorio de ValorComercialDiamanteRepository.
+     */
+    private final CalculosPrecioDiamanteRepository calculosPrecioDiamanteRepository;
+
+
+    public ValorComercialDiamanteProcessor(CalculosPrecioDiamanteRepository calculosPrecioDiamanteRepository) {
+        super();
+        this.calculosPrecioDiamanteRepository = calculosPrecioDiamanteRepository;
+    }
 
 
     @Override
@@ -23,13 +37,12 @@ public class ValorComercialDiamanteProcessor
         try {
 
             if (precioCorteDetalle != null) {
-                String corte = precioCorteDetalle.getCorte();
-                diamante = DiamanteFactory.create(validaString(corte, _SHAPE),
-                    validaString(precioCorteDetalle.getColor(), _COLOR),
-                    validaString(precioCorteDetalle.getClaridad(), _CLARITY),
-                    precioCorteDetalle.getTamanioInferior(),
-                    precioCorteDetalle.getTamanioSuperior(),
-                    precioCorteDetalle.getPrecio());
+
+                validaString(precioCorteDetalle.getCorte(), _SHAPE);
+                validaString(precioCorteDetalle.getColor(), _COLOR);
+                validaString(precioCorteDetalle.getClaridad(), _CLARITY);
+
+                diamante = calculosPrecioDiamanteRepository.calcularColumnas(precioCorteDetalle);
             }
 
         } catch (Exception e) {

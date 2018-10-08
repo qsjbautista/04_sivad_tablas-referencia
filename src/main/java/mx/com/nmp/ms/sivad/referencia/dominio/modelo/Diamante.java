@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * Entidad que representa un diamante.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 public class Diamante {
 
@@ -50,6 +50,21 @@ public class Diamante {
     private BigDecimal precio;
 
     /**
+     * Precio del dolar.
+     */
+    private BigDecimal tipoCambio;
+
+    /**
+     * Precio del diamante en pesos con depreciacion.
+     */
+    private BigDecimal montoVbd;
+
+    /**
+     * Precio del diamante con el castigo por rango de peso aplicado.
+     */
+    private BigDecimal montofCastigoxRango;
+
+    /**
      * Referencia al repositorio de ModificadorValorDiamanteRepository.
      */
     private ModificadorValorDiamanteRepository modificadorValorDiamanteRepository;
@@ -78,6 +93,36 @@ public class Diamante {
         this.tamanioInferior = tamanioInferior;
         this.tamanioSuperior = tamanioSuperior;
         this.precio = precio;
+        this.modificadorValorDiamanteRepository = modificadorValorDiamanteRepository;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param corte El tipo de corte del diamante.
+     * @param color El tipo de color del diamante.
+     * @param claridad El tipo de claridad del diamante.
+     * @param tamanioInferior Tamaño inferior en quilates que abarca el valor comercial.
+     * @param tamanioSuperior Tamaño superior en quilates que abarca el valor comercial.
+     * @param precio Precio en dólares del diamante.
+     * @param tipoCambio Precio del dolar.
+     * @param montoVbd Precio del diamante en pesos con depreciacion.
+     * @param montofCastigoxRango Precio del diamante con el castigo por rango de peso aplicado.
+     * @param modificadorValorDiamanteRepository Referencia al repositorio de ModificadorValorDiamanteRepository.
+     */
+    Diamante(String corte, String color, String claridad, BigDecimal tamanioInferior,
+             BigDecimal tamanioSuperior, BigDecimal precio, BigDecimal tipoCambio,
+             BigDecimal montoVbd, BigDecimal montofCastigoxRango,
+             ModificadorValorDiamanteRepository modificadorValorDiamanteRepository) {
+        this.corte = corte;
+        this.color = color;
+        this.claridad = claridad;
+        this.tamanioInferior = tamanioInferior;
+        this.tamanioSuperior = tamanioSuperior;
+        this.precio = precio;
+        this.tipoCambio = tipoCambio;
+        this.montoVbd = montoVbd;
+        this.montofCastigoxRango = montofCastigoxRango;
         this.modificadorValorDiamanteRepository = modificadorValorDiamanteRepository;
     }
 
@@ -136,6 +181,18 @@ public class Diamante {
         return precio;
     }
 
+    public BigDecimal getTipoCambio() {
+        return tipoCambio;
+    }
+
+    public BigDecimal getMontoVbd() {
+        return montoVbd;
+    }
+
+    public BigDecimal getMontofCastigoxRango() {
+        return montofCastigoxRango;
+    }
+
     @Override
     public String toString() {
         return "Diamante{" +
@@ -144,7 +201,10 @@ public class Diamante {
             ", claridad='" + claridad + '\'' +
             ", tamanioInferior=" + tamanioInferior +
             ", tamanioSuperior=" + tamanioSuperior +
-            ", precio=" + precio +
+            ", precio=" + precio + '\'' +
+            ", tipoCambio='" + tipoCambio + '\'' +
+            ", montoVbd='" + montoVbd + '\'' +
+            ", montofCastigoxRango='" + montofCastigoxRango +
             '}';
     }
 
@@ -161,6 +221,9 @@ public class Diamante {
         if (!precio.equals(diamante.precio)) return false;
         if (!tamanioInferior.equals(diamante.tamanioInferior)) return false;
         if (!tamanioSuperior.equals(diamante.tamanioSuperior)) return false;
+        if (!tipoCambio.equals(diamante.tipoCambio)) return false;
+        if (!montoVbd.equals(diamante.montoVbd)) return false;
+        if (!montofCastigoxRango.equals(diamante.montofCastigoxRango)) return false;
 
         return true;
     }
@@ -173,6 +236,9 @@ public class Diamante {
         result = 31 * result + tamanioInferior.hashCode();
         result = 31 * result + tamanioSuperior.hashCode();
         result = 31 * result + precio.hashCode();
+        result = 31 * result + tipoCambio.hashCode();
+        result = 31 * result + montoVbd.hashCode();
+        result = 31 * result + montofCastigoxRango.hashCode();
         return result;
     }
 

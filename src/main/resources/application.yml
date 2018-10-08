@@ -22,6 +22,8 @@ cxf:
 tipocambio:
   convertidor:
     wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl
+  consulta:
+    wsdlLocation: http://localhost:8083/soap-api/ConsultaTipoCambio?wsdl
 
 # mostrar o no mensajes soap entrantes y salientes
 soap:

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * Fábrica que se encarga de crear objetos de tipo Diamante.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 public final class DiamanteFactory {
 
@@ -25,6 +25,9 @@ public final class DiamanteFactory {
     private static final String PRECIO_NULO = "El precio no debe ser nulo.";
     private static final String TAMANIO_INFERIOR_NULO = "El tamanio inferior no debe ser nulo.";
     private static final String TAMANIO_SUPERIOR_NULO = "El tamanio superior no debe ser nulo.";
+    private static final String TIPO_CAMBIO_NULO = "El tipo de cambio no debe ser nulo.";
+    private static final String MONTOVBD_NULO = "El campo montoVbd no debe ser nulo.";
+    private static final String MONTOFCASTIGOXRANGO_NULO = "El campo montofCastigoxRango no debe ser nulo.";
 
     /**
      * Referencia al repositorio de ModificadorValorDiamanteRepository.
@@ -59,6 +62,43 @@ public final class DiamanteFactory {
         ValidadorNumero.validarPositivo(tamanioSuperior);
         ValidadorNumero.validarPositivo(precio);
         return new Diamante(corte, color, claridad, tamanioInferior, tamanioSuperior, precio, getRepositorio());
+    }
+
+    /**
+     * Permite crear una entidad de tipo Diamante con base en los argumentos recibidos.
+     *
+     * @param corte El tipo de corte del diamante.
+     * @param color El tipo de color del diamante.
+     * @param claridad El tipo de claridad del diamante.
+     * @param tamanioInferior Tamaño inferior en quilates que abarca el valor comercial.
+     * @param tamanioSuperior Tamaño superior en quilates que abarca el valor comercial.
+     * @param precio Precio en dólares del diamante.
+     * @param tipoCambio Precio del dolar.
+     * @param montoVbd Precio del diamante en pesos con depreciacion.
+     * @param montofCastigoxRango Precio del diamante con el castigo por rango de peso aplicado.
+     * @return La entidad creada.
+     */
+    public static Diamante create(String corte, String color, String claridad, BigDecimal tamanioInferior,
+                                  BigDecimal tamanioSuperior, BigDecimal precio, BigDecimal tipoCambio,
+                                  BigDecimal montoVbd, BigDecimal montofCastigoxRango) {
+        Assert.notNull(corte, CORTE_NULO);
+        Assert.notNull(color, COLOR_NULO);
+        Assert.notNull(claridad, CLARIDAD_NULA);
+        Assert.notNull(tamanioInferior, TAMANIO_INFERIOR_NULO);
+        Assert.notNull(tamanioSuperior, TAMANIO_SUPERIOR_NULO);
+        Assert.notNull(precio, PRECIO_NULO);
+        Assert.notNull(tipoCambio, TIPO_CAMBIO_NULO);
+        Assert.notNull(montoVbd, MONTOVBD_NULO);
+        Assert.notNull(montofCastigoxRango, MONTOFCASTIGOXRANGO_NULO);
+
+        ValidadorNumero.validarPositivo(tamanioInferior);
+        ValidadorNumero.validarPositivo(tamanioSuperior);
+        ValidadorNumero.validarPositivo(precio);
+        ValidadorNumero.validarPositivo(tipoCambio);
+        ValidadorNumero.validarPositivo(montoVbd);
+        ValidadorNumero.validarPositivo(montofCastigoxRango);
+        return new Diamante(corte, color, claridad, tamanioInferior, tamanioSuperior, precio, tipoCambio,
+            montoVbd, montofCastigoxRango, getRepositorio());
     }
 
     /**

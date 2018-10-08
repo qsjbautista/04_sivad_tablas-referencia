@@ -421,6 +421,23 @@
                             </vmArgs>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>wsdl-consulta-tipo-cambio</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <!-- See http://www.mojohaus.org/jaxws-maven-plugin/wsimport-mojo.html -->
+                            <wsdlUrls>
+                                <wsdlUrl>src/main/resources/client-api-definition/ConsultaTipoCambio.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <sourceDestDir>target/generated-sources/wsdlimport/ConsultaTipoCambio</sourceDestDir>
+                            <!-- For accessing the imported schema, see https://netbeans.org/bugzilla/show_bug.cgi?id=241570 -->
+                            <vmArgs>
+                                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                            </vmArgs>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
