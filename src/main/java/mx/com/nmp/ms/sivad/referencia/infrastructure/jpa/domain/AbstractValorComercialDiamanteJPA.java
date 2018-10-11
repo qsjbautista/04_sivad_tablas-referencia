@@ -67,7 +67,7 @@ public abstract class AbstractValorComercialDiamanteJPA {
     private BigDecimal tipoCambio;
 
     /**
-     * Precio en pesos con depreciacion
+     * Precio en pesos con factor rapaport
      */
     @Column(name = "montovbd", precision = 10, scale = 4, nullable = false)
     protected BigDecimal montoVbd;

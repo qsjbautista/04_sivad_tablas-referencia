@@ -666,13 +666,13 @@ CREATE TABLE `cfg_diamante_parametros_quilates` (
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 --
--- table structure for table `cfg_diamante_factor_depreciacion`
+-- table structure for table `cfg_diamante_factor_rapaport`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_factor_depreciacion`;
+DROP TABLE IF EXISTS `cfg_diamante_factor_rapaport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cfg_diamante_factor_depreciacion` (
+CREATE TABLE `cfg_diamante_factor_rapaport` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `factor` DECIMAL(10,1) NOT NULL,
   `fecha` DATE DEFAULT NULL,

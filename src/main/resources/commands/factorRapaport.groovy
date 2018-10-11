@@ -7,9 +7,9 @@
  */
 package commands
 
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorDepreciacionNoEncontradoException
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.FactorDepreciacionRepository
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorRapaportNoEncontradoException
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorRapaportDiamanteJPA
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.FactorRapaportRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -27,9 +27,9 @@ import org.springframework.util.ObjectUtils
  *
  * @author <a href="https://wiki.quarksoft.net/display/~cachavez">Carlos Chávez Melena</a>
  */
-@Usage("Administración de Factor Depreciacion")
-class factorDepreciacion {
-    Logger LOGGER = LoggerFactory.getLogger(factorDepreciacion.class)
+@Usage("Administración de Factor Rapaport")
+class factorRapaport {
+    Logger LOGGER = LoggerFactory.getLogger(factorRapaport.class)
 
     @Usage("Permite recuperar todos los elementos del catálogo.")
     @Command
@@ -69,7 +69,7 @@ class factorDepreciacion {
                 "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
         }
 
-        def fd = new FactorDepreciacionDiamanteJPA([factor: factorConvert])
+        def fd = new FactorRapaportDiamanteJPA([factor: factorConvert])
 
         try {
             def elemento = getServicio(context).save(fd)
@@ -80,7 +80,7 @@ class factorDepreciacion {
             out.println("Ya existe un elemento del cat\u00e1logo con [${factor}].")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al guardar el elemento", e)
-            out.println("Ocurrió un error al guardar el elemento FactorDepreciacionDiamanteJPA(${factor}).")
+            out.println("Ocurrió un error al guardar el elemento FactorRapaportDiamanteJPA(${factor}).")
         }
     }
 
@@ -103,13 +103,13 @@ class factorDepreciacion {
                 "El formato del factor [$factor] no es valido.\n${e.getLocalizedMessage()}")
         }
 
-        def fd = new FactorDepreciacionDiamanteJPA([factor: factorConvert])
+        def fd = new FactorRapaportDiamanteJPA([factor: factorConvert])
 
         try {
             def elemento = getServicio(context).update(idFactor, factorConvert)
             out.println("El elemento con [" + idFactor + "," + factor + "] ha sido modificado.")
             mostrarTablaResultados([elemento])
-        } catch (FactorDepreciacionNoEncontradoException e) {
+        } catch (FactorRapaportNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
             out.println("El elemento del catálogo con [${idFactor}, ${factor}] no existe.")
         } catch (DataIntegrityViolationException e) {
@@ -117,7 +117,7 @@ class factorDepreciacion {
             out.println("Ya existe un elemento del cat\u00e1logo con [${idFactor}, ${factor}].")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
-            out.println("Ocurrió un error al actualizar el elemento FactorDepreciacionDiamanteJPA(${idFactor}, ${factor}).")
+            out.println("Ocurrió un error al actualizar el elemento FactorRapaportDiamanteJPA(${idFactor}, ${factor}).")
         }
     }
 
@@ -128,7 +128,7 @@ class factorDepreciacion {
         try {
             getServicio(context).delete(idFactor)
             out.println("El elemento con idFactor [${idFactor}] fue eliminado correctamente del cat\u00e1logo.")
-        } catch (FactorDepreciacionNoEncontradoException e) {
+        } catch (FactorRapaportNoEncontradoException e) {
             LOGGER.error("Ocurrió un error al eliminar el elemento", e)
             out.println("El elemento del cat\u00e1logo con idFactor [${idFactor}] no existe.")
         } catch (DataIntegrityViolationException e) {
@@ -170,7 +170,7 @@ class factorDepreciacion {
      *
      * @return Servicio a utilizar.
      */
-    private static FactorDepreciacionRepository getServicio(InvocationContext context) {
-        context.attributes['spring.beanfactory'].getBean(FactorDepreciacionRepository)
+    private static FactorRapaportRepository getServicio(InvocationContext context) {
+        context.attributes['spring.beanfactory'].getBean(FactorRapaportRepository)
     }
 }

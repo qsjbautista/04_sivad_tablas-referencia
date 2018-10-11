@@ -4,26 +4,26 @@
  */
 package mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository;
 
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorRapaportDiamanteJPA;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * Expone los metodos de acceso a datos para la entidad FactorDepreciacionDiamanteJPA.
+ * Expone los metodos de acceso a datos para la entidad FactorRapaportDiamanteJPA.
  *
  * @author ecancino
  */
 @Repository
-public interface FactorDepreciacionDiamanteJPARepository extends JpaRepository<FactorDepreciacionDiamanteJPA, Long> {
+public interface FactorRapaportDiamanteJPARepository extends JpaRepository<FactorRapaportDiamanteJPA, Long> {
 
     /**
-     * Utilizado para obtener el factor de depreciacion que se aplica al precio
+     * Utilizado para obtener el factor de rapaport que se aplica al precio
      * del diamante.
      *
      * @return La entidad que coincida con los valores de los atributos indicados.
      */
-    @Query("SELECT fd FROM FactorDepreciacionDiamanteJPA fd " +
-        "WHERE fd.fecha = (SELECT MAX(fd2.fecha) FROM FactorDepreciacionDiamanteJPA fd2)")
-    FactorDepreciacionDiamanteJPA obtenerFactorDepreciacion();
+    @Query("SELECT fd FROM FactorRapaportDiamanteJPA fd " +
+        "WHERE fd.fecha = (SELECT MAX(fd2.fecha) FROM FactorRapaportDiamanteJPA fd2)")
+    FactorRapaportDiamanteJPA obtenerFactorRapaport();
 }

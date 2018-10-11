@@ -127,7 +127,7 @@ class castigoRangoColor {
             out.println("Ya existe un elemento del cat\u00e1logo con [${idFactor}, ${factor}].")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
-            out.println("Ocurrió un error al actualizar el elemento FactorDepreciacionDiamanteJPA(${idFactor}, ${factor}).")
+            out.println("Ocurrió un error al actualizar el elemento FactoresRangoColorJPA(${idFactor}, ${factor}).")
         }
     }
 

@@ -16,6 +16,6 @@ INSERT INTO hist_cfg_diamante_valor_comercial (id, corte, color, claridad, taman
 
 
 --
--- FACTOR DE DEPRECIACION
+-- FACTOR RAPAPORT
 --
-INSERT INTO cfg_diamante_factor_depreciacion (fecha, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 0.3);
+INSERT INTO cfg_diamante_factor_rapaport (fecha, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 100);
