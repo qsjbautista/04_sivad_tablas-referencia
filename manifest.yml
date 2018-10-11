@@ -1,12 +1,10 @@
 ---
 applications:
-- name: sivad-tablas-referencia
+- name: dev1775-tablas-referencia-sivad
   buildpack: https://github.com/cloudfoundry/java-buildpack.git
-  memory: 1G
-  timeout: 120
   path: target/sivad-tablas-referencia-0.9.0-SNAPSHOT.war
   env:
     spring.profiles.active: cloud
     TZ: America/Mexico_City
   services:
-    - sivad-tablas-referencia-bd
+    - dev1775-tablas-referencia-sivaddb
