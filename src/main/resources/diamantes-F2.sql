@@ -202,7 +202,8 @@ CREATE TABLE tmp_diamante_valor_comercial
     precio DECIMAL(10, 4) NOT NULL,
     tipo_cambio DECIMAL(12,4) NOT NULL,
     montovbd DECIMAL(15, 4) NOT NULL,
-    montofcastigoxrango DECIMAL(15, 4) NOT NULL
+    montofcastigoxrango DECIMAL(15, 4) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
@@ -665,13 +666,13 @@ CREATE TABLE `cfg_diamante_parametros_quilates` (
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
 --
--- table structure for table `cfg_diamante_factor_depreciacion`
+-- table structure for table `cfg_diamante_factor_rapaport`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_factor_depreciacion`;
+DROP TABLE IF EXISTS `cfg_diamante_factor_rapaport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cfg_diamante_factor_depreciacion` (
+CREATE TABLE `cfg_diamante_factor_rapaport` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `factor` DECIMAL(10,1) NOT NULL,
   `fecha` DATE DEFAULT NULL,
@@ -884,7 +885,7 @@ VALUES (18, 'AU_BL', '24_Q', 780.000, 1);
 -- INICIA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
 INSERT INTO cfg_diamante_factor (id, factor_minimo, factor_medio, factor_maximo, fecha_carga, fecha_listado)
-VALUES (1, 0.550, 1.000, 1.100, '2017-05-02 12:56:00.521', '2017-05-02');
+VALUES (1, 1.250, 1.400, 1.550, '2017-05-02 12:56:00.521', '2017-05-02');
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: FACTOR VALOR DIAMANTE
 -- ----------------------------------------------------------------------------------------------------------------------
@@ -898,13 +899,13 @@ INSERT INTO cfg_diamante_listado_valor_certificado (id, ultima_actualizacion, fe
 VALUES (1, '2016-12-20 10:00:00.521', '2016-12-20');
 
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
-VALUES (1, 'GI', 1.050, 1);
+VALUES (1, 'GI', 1.100, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
-VALUES (2, 'HR', 1.050, 1);
+VALUES (2, 'HR', 1.100, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
-VALUES (3, 'IG', 1.050, 1);
+VALUES (3, 'IG', 1.100, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
-VALUES (4, 'AJ', 1.050, 1);
+VALUES (4, 'AJ', 1.100, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADOR CERTIFICADO
 -- ----------------------------------------------------------------------------------------------------------------------
@@ -1060,9 +1061,9 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QU
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (5,'2018-08-28',2.00,100.00,0.35);
 
 /*
-cfg_diamante_factor_depreciacion
+cfg_diamante_factor_rapaport
 */
-INSERT INTO `cfg_diamante_factor_depreciacion` (`ID`,`FACTOR`,`FECHA`) VALUES (1,0.4,'2018-08-28');
+INSERT INTO `cfg_diamante_factor_rapaport` (`ID`,`FACTOR`,`FECHA`) VALUES (1,100,'2018-08-28');
 
 /*
 cfg_diamante_rango_pesos

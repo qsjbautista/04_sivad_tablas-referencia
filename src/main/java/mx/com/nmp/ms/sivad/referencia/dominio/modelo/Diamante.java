@@ -55,7 +55,7 @@ public class Diamante {
     private BigDecimal tipoCambio;
 
     /**
-     * Precio del diamante en pesos con depreciacion.
+     * Precio del diamante en pesos con factor rapaport.
      */
     private BigDecimal montoVbd;
 
@@ -106,7 +106,7 @@ public class Diamante {
      * @param tamanioSuperior Tamaño superior en quilates que abarca el valor comercial.
      * @param precio Precio en dólares del diamante.
      * @param tipoCambio Precio del dolar.
-     * @param montoVbd Precio del diamante en pesos con depreciacion.
+     * @param montoVbd Precio del diamante en pesos con factor rapaport.
      * @param montofCastigoxRango Precio del diamante con el castigo por rango de peso aplicado.
      * @param modificadorValorDiamanteRepository Referencia al repositorio de ModificadorValorDiamanteRepository.
      */

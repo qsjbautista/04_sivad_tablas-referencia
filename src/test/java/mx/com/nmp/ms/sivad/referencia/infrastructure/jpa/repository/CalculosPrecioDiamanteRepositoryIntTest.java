@@ -10,16 +10,9 @@ import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.*;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamanteFactory;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.DiamanteVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialDiamanteJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.PrecioCorteDetalle;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +21,6 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.CacheManager;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -37,9 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -67,9 +55,9 @@ public class CalculosPrecioDiamanteRepositoryIntTest {
     private static final BigDecimal QUILATES_HASTA = new BigDecimal(0.94D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO = new BigDecimal(65.70D).setScale(4, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal PRECIO_EXISTE_PESOS = new BigDecimal(1460.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal TIPO_CAMBIO = new BigDecimal(65.70D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal MONTOVBD = new BigDecimal(438.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
-    private static final BigDecimal MONTOFCASTIGOXRANGO = new BigDecimal(43.80D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal TIPO_CAMBIO = new BigDecimal(19.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal MONTOVBD = new BigDecimal(146000.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal MONTOFCASTIGOXRANGO = new BigDecimal(14600.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de CalculosPrecioDiamanteRepository
@@ -161,9 +149,9 @@ public class CalculosPrecioDiamanteRepositoryIntTest {
 
     /**
      * Utilizado para calcular las nuevas columnas del diamante.
-     * No existe un factor de depreciacion
+     * No existe un factor de rapaport
      */
-    @Test(expected = FactorDepreciacionNoEncontradoException.class)
+    @Test(expected = FactorRapaportNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
     public void calcularColumnasTest03() {

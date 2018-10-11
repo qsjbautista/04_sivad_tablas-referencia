@@ -13,14 +13,14 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Entidad JPA que permite mapear los factores de depreciacion a una tabla
+ * Entidad JPA que permite mapear los factores de rapaport a una tabla
  * persistente.
  *
  * @author ecancino
  */
 @Entity
-@Table(name = "cfg_diamante_factor_depreciacion")
-public class FactorDepreciacionDiamanteJPA {
+@Table(name = "cfg_diamante_factor_rapaport")
+public class FactorRapaportDiamanteJPA {
 
     /**
      * Identificador del registro.
@@ -39,7 +39,7 @@ public class FactorDepreciacionDiamanteJPA {
     private DateTime fecha;
 
     /**
-     * Factor de depreciacion
+     * Factor de rapaport
      */
     @Column(name = "factor", precision = 10, scale = 3, nullable = false)
     private BigDecimal factor;
@@ -79,9 +79,9 @@ public class FactorDepreciacionDiamanteJPA {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FactorDepreciacionDiamanteJPA)) return false;
+        if (!(o instanceof FactorRapaportDiamanteJPA)) return false;
 
-        FactorDepreciacionDiamanteJPA that = (FactorDepreciacionDiamanteJPA) o;
+        FactorRapaportDiamanteJPA that = (FactorRapaportDiamanteJPA) o;
 
         if (!id.equals(that.id)) return false;
         if (!fecha.equals(that.fecha)) return false;
@@ -103,7 +103,7 @@ public class FactorDepreciacionDiamanteJPA {
      */
     @Override
     public String toString() {
-        return "FactorDepreciacionDiamanteJPA{" +
+        return "FactorRapaportDiamanteJPA{" +
             "id=" + id + '\'' +
             ", fecha='" + fecha + '\'' +
             ", factor='" + factor +

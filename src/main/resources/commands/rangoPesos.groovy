@@ -10,7 +10,6 @@ package commands
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.RangoPesoNoEncontradoException
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.RangoPesoDiamanteRepository
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.RangoPesoDiamanteJPA
-import mx.com.nmp.ms.sivad.referencia.dominio.repository.FactorDepreciacionRepository
 import org.crsh.cli.Argument
 import org.crsh.cli.Command
 import org.crsh.cli.Option
@@ -140,7 +139,7 @@ class rangoPesos{
             out.println("Ya existe un elemento del cat\u00e1logo con [${idRangoPesos}, ${quilatesDesde}, ${quilatesHasta}].")
         } catch (Exception e) {
             LOGGER.error("Ocurrió un error al actualizar el elemento", e)
-            out.println("Ocurrió un error al actualizar el elemento FactorDepreciacionDiamanteJPA(${idRangoPesos}, ${quilatesDesde}, ${quilatesHasta}).")
+            out.println("Ocurrió un error al actualizar el elemento RangoPesoDiamanteJPA(${idRangoPesos}, ${quilatesDesde}, ${quilatesHasta}).")
         }
     }
 

@@ -8,13 +8,13 @@ import mx.com.nmp.ms.sivad.referencia.conector.ConsultaTipoCambio;
 import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoRangoPesoNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorDepreciacionNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorRapaportNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.TipoCambioNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.CalculosPrecioDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.CastigoRangoPesoDiamanteJPA;
-import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorDepreciacionDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactorRapaportDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.TipoNuevoRegistro;
 
@@ -43,10 +43,10 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
     private static final BigDecimal FACTOR = BigDecimal.valueOf(100);
 
     /**
-     * Referencia al repositorio de FactorDepreciacionDiamanteJPARepository.
+     * Referencia al repositorio de FactorRapaportDiamanteJPARepository.
      */
     @Inject
-    private FactorDepreciacionDiamanteJPARepository factorDepreciacionDiamanteJPARepository;
+    private FactorRapaportDiamanteJPARepository factorRapaportDiamanteJPARepository;
 
     /**
      * Referencia al repositorio de CastigoRangoPesoDiamanteJPARepository.
@@ -98,7 +98,7 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
         }
 
 
-        //2. MONTOVBD (Valor base de datos convertido a pesos con depreciacion), CON LA FORMULA 'VBD = VR * 100 * TC * FD
+        //2. MONTOVBD (Valor base de datos convertido a pesos con factor rapaport), CON LA FORMULA 'VBD = VR * TC * F
 
         //VR: VR (Valor del Rapaport)
         BigDecimal montoVbd = precioCorteDetalle.getPrecio();
@@ -107,17 +107,17 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
         montoVbd = convertidor.convertir(
             TipoCambioEnum.USD.getTipo(), TipoCambioEnum.MXN.getTipo(), montoVbd);
 
-        //VR * TC * FD: APLICAR EL FD (Factor de depreciacion)
-        FactorDepreciacionDiamanteJPA factorDepreciacionDiamanteJPA = factorDepreciacionDiamanteJPARepository.obtenerFactorDepreciacion();
+        //VR * TC * F: APLICAR EL F (Factor proporcionado por rapaport, actualmente el valor es de 100)
+        FactorRapaportDiamanteJPA factorRapaportDiamanteJPA = factorRapaportDiamanteJPARepository.obtenerFactorRapaport();
 
-        if (ObjectUtils.isEmpty(factorDepreciacionDiamanteJPA)) {
-            String msg = "No existe un factor de depreciacion.";
+        if (ObjectUtils.isEmpty(factorRapaportDiamanteJPA)) {
+            String msg = "No existe un factor de rapaport.";
             LOGGER.warn(msg);
-            throw new FactorDepreciacionNoEncontradoException(FactorDepreciacionDiamanteJPA.class, msg);
+            throw new FactorRapaportNoEncontradoException(FactorRapaportDiamanteJPA.class, msg);
         }
 
-        if (factorDepreciacionDiamanteJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
-            montoVbd = montoVbd.multiply(factorDepreciacionDiamanteJPA.getFactor());
+        if (factorRapaportDiamanteJPA.getFactor().compareTo(BigDecimal.ZERO) > 0) {
+            montoVbd = montoVbd.multiply(factorRapaportDiamanteJPA.getFactor());
         }
 
 
@@ -161,14 +161,14 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
 		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.QUILATES)) {
 
 			precioCorteDetalle.setPrecio(
-					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()));
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()).setScale(0, BigDecimal.ROUND_UP));
 
 		}
 
 		if (precioCorteDetalle.isNuevoRegistro(TipoNuevoRegistro.COLOR)) {
 
 			precioCorteDetalle.setPrecio(
-					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()).setScale(0, BigDecimal.ROUND_UP));
 
 		}
 
@@ -176,11 +176,11 @@ public class CalculosPrecioDiamanteRepositoryImpl implements CalculosPrecioDiama
 
 			// Factor quilataje
 			precioCorteDetalle.setPrecio(
-					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()));
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorQuilates()).setScale(0, BigDecimal.ROUND_UP));
 
 			// Factor color
 			precioCorteDetalle.setPrecio(
-					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()));
+					precioCorteDetalle.getPrecio().multiply(precioCorteDetalle.getFactorColor()).setScale(0, BigDecimal.ROUND_UP));
 
 		}
 

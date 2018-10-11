@@ -52,9 +52,9 @@ INSERT INTO cfg_diamante_porcentaje_castigo_x_tipo_corte (fecha, corte, factor) 
 INSERT INTO cfg_diamante_rango_pesos (fecha, quilates_desde, quilates_hasta) VALUES ('2016-11-23 10:00:00.521-06:00', 0.90, 0.96);
 
 --
--- FACTOR DE DEPRECIACION
+-- FACTOR RAPAPORT
 --
-INSERT INTO cfg_diamante_factor_depreciacion (fecha, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 0.3);
+INSERT INTO cfg_diamante_factor_rapaport (fecha, factor) VALUES ('2016-11-23 10:00:00.521-06:00', 100);
 
 --
 -- PORCENTAJE DE CASTIGO POR RANGO DE PESO
