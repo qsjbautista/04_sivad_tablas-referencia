@@ -41,6 +41,7 @@ import org.springframework.util.ObjectUtils;
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -93,96 +94,96 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 
     @Inject
     private TaskExecutor taskExecutor;
-    
+
     @Inject
-	private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
-    
+    private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
+
     @Inject
-	private FactoresRangoColorJPARepository factoresRangoColorJPARepository;
+    private FactoresRangoColorJPARepository factoresRangoColorJPARepository;
 
     /**
      * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
      */
-	@Timed
-	@Override
-	public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
-		LOGGER.info(">> actualizarListaValorComercial({})", parameters);
+    @Timed
+    @Override
+    public Void actualizarListaValorComercial(ActualizarListaValorComercialRequest parameters) {
+        LOGGER.info(">> actualizarListaValorComercial({})", parameters);
 
-		validarDatosEntrada(parameters.getListado());
+        validarDatosEntrada(parameters.getListado());
 
-		try {
-			LOGGER.debug("iniciando ejecucion...");
+        try {
+            LOGGER.debug("iniciando ejecucion...");
 
-			// Preparar lista para el Reader
-			List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
-			Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
-			
-			List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
-			List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
-			
+            // Preparar lista para el Reader
+            List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
+            Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
 
-			for (PrecioCorte pc : listaPrecios) {
-				for (PrecioCorteDetalle pcd : pc.getPrecioCorte()) {
-					PrecioCorteDetalleBatch pcdb = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
-					
-					preciosDiamantes.add(pcdb);
-					
-					// --> Nuevos registros
-					PrecioCorteDetalleBatch pq = crearNuevoRegistroQuilates(pcdb, parametrosQuilates);
-					if (pq != null) {
-						preciosDiamantes.add(pq);
-					}
+            List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
+            List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
 
-					Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, pq, factoresRangoColor);
-					preciosDiamantes.addAll(frc);
 
-				}
-			}
+            for (PrecioCorte pc : listaPrecios) {
+                for (PrecioCorteDetalle pcd : pc.getPrecioCorte()) {
+                    PrecioCorteDetalleBatch pcdb = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
 
-			// Reader
-			ItemReader diamanteItemReader = new DiamanteItemReader(preciosDiamantes);
+                    preciosDiamantes.add(pcdb);
 
-			// Step
-			Step procesaPrecioStep = stepBuilderFactory.get("procesarPreciosDiamantes")
-					// Se guardan cada 500 registros
-					.<PrecioCorteDetalle, Diamante>chunk(500).reader(diamanteItemReader).processor(diamantesProcessor)
-					.writer(diamanteItemWriter).taskExecutor(taskExecutor).build();
+                    // --> Nuevos registros
+                    List<PrecioCorteDetalleBatch> pqs = crearNuevosRegistrosQuilates(pcdb, parametrosQuilates);
+                    if (pqs != null) {
+                        preciosDiamantes.addAll(pqs);
+                    }
 
-			// Job
-			Job diamantesJob = jobBuilderFactory.get("importarPreciosDiamantes")
-					.listener(jobCompletionNotificationListener).incrementer(new RunIdIncrementer())
-					.flow(procesaPrecioStep).end().build();
+                    Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, pqs, factoresRangoColor);
+                    preciosDiamantes.addAll(frc);
 
-			// Execution
-			JobParametersBuilder builder = new JobParametersBuilder();
-			// Se agrega un timer para que no se repita nunca el job.
-			builder.addLong("time", System.currentTimeMillis());
-			// Se agrega la fecha de listado como parametro para que el listener la reciba.
-			builder.addDate("fechaListado", parameters.getListado().getFecha().toGregorianCalendar().getTime());
-			JobParameters jobParameters = builder.toJobParameters();
-			JobExecution execution = jobLauncher.run(diamantesJob, jobParameters);
+                }
+            }
 
-			LOGGER.info("Codigo de salida: {}", execution.getStatus());
-			if (execution.getStatus() == BatchStatus.FAILED) {
-				String mensajesError = "";
-				for (Throwable excepcion : execution.getAllFailureExceptions()) {
-					mensajesError = mensajesError.concat(excepcion.getMessage());
-				}
-				throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
-						WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
-			}
-			// }
+            // Reader
+            ItemReader diamanteItemReader = new DiamanteItemReader(preciosDiamantes);
 
-		} catch (Exception e) {
-			LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-			throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
-					WebServiceExceptionCodes.NMPR004.getCodeException(),
-					WebServiceExceptionCodes.NMPR004.getMessageException(), e);
-		}
+            // Step
+            Step procesaPrecioStep = stepBuilderFactory.get("procesarPreciosDiamantes")
+                // Se guardan cada 500 registros
+                .<PrecioCorteDetalle, Diamante>chunk(500).reader(diamanteItemReader).processor(diamantesProcessor)
+                .writer(diamanteItemWriter).taskExecutor(taskExecutor).build();
 
-		return new Void();
-	}
+            // Job
+            Job diamantesJob = jobBuilderFactory.get("importarPreciosDiamantes")
+                .listener(jobCompletionNotificationListener).incrementer(new RunIdIncrementer())
+                .flow(procesaPrecioStep).end().build();
+
+            // Execution
+            JobParametersBuilder builder = new JobParametersBuilder();
+            // Se agrega un timer para que no se repita nunca el job.
+            builder.addLong("time", System.currentTimeMillis());
+            // Se agrega la fecha de listado como parametro para que el listener la reciba.
+            builder.addDate("fechaListado", parameters.getListado().getFecha().toGregorianCalendar().getTime());
+            JobParameters jobParameters = builder.toJobParameters();
+            JobExecution execution = jobLauncher.run(diamantesJob, jobParameters);
+
+            LOGGER.info("Codigo de salida: {}", execution.getStatus());
+            if (execution.getStatus() == BatchStatus.FAILED) {
+                String mensajesError = "";
+                for (Throwable excepcion : execution.getAllFailureExceptions()) {
+                    mensajesError = mensajesError.concat(excepcion.getMessage());
+                }
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
+                    WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
+            }
+            // }
+
+        } catch (Exception e) {
+            LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
+            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
+                WebServiceExceptionCodes.NMPR004.getCodeException(),
+                WebServiceExceptionCodes.NMPR004.getMessageException(), e);
+        }
+
+        return new Void();
+    }
 
     /**
      * @param parameters Parametros
@@ -251,69 +252,72 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
             .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
                 WebServiceExceptionCodes.NMPR004.getMessageException());
     }
-    
-	private PrecioCorteDetalleBatch crearNuevoRegistroQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
 
-		PrecioCorteDetalleBatch precioDiamantes = null;
+    private List<PrecioCorteDetalleBatch> crearNuevosRegistrosQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
 
-		for (ParametrosQuilatesJPA param : parametrosQuilates) {
+        List<PrecioCorteDetalleBatch> preciosDiamantes = new ArrayList<PrecioCorteDetalleBatch>();
 
-			if (param.getQuilatesBaseDesde().compareTo(pcdb.getTamanioInferior()) == 0
-					&& param.getQuilatesBaseHasta().compareTo(pcdb.getTamanioSuperior()) == 0) {
+        for (ParametrosQuilatesJPA param : parametrosQuilates) {
 
-				precioDiamantes = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
-				precioDiamantes.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
-				precioDiamantes.setTamanioInferior(param.getQuilatesDesde());
-				precioDiamantes.setTamanioSuperior(param.getQuilatesHasta());
+            if (param.getQuilatesBaseDesde().compareTo(pcdb.getTamanioInferior()) == 0
+                && param.getQuilatesBaseHasta().compareTo(pcdb.getTamanioSuperior()) == 0) {
 
-				break;
+                PrecioCorteDetalleBatch precioDiamantes = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                precioDiamantes.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
+                precioDiamantes.setTamanioInferior(param.getQuilatesDesde());
+                precioDiamantes.setTamanioSuperior(param.getQuilatesHasta());
 
-			}
+                preciosDiamantes.add(precioDiamantes);
+            }
 
-		}
-		return precioDiamantes;
-	}
-
+        }
+        return preciosDiamantes;
+    }
 
 
-	private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, PrecioCorteDetalleBatch pq, List<FactoresRangoColorJPA> factoresRangoColor) {
 
-		Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
-		for (FactoresRangoColorJPA param : factoresRangoColor) {
+    private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, List<PrecioCorteDetalleBatch> pqs, List<FactoresRangoColorJPA> factoresRangoColor) {
 
-			if (param.getRangoColorBase().equalsIgnoreCase(pcdb.getColor())) {
+        Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
+        for (FactoresRangoColorJPA param : factoresRangoColor) {
 
-				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
-				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
-				pcColor.setColor(param.getColorDesde());
-				
-				preciosDiamantes.add(pcColor);
-				
-				pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
-				pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
-				pcColor.setColor(param.getColorHasta());
+            if (param.getRangoColorBase().equalsIgnoreCase(pcdb.getColor())) {
 
-				preciosDiamantes.add(pcColor);
-			}
-			
-			// Nuevos registros colores para nuevos rangos quilatajes
-			if (pq != null && param.getRangoColorBase().equalsIgnoreCase(pq.getColor())) {
+                PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
+                pcColor.setColor(param.getColorDesde());
 
-				PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
-				pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
-				pcColor.setColor(param.getColorDesde());
-				
-				preciosDiamantes.add(pcColor);
-				
-				pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
-				pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
-				pcColor.setColor(param.getColorHasta());
+                preciosDiamantes.add(pcColor);
 
-				preciosDiamantes.add(pcColor);
-			}
+                pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
+                pcColor.setColor(param.getColorHasta());
 
-		}
+                preciosDiamantes.add(pcColor);
+            }
 
-		return preciosDiamantes;
-	}
+            // Nuevos registros colores para nuevos rangos quilatajes
+            if (pqs != null) {
+                for (PrecioCorteDetalleBatch pq : pqs) {
+                    if (pq != null && param.getRangoColorBase().equalsIgnoreCase(pq.getColor())) {
+
+                        PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+                        pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+                        pcColor.setColor(param.getColorDesde());
+
+                        preciosDiamantes.add(pcColor);
+
+                        pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+                        pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+                        pcColor.setColor(param.getColorHasta());
+
+                        preciosDiamantes.add(pcColor);
+                    }
+                }
+            }
+
+        }
+
+        return preciosDiamantes;
+    }
 }
