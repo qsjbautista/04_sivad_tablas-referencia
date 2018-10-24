@@ -1111,3 +1111,9 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (17,'2018-09-05','Otro',0.6000);
 
 -- Fin configuración de tablas de referencia
+
+-- Se actualiza el catálogo de incremento
+UPDATE cfg_factor_alhaja SET limite_inferior=5.00, limite_superior=20.00 WHERE id in (2,6,11,16,21,26,32,38);
+UPDATE cfg_factor_alhaja SET limite_inferior=10.00, limite_superior=15.00 WHERE id in (3,7,12,17,22,27,33,39);
+UPDATE cfg_factor_alhaja SET limite_inferior=25.00, limite_superior=55.00 WHERE id in (9,14,19,24,29,35,41);
+UPDATE cfg_factor_alhaja SET limite_inferior=70.00, limite_superior=110.00 WHERE id in (30,36,42);
