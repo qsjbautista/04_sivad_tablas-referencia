@@ -125,7 +125,11 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
-                response.setDesplazamiento(factorAlhaja.getDesplazamiento());
+                RangoLimite rangoLimite = new RangoLimite();
+//                rangoLimite.setLimiteInferior(factorAlhaja.getLimiteInferior());
+                rangoLimite.setLimiteSuperior(factorAlhaja.getDesplazamiento());
+                response.setLimitesIncremento(rangoLimite);
+//                response.setDesplazamiento(factorAlhaja.getDesplazamiento());
             } catch (FactorAlhajaNoEncontradoException e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
@@ -135,7 +139,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             throwWebServiceException();
         }
 
-        LOGGER.info("<< {}", response.getDesplazamiento());
+        LOGGER.info("<< {}", response.getLimitesIncremento());
 
         return response;
     }

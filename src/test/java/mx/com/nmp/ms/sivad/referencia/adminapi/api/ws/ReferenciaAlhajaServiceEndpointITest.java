@@ -61,7 +61,9 @@ public class ReferenciaAlhajaServiceEndpointITest {
         parameters.setCalidad("cal1");
         parameters.setRango("ran1");
         ObtenerDesplazamientoResponse response =referenciaAlhajaServiceEndPoint.obtenerDesplazamiento(parameters);
-        assertEquals(response.getDesplazamiento(), new BigDecimal(1).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertEquals(response.getLimitesIncremento().getLimiteInferior(), new BigDecimal(1).setScale(2, BigDecimal.ROUND_HALF_UP));
+        assertEquals(response.getLimitesIncremento().getLimiteSuperior(), new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_UP));
+//        assertEquals(response.getDesplazamiento(), new BigDecimal(1).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
     @Test
