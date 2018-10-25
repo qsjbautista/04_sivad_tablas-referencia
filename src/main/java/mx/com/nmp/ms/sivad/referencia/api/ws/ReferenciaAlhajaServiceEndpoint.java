@@ -126,10 +126,12 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
                 RangoLimite rangoLimite = new RangoLimite();
-//                rangoLimite.setLimiteInferior(factorAlhaja.getLimiteInferior());
-                rangoLimite.setLimiteSuperior(factorAlhaja.getDesplazamiento());
+
+                rangoLimite.setLimiteInferior(factorAlhaja.getDesplazamiento_limite_inferior());
+                rangoLimite.setLimiteSuperior(factorAlhaja.getDesplazamiento_limite_superior());
+                rangoLimite.setIncremento(factorAlhaja.getDesplazamiento_incremento());
                 response.setLimitesIncremento(rangoLimite);
-//                response.setDesplazamiento(factorAlhaja.getDesplazamiento());
+
             } catch (FactorAlhajaNoEncontradoException e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
@@ -197,7 +199,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 RangoLimite rangoLimite = new RangoLimite();
                 rangoLimite.setLimiteInferior(factorAlhaja.getLimiteInferior());
                 rangoLimite.setLimiteSuperior(factorAlhaja.getLimiteSuperior());
-
+                rangoLimite.setIncremento(factorAlhaja.getIncremento());
                 response.setLimitesIncremento(rangoLimite);
 
             } catch (FactorAlhajaNoEncontradoException e) {

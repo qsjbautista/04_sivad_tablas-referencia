@@ -320,3 +320,30 @@ UPDATE cfg_factor_alhaja SET limite_inferior=5.00, limite_superior=20.00 WHERE i
 UPDATE cfg_factor_alhaja SET limite_inferior=10.00, limite_superior=15.00 WHERE id in (3,7,12,17,22,27,33,39);
 UPDATE cfg_factor_alhaja SET limite_inferior=25.00, limite_superior=55.00 WHERE id in (9,14,19,24,29,35,41);
 UPDATE cfg_factor_alhaja SET limite_inferior=70.00, limite_superior=110.00 WHERE id in (30,36,42);
+
+-- Se agregan los campos de desplazamiento comercial y el incremento
+ALTER TABLE cfg_factor_alhaja 
+CHANGE COLUMN desplazamiento desplazamiento_limite_superior DECIMAL(8,2) NOT NULL ,
+ADD COLUMN desplazamiento_limite_inferior DECIMAL(8,2) NOT NULL AFTER factor,
+ADD COLUMN desplazamiento_incremento INT NOT NULL AFTER desplazamiento_limite_superior,
+ADD COLUMN incremento INT NOT NULL AFTER limite_superior;
+
+
+ALTER TABLE hist_cfg_factor_alhaja 
+CHANGE COLUMN desplazamiento desplazamiento_limite_superior DECIMAL(8,2) NOT NULL ,
+ADD COLUMN desplazamiento_limite_inferior DECIMAL(8,2) NOT NULL AFTER factor,
+ADD COLUMN desplazamiento_incremento INT NOT NULL AFTER desplazamiento_limite_superior,
+ADD COLUMN incremento INT NOT NULL AFTER limite_superior;
+
+-- Rango F2
+UPDATE cfg_factor_alhaja SET incremento=5 WHERE id in (2,6,11,16,21,26,32,38);
+-- Rango F3
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00, desplazamiento_incremento=5, incremento=5 WHERE id in (3,7,12,17,22,27,33,39);
+-- Rango F4
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (4,8,13,18,23,28,34,40);
+-- Rango F5
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (9,14,19,24,29,35,41);
+-- Rango F6
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 30.00, desplazamiento_incremento=5, incremento=10 WHERE id in (30,36,42);
+
+

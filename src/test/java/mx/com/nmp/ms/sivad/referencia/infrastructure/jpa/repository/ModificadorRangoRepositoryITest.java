@@ -121,9 +121,12 @@ public class ModificadorRangoRepositoryITest {
 
         assertNotNull(entidad);
         assertNotNull(entidad.getFactor());
-        assertNotNull(entidad.getDesplazamiento());
+        assertNotNull(entidad.getDesplazamiento_limite_inferior());
+        assertNotNull(entidad.getDesplazamiento_limite_superior());
+        assertNotNull(entidad.getDesplazamiento_incremento());
         assertNotNull(entidad.getLimiteInferior());
         assertNotNull(entidad.getLimiteSuperior());
+        assertNotNull(entidad.getIncremento());
         assertNotNull(entidad.getUltimaActualizacion());
 
             LOGGER.info(entidad.toString());
@@ -142,9 +145,12 @@ public class ModificadorRangoRepositoryITest {
 
         assertNotNull(entidad);
         assertNotNull(entidad.getFactor());
-        assertNotNull(entidad.getDesplazamiento());
+        assertNotNull(entidad.getDesplazamiento_limite_inferior());
+        assertNotNull(entidad.getDesplazamiento_limite_superior());
+        assertNotNull(entidad.getDesplazamiento_incremento());
         assertNotNull(entidad.getLimiteInferior());
         assertNotNull(entidad.getLimiteSuperior());
+        assertNotNull(entidad.getIncremento());
         assertNotNull(entidad.getUltimaActualizacion());
 
         LOGGER.info(entidad.toString());
@@ -254,11 +260,11 @@ public class ModificadorRangoRepositoryITest {
 
         Set<FactorAlhaja> factoresAlhaja = new HashSet<>();
         FactorAlhaja factor1 = FactorAlhajaFactory.crear("met1", "cal1", "ran1", new BigDecimal(10), new BigDecimal(10),
-            new BigDecimal(10), new BigDecimal(20), DateTime.now());
+            new BigDecimal(10),5,new BigDecimal(10), new BigDecimal(20),5, DateTime.now());
         FactorAlhaja factor2 = FactorAlhajaFactory.crear("met2", "cal2", "ran2", new BigDecimal(10), new BigDecimal(10),
-            new BigDecimal(10), new BigDecimal(20), DateTime.now());
+            new BigDecimal(10),5,new BigDecimal(10), new BigDecimal(20),5, DateTime.now());
         FactorAlhaja factor3 = FactorAlhajaFactory.crear("met3", "cal3", "ran3", new BigDecimal(10), new BigDecimal(10),
-            new BigDecimal(10), new BigDecimal(20), DateTime.now());
+            new BigDecimal(10),5,new BigDecimal(10), new BigDecimal(20),5, DateTime.now());
         factoresAlhaja.add(factor1);
         factoresAlhaja.add(factor2);
         factoresAlhaja.add(factor3);
@@ -281,7 +287,7 @@ public class ModificadorRangoRepositoryITest {
         assertEquals(histListadoInicialIda.size(),1);
 
         FactorAlhaja factor4 = FactorAlhajaFactory.crear("met4", "cal4", "ran4", new BigDecimal(10), new BigDecimal(10),
-            new BigDecimal(10), new BigDecimal(20), DateTime.now());
+            new BigDecimal(10),5,new BigDecimal(10), new BigDecimal(20),5, DateTime.now());
 
         factoresAlhaja.clear();
         factoresAlhaja.add(factor4);
