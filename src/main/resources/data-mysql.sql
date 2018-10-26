@@ -338,7 +338,7 @@ ADD COLUMN incremento INT NOT NULL AFTER limite_superior;
 -- Rango F2
 UPDATE cfg_factor_alhaja SET incremento=5 WHERE id in (2,6,11,16,21,26,32,38);
 -- Rango F3
-UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00, desplazamiento_incremento=5, incremento=5 WHERE id in (3,7,12,17,22,27,33,39);
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=0.00, desplazamiento_incremento=5, incremento=5 WHERE id in (3,7,12,17,22,27,33,39);
 -- Rango F4
 UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (4,8,13,18,23,28,34,40);
 -- Rango F5
