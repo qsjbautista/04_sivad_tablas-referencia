@@ -36,19 +36,31 @@ public class FactorAlhaja {
     private BigDecimal factor;
 
     /**
-     * Factor de la alhaja
+     * Desplazamiento Comercial limite inferior
      */
-    private BigDecimal desplazamiento;
+    private BigDecimal desplazamiento_limite_inferior;
+    /**
+     * Desplazamiento Comercial limite superior
+     */
+    private BigDecimal desplazamiento_limite_superior;
+    /**
+     * Desplazamiento Comercial incremento
+     */
+    private Integer desplazamiento_incremento;
 
     /**
-     * Limite inferior
+     * Incremento Limite inferior
      */
     private BigDecimal limiteInferior;
 
     /**
-     * Limite superior
+     * Incremento Limite superior
      */
     private BigDecimal limiteSuperior;
+    /**
+     * Pasos de la propiedad Incremento 
+     */
+    private Integer incremento;
 
     /**
      * Fecha de la ultima actualizacion
@@ -62,20 +74,27 @@ public class FactorAlhaja {
      * @param factor Factor de la alhaja.
      * @param metal Metal de la alhaja.
      * @param rango Rango de la alhaja.
-     * @param desplazamiento Factor de desplazamiento.
-     * @param limiteInferior Limite inferior.
-     * @param limiteSuperior Limite superior.
+     * @param desplazamiento_limite_inferior factor de desplazamiento limite inferior
+     * @param desplazamiento_limite_superior factor de desplazamiento limite superior
+     * @param desplazamiento_incremento incremento de factor de incremento
+     * @param limiteInferior Incremento Limite inferior.
+     * @param limiteSuperior Incremento Limite superior.
+     * @param incremento Incremento del factor de Incremento
      * @param ultimaActualizacion fecha de la ultima actualizacion.
      */
-    public FactorAlhaja(String metal, String calidad, String rango, BigDecimal factor, BigDecimal desplazamiento,
-                        BigDecimal limiteInferior, BigDecimal limiteSuperior, DateTime ultimaActualizacion) {
+    public FactorAlhaja(String metal, String calidad, String rango, BigDecimal factor, BigDecimal desplazamiento_limite_inferior,
+                        BigDecimal desplazamiento_limite_superior,Integer desplazamiento_incremento,BigDecimal limiteInferior, 
+                        BigDecimal limiteSuperior,Integer incremento, DateTime ultimaActualizacion) {
         this.calidad = calidad;
         this.factor = factor;
         this.metal = metal;
         this.rango = rango;
-        this.desplazamiento = desplazamiento;
+        this.desplazamiento_limite_inferior = desplazamiento_limite_inferior;
+        this.desplazamiento_limite_superior = desplazamiento_limite_superior;
+        this.desplazamiento_incremento = desplazamiento_incremento;
         this.limiteInferior = limiteInferior;
         this.limiteSuperior = limiteSuperior;
+        this.incremento = incremento;
         this.ultimaActualizacion = ultimaActualizacion;
     }
 
@@ -108,10 +127,6 @@ public class FactorAlhaja {
         return factor;
     }
 
-    public BigDecimal getDesplazamiento() {
-        return desplazamiento;
-    }
-
     public BigDecimal getLimiteInferior() {
         return limiteInferior;
     }
@@ -122,5 +137,22 @@ public class FactorAlhaja {
 
     public DateTime getUltimaActualizacion() {
         return ultimaActualizacion;
+    }
+
+    
+    public BigDecimal getDesplazamiento_limite_inferior() {
+        return desplazamiento_limite_inferior;
+    }
+
+    public BigDecimal getDesplazamiento_limite_superior() {
+        return desplazamiento_limite_superior;
+    }
+
+    public Integer getDesplazamiento_incremento() {
+        return desplazamiento_incremento;
+    }
+
+    public Integer getIncremento() {
+        return incremento;
     }
 }

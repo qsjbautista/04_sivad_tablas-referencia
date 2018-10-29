@@ -56,7 +56,7 @@ public class FactorAlhajasITest {
     @Before
     public void setUp() throws Exception {
         factorAlhaja = FactorAlhajaFactory.crear("metal", "calidad", "rango", new BigDecimal(10), new BigDecimal(30),
-            new BigDecimal(05), new BigDecimal(50), DateTime.now());
+            new BigDecimal(05),5,new BigDecimal(05), new BigDecimal(50),5, DateTime.now());
         listaFactoresAlhaja = new HashSet<FactorAlhaja>();
         listaFactoresAlhaja.add(factorAlhaja);
 

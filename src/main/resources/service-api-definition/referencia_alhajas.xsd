@@ -52,7 +52,7 @@
     <s:element name="obtenerDesplazamientoResponse">
         <s:complexType>
             <s:sequence>
-                <s:element name="desplazamiento" type="s:decimal"/>
+                <s:element name="limitesIncremento" type="RangoLimite"/>
             </s:sequence>
         </s:complexType>
     </s:element>
@@ -89,6 +89,7 @@
         <s:sequence>
             <s:element name="limiteInferior" type="s:decimal"/>
             <s:element name="limiteSuperior" type="s:decimal"/>
+            <s:element name="incremento" type="s:int"/>
         </s:sequence>
     </s:complexType>
 

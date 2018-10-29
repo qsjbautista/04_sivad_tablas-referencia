@@ -125,7 +125,13 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
                 FactorAlhajaVO factorAlhajaVO = new FactorAlhajaVO(parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 FactorAlhaja factorAlhaja = modificadorRangoRepository.obtenerFactor(factorAlhajaVO);
-                response.setDesplazamiento(factorAlhaja.getDesplazamiento());
+                RangoLimite rangoLimite = new RangoLimite();
+
+                rangoLimite.setLimiteInferior(factorAlhaja.getDesplazamiento_limite_inferior());
+                rangoLimite.setLimiteSuperior(factorAlhaja.getDesplazamiento_limite_superior());
+                rangoLimite.setIncremento(factorAlhaja.getDesplazamiento_incremento());
+                response.setLimitesIncremento(rangoLimite);
+
             } catch (FactorAlhajaNoEncontradoException e) {
                 LOGGER.info("<< " + WebServiceExceptionCodes.NMPR007.getMessageException() + " para las entradas ({}), ({}), ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getRango());
                 throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR007.getCodeException(), WebServiceExceptionCodes.NMPR007.getMessageException());
@@ -135,7 +141,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
             throwWebServiceException();
         }
 
-        LOGGER.info("<< {}", response.getDesplazamiento());
+        LOGGER.info("<< {}", response.getLimitesIncremento());
 
         return response;
     }
@@ -193,7 +199,7 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 RangoLimite rangoLimite = new RangoLimite();
                 rangoLimite.setLimiteInferior(factorAlhaja.getLimiteInferior());
                 rangoLimite.setLimiteSuperior(factorAlhaja.getLimiteSuperior());
-
+                rangoLimite.setIncremento(factorAlhaja.getIncremento());
                 response.setLimitesIncremento(rangoLimite);
 
             } catch (FactorAlhajaNoEncontradoException e) {

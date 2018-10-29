@@ -295,18 +295,18 @@ INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) valu
 cfg_diamante_porcentaje_castigo_x_tipo_corte
 */
 -- Se estandarizan los nombres segun el catalogo de subcortes
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','Brillante',1.0000); -- Brillante Redondo
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (2,'2018-09-05','Cojin',0.9000); -- Acojinado
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (3,'2018-09-05','Pera',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','Brillante Redondo',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (2,'2018-09-05','Acojinado',0.9000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (3,'2018-09-05','Pera',0.8500);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (4,'2018-09-05','Oval',0.8300);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (5,'2018-09-05','Corazón',0.8200);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (6,'2018-09-05','Marquesa',0.8200);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (7,'2018-09-05','Flanders',0.8000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05','Princesa',0.8000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (9,'2018-09-05','Radiant',0.7600); -- Radiante
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (9,'2018-09-05','Radiante',0.7600);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (10,'2018-09-05','Asscher',0.7500);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (11,'2018-09-05','Trapecio',0.7500);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (12,'2018-09-05','Trillion',0.7500); -- Trillante
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (12,'2018-09-05','Trillante',0.7500);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (13,'2018-09-05','Baguette',0.7000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (14,'2018-09-05','Esmeralda',0.7000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (15,'2018-09-05','Antiguo',0.6000);
@@ -314,3 +314,36 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (17,'2018-09-05','Otro',0.6000);
 
 -- Fin configuración de tablas de referencia
+
+-- Se actualiza el catalogo de incremento
+UPDATE cfg_factor_alhaja SET limite_inferior=5.00, limite_superior=20.00 WHERE id in (2,6,11,16,21,26,32,38);
+UPDATE cfg_factor_alhaja SET limite_inferior=10.00, limite_superior=15.00 WHERE id in (3,7,12,17,22,27,33,39);
+UPDATE cfg_factor_alhaja SET limite_inferior=25.00, limite_superior=55.00 WHERE id in (9,14,19,24,29,35,41);
+UPDATE cfg_factor_alhaja SET limite_inferior=70.00, limite_superior=110.00 WHERE id in (30,36,42);
+
+-- Se agregan los campos de desplazamiento comercial y el incremento
+ALTER TABLE cfg_factor_alhaja 
+CHANGE COLUMN desplazamiento desplazamiento_limite_superior DECIMAL(8,2) NOT NULL ,
+ADD COLUMN desplazamiento_limite_inferior DECIMAL(8,2) NOT NULL AFTER factor,
+ADD COLUMN desplazamiento_incremento INT NOT NULL AFTER desplazamiento_limite_superior,
+ADD COLUMN incremento INT NOT NULL AFTER limite_superior;
+
+
+ALTER TABLE hist_cfg_factor_alhaja 
+CHANGE COLUMN desplazamiento desplazamiento_limite_superior DECIMAL(8,2) NOT NULL ,
+ADD COLUMN desplazamiento_limite_inferior DECIMAL(8,2) NOT NULL AFTER factor,
+ADD COLUMN desplazamiento_incremento INT NOT NULL AFTER desplazamiento_limite_superior,
+ADD COLUMN incremento INT NOT NULL AFTER limite_superior;
+
+-- Rango F2
+UPDATE cfg_factor_alhaja SET incremento=5 WHERE id in (2,6,11,16,21,26,32,38);
+-- Rango F3
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=0.00, desplazamiento_incremento=5, incremento=5 WHERE id in (3,7,12,17,22,27,33,39);
+-- Rango F4
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (4,8,13,18,23,28,34,40);
+-- Rango F5
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (9,14,19,24,29,35,41);
+-- Rango F6
+UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 30.00, desplazamiento_incremento=5, incremento=10 WHERE id in (30,36,42);
+
+

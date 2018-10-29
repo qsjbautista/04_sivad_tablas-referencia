@@ -98,8 +98,9 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
         }
 
         return FactorAlhajaFactory.crear(factorAlhajaJPA.getMetal(), factorAlhajaJPA.getCalidad(), factorAlhajaJPA.getRango(),
-            factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento(), factorAlhajaJPA.getLimiteInferior(),
-            factorAlhajaJPA.getLimiteSuperior(), factorAlhajaJPA.getUltimaActualizacion());
+            factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento_limiteInferior(),factorAlhajaJPA.getDesplazamiento_limiteSuperior(),
+            factorAlhajaJPA.getDesplazamiento_incremento(),factorAlhajaJPA.getLimiteInferior(),factorAlhajaJPA.getLimiteSuperior(), 
+            factorAlhajaJPA.getIncremento(),factorAlhajaJPA.getUltimaActualizacion());
     }
 
     /**
@@ -182,9 +183,12 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
                     histFactorAlhajaJPA.setCalidad(factorAlhajaJPA.getCalidad());
                     histFactorAlhajaJPA.setRango(factorAlhajaJPA.getRango());
                     histFactorAlhajaJPA.setFactor(factorAlhajaJPA.getFactor());
-                    histFactorAlhajaJPA.setDesplazamiento(factorAlhajaJPA.getDesplazamiento());
+                    histFactorAlhajaJPA.setDesplazamiento_limiteInferior(factorAlhajaJPA.getDesplazamiento_limiteInferior());
+                    histFactorAlhajaJPA.setDesplazamiento_limiteSuperior(factorAlhajaJPA.getDesplazamiento_limiteSuperior());
+                    histFactorAlhajaJPA.setDesplazamiento_incremento(factorAlhajaJPA.getDesplazamiento_incremento());
                     histFactorAlhajaJPA.setLimiteInferior(factorAlhajaJPA.getLimiteInferior());
                     histFactorAlhajaJPA.setLimiteSuperior(factorAlhajaJPA.getLimiteSuperior());
+                    histFactorAlhajaJPA.setIncremento(factorAlhajaJPA.getIncremento());
                     histFactorAlhajaJPA.setUltimaActualizacion(factorAlhajaJPA.getUltimaActualizacion());
 
                     histFactorAlhajaJPA.setListado(histListadoFactorAlhajaJPA);
@@ -210,9 +214,12 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
                 factorAlhajaJPA.setCalidad(factorAlhaja.getCalidad());
                 factorAlhajaJPA.setRango(factorAlhaja.getRango());
                 factorAlhajaJPA.setFactor(factorAlhaja.getFactor());
-                factorAlhajaJPA.setDesplazamiento(factorAlhaja.getDesplazamiento());
+                factorAlhajaJPA.setDesplazamiento_limiteInferior(factorAlhaja.getDesplazamiento_limite_inferior());
+                factorAlhajaJPA.setDesplazamiento_limiteSuperior(factorAlhaja.getDesplazamiento_limite_superior());
+                factorAlhajaJPA.setDesplazamiento_incremento(factorAlhaja.getDesplazamiento_incremento());
                 factorAlhajaJPA.setLimiteInferior(factorAlhaja.getLimiteInferior());
                 factorAlhajaJPA.setLimiteSuperior(factorAlhaja.getLimiteSuperior());
+                factorAlhajaJPA.setIncremento(factorAlhaja.getIncremento());
                 factorAlhajaJPA.setUltimaActualizacion(DateTime.now());
 
                 factorAlhajaJPA.setListado(listadoNuevo);
@@ -239,8 +246,9 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             for (FactorAlhajaJPA factorAlhajaJPA : listado.getFactoresAlhaja()) {
                 factoresAlhaja.add(
                     FactorAlhajaFactory.crear(factorAlhajaJPA.getMetal(), factorAlhajaJPA.getCalidad(), factorAlhajaJPA.getRango(),
-                        factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento(), factorAlhajaJPA.getLimiteInferior(),
-                        factorAlhajaJPA.getLimiteSuperior(), factorAlhajaJPA.getUltimaActualizacion()));
+                        factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento_limiteInferior(),factorAlhajaJPA.getDesplazamiento_limiteSuperior(),
+                        factorAlhajaJPA.getDesplazamiento_incremento(),factorAlhajaJPA.getLimiteInferior(),
+                        factorAlhajaJPA.getLimiteSuperior(),factorAlhajaJPA.getIncremento(), factorAlhajaJPA.getUltimaActualizacion()));
             }
         }
 
@@ -259,8 +267,9 @@ public class ModificadorRangoRepositoryImpl implements ModificadorRangoRepositor
             for (HistFactorAlhajaJPA factorAlhajaJPA : listado.getFactoresAlhaja()) {
                 factoresAlhaja.add(
                     FactorAlhajaFactory.crear(factorAlhajaJPA.getMetal(), factorAlhajaJPA.getCalidad(), factorAlhajaJPA.getRango(),
-                        factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento(), factorAlhajaJPA.getLimiteInferior(),
-                        factorAlhajaJPA.getLimiteSuperior(), factorAlhajaJPA.getUltimaActualizacion()));
+                        factorAlhajaJPA.getFactor(), factorAlhajaJPA.getDesplazamiento_limiteInferior(),factorAlhajaJPA.getDesplazamiento_limiteSuperior(),
+                        factorAlhajaJPA.getDesplazamiento_incremento(),factorAlhajaJPA.getLimiteInferior(),
+                        factorAlhajaJPA.getLimiteSuperior(),factorAlhajaJPA.getIncremento(), factorAlhajaJPA.getUltimaActualizacion()));
             }
         }
 
