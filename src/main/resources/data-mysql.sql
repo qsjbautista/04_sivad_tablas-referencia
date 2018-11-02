@@ -232,88 +232,88 @@ VALUES (51, 'AG', 'CL_500', 'F1', 1.00, 0.00, 0.00, 0.00, '2016-12-20 10:00:00.5
 -- TERMINA - DATOS: MODIFICADORES DE FACTORES DE ALHAJAS.
 -- ----------------------------------------------------------------------------------------------------------------------
 
--- Incio configuraciÃ³n de tablas de referencia  Siva Diamantes F2
+-- Incio configuración de tablas de referencia  Siva Diamantes F2
 
 /*
 cfg_diamante_factores_x_rango_de_color
 */
-INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (1,'2018-08-28','O','R','M',0.80);
-INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (2,'2018-08-28','S','Z','M',0.65);
+INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (1,'2018-08-28 00:00:00','O','R','M',0.80);
+INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (2,'2018-08-28 00:00:00','S','Z','M',0.65);
 
 /*
 cfg_diamante_parametros_quilates
 */
-INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (1,'2018-08-28',6.00,6.99,5.00,5.99,1.100);
-INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (6,'2018-08-28',7.00,7.99,5.00,5.99,1.150);
-INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (7,'2018-08-28',8.00,8.99,5.00,5.99,1.200);
-INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (8,'2018-08-28',9.00,9.99,5.00,5.99,1.250);
-INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (9,'2018-08-28',11.00,20.00,10.00,10.99,1.075);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (1,'2018-08-28 00:00:00',6.00,6.99,5.00,5.99,1.100);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (6,'2018-08-28 00:00:00',7.00,7.99,5.00,5.99,1.150);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (7,'2018-08-28 00:00:00',8.00,8.99,5.00,5.99,1.200);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (8,'2018-08-28 00:00:00',9.00,9.99,5.00,5.99,1.250);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (9,'2018-08-28 00:00:00',11.00,20.00,10.00,10.99,1.075);
 
 /*
 cfg_diamante_porcentaje_castigo_x_rango_de_pesos
 */
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (1,'2018-08-28',0.01,0.49,0.70);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (2,'2018-08-28',0.50,0.89,0.60);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (3,'2018-08-28',0.90,1.49,0.50);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (4,'2018-08-28',1.50,1.99,0.45);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (5,'2018-08-28',2.00,100.00,0.35);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (1,'2018-08-28 00:00:00',0.01,0.49,0.70);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (2,'2018-08-28 00:00:00',0.50,0.89,0.60);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (3,'2018-08-28 00:00:00',0.90,1.49,0.50);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (4,'2018-08-28 00:00:00',1.50,1.99,0.45);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (5,'2018-08-28 00:00:00',2.00,100.00,0.35);
 
 /*
 cfg_diamante_factor_rapaport
 */
-INSERT INTO `cfg_diamante_factor_rapaport` (`ID`,`FACTOR`,`FECHA`) VALUES (1,100,'2018-08-28');
+INSERT INTO `cfg_diamante_factor_rapaport` (`ID`,`FACTOR`,`FECHA`) VALUES (1,100,'2018-08-28 00:00:00');
 
 /*
 cfg_diamante_rango_pesos
 */
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05',0.01,0.03);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05',0.04,0.07);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05',0.08,0.14);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05',0.15,0.17);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.18,0.22);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.23,0.29);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.30,0.39);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.40,0.49);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.50,0.69);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.70,0.89);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',0.90,0.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',1.00,1.49);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',1.50,1.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',2.00,2.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',3.00,3.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',4.00,4.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',5.00,5.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',6.00,6.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',7.00,7.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',8.00,8.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',9.00,9.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',10.00,10.99);
-INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05',11.00,20.00);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05 00:00:00',0.01,0.03);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05 00:00:00',0.04,0.07);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05 00:00:00',0.08,0.14);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) VALUES('2018-09-05 00:00:00',0.15,0.17);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.18,0.22);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.23,0.29);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.30,0.39);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.40,0.49);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.50,0.69);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.70,0.89);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',0.90,0.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',1.00,1.49);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',1.50,1.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',2.00,2.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',3.00,3.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',4.00,4.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',5.00,5.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',6.00,6.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',7.00,7.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',8.00,8.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',9.00,9.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',10.00,10.99);
+INSERT INTO cfg_diamante_rango_pesos(fecha, quilates_desde, quilates_hasta) values('2018-09-05 00:00:00',11.00,20.00);
 
 
 /*
 cfg_diamante_porcentaje_castigo_x_tipo_corte
 */
 -- Se estandarizan los nombres segun el catalogo de subcortes
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','Brillante Redondo',1.0000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (2,'2018-09-05','Acojinado',0.9000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (3,'2018-09-05','Pera',0.8500);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (4,'2018-09-05','Oval',0.8300);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (5,'2018-09-05','CorazÃ³n',0.8200);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (6,'2018-09-05','Marquesa',0.8200);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (7,'2018-09-05','Flanders',0.8000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05','Princesa',0.8000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (9,'2018-09-05','Radiante',0.7600);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (10,'2018-09-05','Asscher',0.7500);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (11,'2018-09-05','Trapecio',0.7500);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (12,'2018-09-05','Trillante',0.7500);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (13,'2018-09-05','Baguette',0.7000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (14,'2018-09-05','Esmeralda',0.7000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (15,'2018-09-05','Antiguo',0.6000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (16,'2018-09-05','8x8',0.6000);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (17,'2018-09-05','Otro',0.6000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05 00:00:00','Brillante Redondo',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (2,'2018-09-05 00:00:00','Acojinado',0.9000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (3,'2018-09-05 00:00:00','Pera',0.8500);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (4,'2018-09-05 00:00:00','Oval',0.8300);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (5,'2018-09-05 00:00:00','Corazón',0.8200);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (6,'2018-09-05 00:00:00','Marquesa',0.8200);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (7,'2018-09-05 00:00:00','Flanders',0.8000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05 00:00:00','Princesa',0.8000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (9,'2018-09-05 00:00:00','Radiante',0.7600);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (10,'2018-09-05 00:00:00','Asscher',0.7500);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (11,'2018-09-05 00:00:00','Trapecio',0.7500);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (12,'2018-09-05 00:00:00','Trillante',0.7500);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (13,'2018-09-05 00:00:00','Baguette',0.7000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (14,'2018-09-05 00:00:00','Esmeralda',0.7000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (15,'2018-09-05 00:00:00','Antiguo',0.6000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (16,'2018-09-05 00:00:00','8x8',0.6000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (17,'2018-09-05 00:00:00','Otro',0.6000);
 
--- Fin configuraciÃ³n de tablas de referencia
+-- Fin configuración de tablas de referencia
 
 -- Se actualiza el catalogo de incremento
 UPDATE cfg_factor_alhaja SET limite_inferior=5.00, limite_superior=20.00 WHERE id in (2,6,11,16,21,26,32,38);
@@ -345,5 +345,28 @@ UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_
 UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 15.00, desplazamiento_incremento=5, incremento=5 WHERE id in (9,14,19,24,29,35,41);
 -- Rango F6
 UPDATE cfg_factor_alhaja SET desplazamiento_limite_inferior=5.00,desplazamiento_limite_superior = 30.00, desplazamiento_incremento=5, incremento=10 WHERE id in (30,36,42);
+
+-- Se agregan los inserts de calidad ley para platino, precio y factor
+
+delete from cfg_alhaja_valor_comercial_metal where id in (1);
+INSERT INTO cfg_alhaja_valor_comercial_metal (metal, calidad, precio, listado)
+VALUES ('PT', 'CL_950', 520.60, 1);
+INSERT INTO cfg_alhaja_valor_comercial_metal (metal, calidad, precio, listado)
+VALUES ('PT', 'CL_900', 493.20, 1);
+
+delete from cfg_factor_alhaja where id in (43,44,45);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_950', 'F1', 1.10, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_950', 'DE', 1.20, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_950', 'MC', 1.30, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_900', 'F1', 1.10, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_900', 'DE', 1.20, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+INSERT INTO cfg_factor_alhaja (metal, calidad, rango, factor, desplazamiento_limite_superior, limite_inferior, limite_superior, ultima_actualizacion, listado, desplazamiento_limite_inferior, desplazamiento_incremento, incremento)
+VALUES ('PT', 'CL_900', 'MC', 1.30, 0.00, 0.00, 0.00, now(), 1, 0.00, 0.00, 0.00);
+
 
 

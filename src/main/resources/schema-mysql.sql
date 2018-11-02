@@ -595,7 +595,7 @@ DELIMITER ;
 DROP TABLE IF EXISTS `cfg_diamante_factores_x_rango_de_color`;
 CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `fecha` DATE NOT NULL,
+  `fecha` TIMESTAMP NOT NULL,
   `color_desde` VARCHAR(20) NOT NULL,
   `color_hasta` VARCHAR(20) NOT NULL,
   `rango_color_base` VARCHAR(20) NOT NULL,
@@ -612,7 +612,7 @@ CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
 DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `fecha` DATE NOT NULL,
+  `fecha` TIMESTAMP NOT NULL,
   `quilates_desde` DECIMAL(10,2) NOT NULL,
   `quilates_hasta` DECIMAL(10,2) NOT NULL,
   `factor` DECIMAL(10,2) NOT NULL,
@@ -628,7 +628,7 @@ CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
 DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_tipo_corte`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `fecha` DATE NOT NULL,
+  `fecha` TIMESTAMP NOT NULL,
   `corte` VARCHAR(20) NOT NULL,
   `factor` DECIMAL(10,4) NOT NULL,
   PRIMARY KEY (`id`)
@@ -642,7 +642,7 @@ CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
 DROP TABLE IF EXISTS `cfg_diamante_rango_pesos`;
 CREATE TABLE `cfg_diamante_rango_pesos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `fecha` DATE NOT NULL,
+  `fecha` TIMESTAMP NOT NULL,
   `quilates_desde` DECIMAL(10,4) NOT NULL,
   `quilates_hasta` DECIMAL(10,4) NOT NULL,
   PRIMARY KEY (`id`)
@@ -656,7 +656,7 @@ CREATE TABLE `cfg_diamante_rango_pesos` (
 DROP TABLE IF EXISTS `cfg_diamante_parametros_quilates`;
 CREATE TABLE `cfg_diamante_parametros_quilates` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `fecha` DATE NOT NULL,
+  `fecha` TIMESTAMP NOT NULL,
   `quilates_desde` DECIMAL(10,2) NOT NULL,
   `quilates_hasta` DECIMAL(10,2) NOT NULL,
   `quilates_base_desde` DECIMAL(10,2) NOT NULL,
@@ -675,7 +675,7 @@ DROP TABLE IF EXISTS `cfg_diamante_factor_rapaport`;
 CREATE TABLE `cfg_diamante_factor_rapaport` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `factor` DECIMAL(10,1) NOT NULL,
-  `fecha` DATE DEFAULT NULL,
+  `fecha` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=UTF8;
 
