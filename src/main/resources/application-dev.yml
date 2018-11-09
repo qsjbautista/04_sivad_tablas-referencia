@@ -28,6 +28,7 @@ spring:
         name:
         username: sivad
         password:
+        max-active: 153
     h2:
         console:
             enabled: true
@@ -49,6 +50,10 @@ tipocambio:
     wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl
   consulta:
     wsdlLocation: http://localhost:8083/soap-api/ConsultaTipoCambio?wsdl
+  header:
+    api:
+      name: X-IBM-Client-Id
+      key: 37b343c4-4214-4101-aba5-81f6265c0868
 
 # ===================================================================
 # Propiedades especificas de la aplicacion (microservicio)

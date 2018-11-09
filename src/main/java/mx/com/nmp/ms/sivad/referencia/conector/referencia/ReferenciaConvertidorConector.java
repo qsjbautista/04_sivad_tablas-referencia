@@ -3,6 +3,8 @@ package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioEndpointService;
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioService;
+import mx.com.nmp.ms.sivad.referencia.security.WSSecurityUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,18 @@ public class ReferenciaConvertidorConector {
      */
     @Value("${tipocambio.convertidor.wsdlLocation}")
     private String wsdlLocation;
+
+    /**
+     * Header name
+     */
+    @Value("${tipocambio.header.api.name}")
+    private String apiName;
+
+    /**
+     * Token value
+     */
+    @Value("${tipocambio.header.api.key}")
+    private String apiKey;
 
     /**
      * Referencia hacia el Servicio Web
@@ -63,6 +77,8 @@ public class ReferenciaConvertidorConector {
         }
 
         wsReferenciaTipoCambio = tipoCambio.getConvertidorTipoCambioEndpointPort();
+        
+        WSSecurityUtils.addHttpAPIKeyHeader(wsReferenciaTipoCambio, apiName, apiKey, "http://nmp.com.mx/ms/sivad/cambiario/ws/convertidor/");
 
     }
 
