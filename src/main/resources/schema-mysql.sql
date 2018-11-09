@@ -55,9 +55,12 @@ CREATE TABLE cfg_factor_alhaja
     calidad VARCHAR(20),
     rango VARCHAR(20) NOT NULL,
     factor DECIMAL(8, 2) NOT NULL,
-    desplazamiento DECIMAL(8, 2) NOT NULL,
+	desplazamiento_limite_inferior DECIMAL(8, 2) NOT NULL,
+    desplazamiento_limite_superior DECIMAL(8, 2) NOT NULL,
+	desplazamiento_incremento INT(11) NOT NULL,
     limite_inferior DECIMAL(8, 2) NOT NULL,
     limite_superior DECIMAL(8, 2) NOT NULL,
+	incremento INT(11) NOT NULL,
     ultima_actualizacion TIMESTAMP NOT NULL,
     listado BIGINT,
     PRIMARY KEY (id)
@@ -80,9 +83,12 @@ CREATE TABLE hist_cfg_factor_alhaja
     calidad VARCHAR(20),
     rango VARCHAR(20) NOT NULL,
     factor DECIMAL(8, 2) NOT NULL,
-    desplazamiento DECIMAL(8, 2) NOT NULL,
+    desplazamiento_limite_inferior DECIMAL(8, 2) NOT NULL,
+    desplazamiento_limite_superior DECIMAL(8, 2) NOT NULL,
+	desplazamiento_incremento INT(11) NOT NULL,
     limite_inferior DECIMAL(8, 2) NOT NULL,
     limite_superior DECIMAL(8, 2) NOT NULL,
+	incremento INT(11) NOT NULL,
     ultima_actualizacion TIMESTAMP NOT NULL,
     listado BIGINT,
     PRIMARY KEY (id)
@@ -140,7 +146,7 @@ CREATE TABLE hist_cfg_diamante_listado_valor_certificado
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- histÃ³ricos
+-- históricos
 --
 
 DROP TABLE IF EXISTS hist_cfg_diamante_valor_comercial;
@@ -226,7 +232,7 @@ CREATE TABLE cfg_diamante_listado_valor_comercial
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- histÃ³ricos
+-- históricos
 --
 
 DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_oro;
@@ -282,7 +288,7 @@ CREATE TABLE cfg_alhaja_listado_valor_comercial_oro
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- histÃ³ricos
+-- históricos
 --
 
 DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_metal;
