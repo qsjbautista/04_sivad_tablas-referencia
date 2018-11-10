@@ -1,6 +1,5 @@
 package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
-
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioEndpointService;
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioService;
 import mx.com.nmp.ms.sivad.referencia.security.WSSecurityUtils;
@@ -76,10 +75,13 @@ public class ReferenciaConvertidorConector {
             tipoCambio = new ConvertidorTipoCambioEndpointService(url);
         }
 
-        wsReferenciaTipoCambio = tipoCambio.getConvertidorTipoCambioEndpointPort();
-        
-        WSSecurityUtils.addHttpAPIKeyHeader(wsReferenciaTipoCambio, apiName, apiKey, "http://nmp.com.mx/ms/sivad/cambiario/ws/convertidor/");
-
+        wsReferenciaTipoCambio = (ConvertidorTipoCambioService) WSSecurityUtils.createService(
+    		tipoCambio.getConvertidorTipoCambioEndpointPort(),
+    		getURL(),
+    		apiName,
+    		apiKey,
+    		"http://nmp.com.mx/ms/sivad/cambiario/ws/convertidor/"
+		);
     }
 
     /**
@@ -102,4 +104,17 @@ public class ReferenciaConvertidorConector {
     }
 
 
+    private URL getLocalURL() {
+        String wsdlLocalLocation = "client-api-definition/ConvertidorTipoCambio.wsdl";
+
+        URL url = null;
+        try {
+        	url = ReferenciaConvertidorConector.class.getResource(wsdlLocalLocation);
+            LOGGER.info("Creando URL con {}", wsdlLocalLocation);
+        } catch (Exception e) {
+            LOGGER.warn("La URL no es valida. {}", wsdlLocalLocation, e);
+        }
+
+        return url;
+    }
 }

@@ -5,6 +5,7 @@
 package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioEndpointService;
+
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioService;
 import mx.com.nmp.ms.sivad.referencia.security.WSSecurityUtils;
 
@@ -70,7 +71,7 @@ public class ReferenciaConsultaTipoCambioConector {
     private void crearReferenciaConsultaTipoCambio() {
         ConsultaTipoCambioEndpointService tipoCambio;
 
-        URL url = getURL();
+        URL url = getLocalURL();
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
@@ -80,9 +81,13 @@ public class ReferenciaConsultaTipoCambioConector {
             tipoCambio = new ConsultaTipoCambioEndpointService(url);
         }
 
-        wsConsultaTipoCambio = tipoCambio.getConsultaTipoCambioEndpointPort();
-
-        WSSecurityUtils.addHttpAPIKeyHeader(wsConsultaTipoCambio, apiName, apiKey, "http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/");
+        wsConsultaTipoCambio = (ConsultaTipoCambioService) WSSecurityUtils.createService(
+    		tipoCambio.getConsultaTipoCambioEndpointPort(),
+    		getURL(),
+    		apiName,
+    		apiKey,
+    		"http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/"
+		);
     }
 
     /**
@@ -101,6 +106,20 @@ public class ReferenciaConsultaTipoCambioConector {
                 LOGGER.warn("La URL no es accesible. {}", wsdlLocation, e);
             }
         }
+        return url;
+    }
+
+    private URL getLocalURL() {
+        String wsdlLocalLocation = "client-api-definition/ConsultaTipoCambio.wsdl";
+
+        URL url = null;
+        try {
+        	url = ReferenciaConsultaTipoCambioConector.class.getResource(wsdlLocalLocation);
+            LOGGER.info("Creando URL con {}", wsdlLocalLocation);
+        } catch (Exception e) {
+            LOGGER.warn("La URL no es valida. {}", wsdlLocalLocation, e);
+        }
+
         return url;
     }
 
