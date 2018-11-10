@@ -110,8 +110,6 @@ INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (2, 'HR', 1.100, 1);
 INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
 VALUES (3, 'IG', 1.100, 1);
-INSERT INTO cfg_diamante_valor_certificado (id, certificado, factor, listado)
-VALUES (4, 'AJ', 1.100, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADOR CERTIFICADO
 -- ----------------------------------------------------------------------------------------------------------------------
@@ -265,7 +263,7 @@ VALUES (63, 'AG', 'CL_500', 'F1', 1.00, 0.00, 0.00, 0.00, '2016-12-20 10:00:00.5
 -- TERMINA - DATOS: MODIFICADORES DE FACTORES DE ALHAJAS.
 -- ----------------------------------------------------------------------------------------------------------------------
 
--- Incio configuración de tablas de referencia  Siva Diamantes F2
+-- Incio configuraciÃ³n de tablas de referencia  Siva Diamantes F2
 
 /*
 cfg_diamante_factores_x_rango_de_color
@@ -332,7 +330,7 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (2,'2018-09-05 00:00:00','Acojinado',0.9000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (3,'2018-09-05 00:00:00','Pera',0.8500);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (4,'2018-09-05 00:00:00','Oval',0.8300);
-INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (5,'2018-09-05 00:00:00','Corazón',0.8200);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (5,'2018-09-05 00:00:00','CorazÃ³n',0.8200);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (6,'2018-09-05 00:00:00','Marquesa',0.8200);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (7,'2018-09-05 00:00:00','Flanders',0.8000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05 00:00:00','Princesa',0.8000);
@@ -346,7 +344,7 @@ INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (16,'2018-09-05 00:00:00','8x8',0.6000);
 INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (17,'2018-09-05 00:00:00','Otro',0.6000);
 
--- Fin configuración de tablas de referencia
+-- Fin configuraciÃ³n de tablas de referencia
 
 
 
