@@ -65,11 +65,12 @@ public class ReferenciaConvertidorConector {
     private void crearReferenciaConvertidorTipoCambio() {
         ConvertidorTipoCambioEndpointService tipoCambio;
 
-        URL url = getURL();
+        URL url = getLocalURL();
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
-            tipoCambio = new ConvertidorTipoCambioEndpointService();
+            url = null;
+            tipoCambio = new ConvertidorTipoCambioEndpointService(url);
         } else {
             LOGGER.info("Creando referencia al WS con URL {}", url);
             tipoCambio = new ConvertidorTipoCambioEndpointService(url);
@@ -105,7 +106,7 @@ public class ReferenciaConvertidorConector {
 
 
     private URL getLocalURL() {
-        String wsdlLocalLocation = "client-api-definition/ConvertidorTipoCambio.wsdl";
+        String wsdlLocalLocation = "/client-api-definition/ConvertidorTipoCambio.wsdl";
 
         URL url = null;
         try {

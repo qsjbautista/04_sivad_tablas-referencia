@@ -75,7 +75,8 @@ public class ReferenciaConsultaTipoCambioConector {
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
-            tipoCambio = new ConsultaTipoCambioEndpointService();
+            url = null;
+            tipoCambio = new ConsultaTipoCambioEndpointService(url);
         } else {
             LOGGER.info("Creando referencia al WS con URL {}", url);
             tipoCambio = new ConsultaTipoCambioEndpointService(url);
