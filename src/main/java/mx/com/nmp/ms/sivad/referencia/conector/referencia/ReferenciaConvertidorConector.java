@@ -1,8 +1,9 @@
 package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
-
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioEndpointService;
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConvertidorTipoCambioService;
+import mx.com.nmp.ms.sivad.referencia.security.WSSecurityUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,18 @@ public class ReferenciaConvertidorConector {
      */
     @Value("${tipocambio.convertidor.wsdlLocation}")
     private String wsdlLocation;
+
+    /**
+     * Header name
+     */
+    @Value("${tipocambio.header.api.name}")
+    private String apiName;
+
+    /**
+     * Token value
+     */
+    @Value("${tipocambio.header.api.key}")
+    private String apiKey;
 
     /**
      * Referencia hacia el Servicio Web
@@ -52,18 +65,24 @@ public class ReferenciaConvertidorConector {
     private void crearReferenciaConvertidorTipoCambio() {
         ConvertidorTipoCambioEndpointService tipoCambio;
 
-        URL url = getURL();
+        URL url = getLocalURL();
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
-            tipoCambio = new ConvertidorTipoCambioEndpointService();
+            url = null;
+            tipoCambio = new ConvertidorTipoCambioEndpointService(url);
         } else {
             LOGGER.info("Creando referencia al WS con URL {}", url);
             tipoCambio = new ConvertidorTipoCambioEndpointService(url);
         }
 
-        wsReferenciaTipoCambio = tipoCambio.getConvertidorTipoCambioEndpointPort();
-
+        wsReferenciaTipoCambio = (ConvertidorTipoCambioService) WSSecurityUtils.createService(
+    		tipoCambio.getConvertidorTipoCambioEndpointPort(),
+    		getURL(),
+    		apiName,
+    		apiKey,
+    		"http://nmp.com.mx/ms/sivad/cambiario/ws/convertidor/"
+		);
     }
 
     /**
@@ -86,4 +105,17 @@ public class ReferenciaConvertidorConector {
     }
 
 
+    private URL getLocalURL() {
+        String wsdlLocalLocation = "/client-api-definition/ConvertidorTipoCambio.wsdl";
+
+        URL url = null;
+        try {
+        	url = ReferenciaConvertidorConector.class.getResource(wsdlLocalLocation);
+            LOGGER.info("Creando URL con {}", wsdlLocalLocation);
+        } catch (Exception e) {
+            LOGGER.warn("La URL no es valida. {}", wsdlLocalLocation, e);
+        }
+
+        return url;
+    }
 }

@@ -5,7 +5,10 @@
 package mx.com.nmp.ms.sivad.referencia.conector.referencia;
 
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioEndpointService;
+
 import mx.com.nmp.ms.sivad.cambiario.api.ws.ConsultaTipoCambioService;
+import mx.com.nmp.ms.sivad.referencia.security.WSSecurityUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +35,18 @@ public class ReferenciaConsultaTipoCambioConector {
     private String wsdlLocation;
 
     /**
+     * Header name
+     */
+    @Value("${tipocambio.header.api.name}")
+    private String apiName;
+
+    /**
+     * Token value
+     */
+    @Value("${tipocambio.header.api.key}")
+    private String apiKey;
+
+    /**
      * Referencia hacia el Servicio Web
      */
     private ConsultaTipoCambioService wsConsultaTipoCambio;
@@ -56,17 +71,24 @@ public class ReferenciaConsultaTipoCambioConector {
     private void crearReferenciaConsultaTipoCambio() {
         ConsultaTipoCambioEndpointService tipoCambio;
 
-        URL url = getURL();
+        URL url = getLocalURL();
 
         if (ObjectUtils.isEmpty(url)) {
             LOGGER.info("Creando referencia al WS con valores por defecto");
-            tipoCambio = new ConsultaTipoCambioEndpointService();
+            url = null;
+            tipoCambio = new ConsultaTipoCambioEndpointService(url);
         } else {
             LOGGER.info("Creando referencia al WS con URL {}", url);
             tipoCambio = new ConsultaTipoCambioEndpointService(url);
         }
 
-        wsConsultaTipoCambio = tipoCambio.getConsultaTipoCambioEndpointPort();
+        wsConsultaTipoCambio = (ConsultaTipoCambioService) WSSecurityUtils.createService(
+    		tipoCambio.getConsultaTipoCambioEndpointPort(),
+    		getURL(),
+    		apiName,
+    		apiKey,
+    		"http://nmp.com.mx/ms/sivad/cambiario/ws/consulta/"
+		);
     }
 
     /**
@@ -85,6 +107,20 @@ public class ReferenciaConsultaTipoCambioConector {
                 LOGGER.warn("La URL no es accesible. {}", wsdlLocation, e);
             }
         }
+        return url;
+    }
+
+    private URL getLocalURL() {
+        String wsdlLocalLocation = "client-api-definition/ConsultaTipoCambio.wsdl";
+
+        URL url = null;
+        try {
+        	url = ReferenciaConsultaTipoCambioConector.class.getResource(wsdlLocalLocation);
+            LOGGER.info("Creando URL con {}", wsdlLocalLocation);
+        } catch (Exception e) {
+            LOGGER.warn("La URL no es valida. {}", wsdlLocalLocation, e);
+        }
+
         return url;
     }
 
