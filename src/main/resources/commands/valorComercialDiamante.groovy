@@ -129,6 +129,9 @@ class valorComercialDiamante {
                 label('Tamanio Inferior')
                 label('Tamanio Superior')
                 label('Precio')
+                label('Tipo Cambio')
+                label('Montovbd')
+                label('Montofcastigoxrango')
             }
 
             elementos.each { elemento ->
@@ -140,6 +143,9 @@ class valorComercialDiamante {
                         label(diamante.tamanioInferior, foreground: white)
                         label(diamante.tamanioSuperior, foreground: white)
                         label(diamante.precio, foreground: white)
+                        label(diamante.tipoCambio, foreground: white)
+                        label(diamante.montoVbd, foreground: white)
+                        label(diamante.montofCastigoxRango, foreground: white)
                     }
                 }
             }

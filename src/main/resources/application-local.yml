@@ -26,12 +26,14 @@ spring:
         name: sivad-tablas-referencia
         username: root
         password: password
+        max-active: 153
         hikari:
             data-source-properties:
                 cachePrepStmts: true
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
+                noAccessToProcedureBodies: true
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         database: MYSQL
@@ -45,6 +47,25 @@ spring:
             hibernate.generate_statistics: true
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
 
+tipocambio:
+  convertidor:
+    wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl
+  consulta:
+    wsdlLocation: http://localhost:8083/soap-api/ConsultaTipoCambio?wsdl
+  header:
+    api:
+      name: X-IBM-Client-Id
+      key: 37b343c4-4214-4101-aba5-81f6265c0868
+
 # ===================================================================
 # Propiedades especificas de la aplicacion (microservicio)
 # ===================================================================
+application:
+    # por defecto cors esta desactivado, descomentar las siguientes lineas para activarlo
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+      allowed-headers: "*"
+      exposed-headers:
+      allow-credentials: true
+      max-age: 1800

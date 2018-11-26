@@ -7,6 +7,7 @@ package mx.com.nmp.ms.sivad.referencia.dominio.model;
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
 import mx.com.nmp.ms.sivad.referencia.conector.Convertidor;
 import mx.com.nmp.ms.sivad.referencia.conector.TipoCambioEnum;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.CastigoCorteNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.DiamanteFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ListadoValorComercialDiamante;
@@ -16,6 +17,7 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.ValorComercialDiamanteVO
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialDiamanteRepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.HistListadoValorComercialDiamanteJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ListadoValorComercialDiamanteJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.CastigoCorteDiamanteJPARepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.HistListadoValorComercialDiamanteJPARepository;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.ListadoValorComercialDiamanteJPARepository;
 import org.joda.time.DateTime;
@@ -50,7 +52,7 @@ import static org.mockito.Mockito.when;
 /**
  * Clase de prueba utilizada para validar el comportamiento de la entidad de dominio Diamante.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TablasReferenciaApplication.class)
@@ -68,6 +70,7 @@ public class DiamanteIntTest {
     private static final String COLOR = "D";
     private static final String COLOR_NUEVO = "K";
     private static final String CORTE = "Oval";
+    private static final String SUBCORTE = "Acojinado";
     private static final String CORTE_NUEVO = "Esmeralda";
     private static final String FECHA_VIGENCIA = "2016-11-21";
     private static final String FORMATO_FECHA = "yyyy-MM-dd";
@@ -83,6 +86,17 @@ public class DiamanteIntTest {
     private static final BigDecimal TAMANIO_INFERIOR_NUEVO = new BigDecimal(1.00D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_SUPERIOR = new BigDecimal(0.99D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_SUPERIOR_NUEVO = new BigDecimal(1.49D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal TIPO_CAMBIO = new BigDecimal(19.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal MONTOVBD = new BigDecimal(73.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal MONTOFCASTIGOXRANGO = new BigDecimal(73.00D).setScale(4, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_DESDE = new BigDecimal(0.90D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_HASTA = new BigDecimal(0.94D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_PESOS_CASTIGO = new BigDecimal(65.70D).setScale(4, BigDecimal.ROUND_HALF_UP);
+
+    private static final BigDecimal FACTOR_VALOR_DIAMANTE_MINIMO = new BigDecimal(0.30D).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal FACTOR_VALOR_DIAMANTE_MEDIO = new BigDecimal(0.40D).setScale(3, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal FACTOR_VALOR_DIAMANTE_MAXIMO = new BigDecimal(0.50D).setScale(3, BigDecimal.ROUND_HALF_UP);
+
 
     private static final BigDecimal VALOR_COMERCIAL_MINIMO_PESOS =
         new BigDecimal(438.0000D).setScale(4, BigDecimal.ROUND_HALF_UP);
@@ -109,12 +123,11 @@ public class DiamanteIntTest {
     @Inject
     private HistListadoValorComercialDiamanteJPARepository histJPARepository;
 
-    /**
+	/**
      * Referencia al conector con microservicio de tipo cambiario.
      */
-    @Mock
-    private Convertidor convertidor;
-
+    //@Mock
+    //private Convertidor convertidor;
 
 
     // METODOS
@@ -132,7 +145,7 @@ public class DiamanteIntTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
+        //ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
     }
 
     /**
@@ -144,10 +157,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NULO
      * TAMANIO SUPERIOR - NULO
      * PRECIO - NULO
+     * TIPO CAMBIO - NULO
+     * MONTOVBD - NULO
+     * MONTOFCASTIGOXRANGO - NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest01() {
-        DiamanteFactory.create(null, null, null, null, null, null);
+        DiamanteFactory.create(null, null, null, null, null, null,
+            null, null, null);
     }
 
     /**
@@ -159,10 +176,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NO NULO
      * TAMANIO SUPERIOR - NO NULO
      * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest02() {
-        DiamanteFactory.create(null, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        DiamanteFactory.create(null, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -174,10 +195,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NO NULO
      * TAMANIO SUPERIOR - NO NULO
      * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest03() {
-        DiamanteFactory.create(CORTE, null, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        DiamanteFactory.create(CORTE, null, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -189,10 +214,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NO NULO
      * TAMANIO SUPERIOR - NO NULO
      * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest04() {
-        DiamanteFactory.create(CORTE, COLOR, null, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        DiamanteFactory.create(CORTE, COLOR, null, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -204,10 +233,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NULO
      * TAMANIO SUPERIOR - NO NULO
      * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest05() {
-        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, null, TAMANIO_SUPERIOR, PRECIO);
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, null, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -219,10 +252,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NO NULO
      * TAMANIO SUPERIOR - NULO
      * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest06() {
-        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, null, PRECIO);
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, null, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -234,10 +271,14 @@ public class DiamanteIntTest {
      * TAMANIO INFERIOR - NO NULO
      * TAMANIO SUPERIOR - NO NULO
      * PRECIO - NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearDiamanteTest07() {
-        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, null);
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, null, TIPO_CAMBIO,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
     }
 
     /**
@@ -252,7 +293,8 @@ public class DiamanteIntTest {
      */
     @Test
     public void crearDiamanteTest08() {
-        Diamante result = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante result = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         assertNotNull(result);
         assertEquals(CORTE, result.getCorte());
@@ -261,6 +303,66 @@ public class DiamanteIntTest {
         assertEquals(TAMANIO_INFERIOR, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR, result.getTamanioSuperior());
         assertEquals(PRECIO, result.getPrecio());
+        assertEquals(TIPO_CAMBIO, result.getTipoCambio());
+        assertEquals(MONTOVBD, result.getMontoVbd());
+        assertEquals(MONTOFCASTIGOXRANGO, result.getMontofCastigoxRango());
+    }
+
+    /**
+     * Utilizado para crear una entidad Diamante a través del factory con las siguientes características:
+     *
+     * CORTE - NO NULO
+     * COLOR - NO NULO
+     * CLARIDAD - NO NULA
+     * TAMANIO INFERIOR - NO NULO
+     * TAMANIO SUPERIOR - NO NULO
+     * PRECIO - NO NULO
+     * TIPO CAMBIO - NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void crearDiamanteTest09() {
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, null,
+            MONTOVBD, MONTOFCASTIGOXRANGO);
+    }
+
+    /**
+     * Utilizado para crear una entidad Diamante a través del factory con las siguientes características:
+     *
+     * CORTE - NO NULO
+     * COLOR - NO NULO
+     * CLARIDAD - NO NULA
+     * TAMANIO INFERIOR - NO NULO
+     * TAMANIO SUPERIOR - NO NULO
+     * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NULO
+     * MONTOFCASTIGOXRANGO - NO NULO
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void crearDiamanteTest10() {
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            null, MONTOFCASTIGOXRANGO);
+    }
+
+    /**
+     * Utilizado para crear una entidad Diamante a través del factory con las siguientes características:
+     *
+     * CORTE - NO NULO
+     * COLOR - NO NULO
+     * CLARIDAD - NO NULA
+     * TAMANIO INFERIOR - NO NULO
+     * TAMANIO SUPERIOR - NO NULO
+     * PRECIO - NO NULO
+     * TIPO CAMBIO - NO NULO
+     * MONTOVBD - NO NULO
+     * MONTOFCASTIGOXRANGO - NULO
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void crearDiamanteTest11() {
+        DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO, TIPO_CAMBIO,
+            MONTOVBD, null);
     }
 
     /**
@@ -297,7 +399,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest03() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         Set<Diamante> valoresComerciales = new HashSet<>();
         valoresComerciales.add(diamante);
@@ -338,7 +441,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest06() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         LocalDate fechaFutura = LocalDate.now();
         fechaFutura = fechaFutura.plusDays(1);
@@ -357,7 +461,8 @@ public class DiamanteIntTest {
      */
     @Test
     public void crearListadoValorComercialDiamanteTest07() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         LocalDate fechaListado = LocalDate.now();
 
@@ -395,7 +500,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest09() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         Set<Diamante> valoresComerciales = new HashSet<>();
         valoresComerciales.add(diamante);
@@ -412,7 +518,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest10() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         Set<Diamante> valoresComerciales = new HashSet<>();
         valoresComerciales.add(diamante);
@@ -456,7 +563,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest13() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         DateTime fechaFutura = DateTime.now();
         fechaFutura = fechaFutura.plusDays(1);
@@ -476,7 +584,8 @@ public class DiamanteIntTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void crearListadoValorComercialDiamanteTest14() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         LocalDate fechaFutura = LocalDate.now();
         fechaFutura = fechaFutura.plusDays(1);
@@ -496,7 +605,8 @@ public class DiamanteIntTest {
      */
     @Test
     public void crearListadoValorComercialDiamanteTest15() {
-        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO);
+        Diamante diamante = DiamanteFactory.create(CORTE, COLOR, CLARIDAD, TAMANIO_INFERIOR, TAMANIO_SUPERIOR, PRECIO,
+            TIPO_CAMBIO, MONTOVBD, MONTOFCASTIGOXRANGO);
 
         DateTime fechaCarga = DateTime.now();
         LocalDate fechaListado = LocalDate.now();
@@ -514,16 +624,17 @@ public class DiamanteIntTest {
     }
 
     /**
-     * Utilizado para consultar el valor comercial de un diamante.
+     * Utilizado para consultar el valor comercial de un diamante encontrando porcentaje de castigo
+     * por tipo de corte.
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest01() {
-        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
-            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);
+        /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_PESOS);*/
 
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE, COLOR, CLARIDAD, QUILATES_CT);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE, SUBCORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
         assertNotNull(result);
@@ -532,16 +643,33 @@ public class DiamanteIntTest {
         assertEquals(CLARIDAD, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR, result.getTamanioSuperior());
-        assertEquals(PRECIO_PESOS, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
 
         ValorComercialDiamanteVO valorComercialDiamanteVO = result.obtenerValorComercial();
         assertNotNull(valorComercialDiamanteVO);
         assertNotNull(valorComercialDiamanteVO.getValorMinimo());
         assertNotNull(valorComercialDiamanteVO.getValorMedio());
         assertNotNull(valorComercialDiamanteVO.getValorMaximo());
-        assertEquals(VALOR_COMERCIAL_MINIMO_PESOS, valorComercialDiamanteVO.getValorMinimo());
-        assertEquals(VALOR_COMERCIAL_MEDIO_PESOS, valorComercialDiamanteVO.getValorMedio());
-        assertEquals(VALOR_COMERCIAL_MAXIMO_PESOS, valorComercialDiamanteVO.getValorMaximo());
+
+        BigDecimal precioMinimo = PRECIO_PESOS_CASTIGO.multiply(FACTOR_VALOR_DIAMANTE_MINIMO).setScale(4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal precioMedio = PRECIO_PESOS_CASTIGO.multiply(FACTOR_VALOR_DIAMANTE_MEDIO).setScale(4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal precioMaximo = PRECIO_PESOS_CASTIGO.multiply(FACTOR_VALOR_DIAMANTE_MAXIMO).setScale(4, BigDecimal.ROUND_HALF_UP);
+
+        assertEquals(precioMinimo, valorComercialDiamanteVO.getValorMinimo());
+        assertEquals(precioMedio, valorComercialDiamanteVO.getValorMedio());
+        assertEquals(precioMaximo, valorComercialDiamanteVO.getValorMaximo());
+    }
+
+    /**
+     * Utilizado para consultar el valor comercial de un diamante sin encontrar
+     * porcentaje de castigo por tipo de corte.
+     */
+    @Test(expected = CastigoCorteNoEncontradoException.class)
+    @Transactional
+    @Sql("/bd/test-data-valor_comercial_diamante_04-h2.sql")
+    public void obtenerValorComercialDiamanteTest02() {
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE, SUBCORTE, COLOR, CLARIDAD, QUILATES_CT, QUILATES_DESDE, QUILATES_HASTA);
+        valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
     /**

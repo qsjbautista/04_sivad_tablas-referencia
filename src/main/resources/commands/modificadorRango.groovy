@@ -36,15 +36,20 @@ class modificadorTipoRango {
     private static final String CALIDAD = "calidad"
     private static final String RANGO = "rango"
     private static final String FACTOR = "factor"
-    private static final String DESPLAZAMIENTO = "desplazamiento"
+    private static final String DESPLAZAMIENTO_LI = "desplazamiento limite inferior"
+    private static final String DESPLAZAMIENTO_LS = "desplazamiento limite superior"
+    private static final String DESPLAZAMIENTO_INCREMENTO = "desplazamiento incremento"
     private static final String LIMITE_INFERIOR = "limite inferior"
     private static final String LIMITE_SUPERIOR = "limite superior"
+    private static final String INCREMENTO = "incremento"
     private static final List<String>  PROPIEDADES_RANGO =
-        ["metal", "calidad", "rango", "factor", "desplazamiento", "limiteInferior", "limiteSuperior"]
+        ["metal", "calidad", "rango", "factor", "desplazamiento_limite_inferior","desplazamiento_limite_superior",
+             "desplazamiento_incremento","limiteInferior", "limiteSuperior","incremento"]
     private static final List<String>  NOMBRE_PROPIEDADES_RANGO =
-        [METAL, CALIDAD, RANGO, FACTOR, DESPLAZAMIENTO, LIMITE_INFERIOR, LIMITE_SUPERIOR]
+    [METAL, CALIDAD, RANGO, FACTOR, DESPLAZAMIENTO_LI,DESPLAZAMIENTO_LS,DESPLAZAMIENTO_INCREMENTO, LIMITE_INFERIOR, LIMITE_SUPERIOR,INCREMENTO]
     private static final List<String>  HEADERS =
-        ["Metal", "Calidad", "Rango", "Factor", "Desplazamiento", "Limite Inferior", "Limite Superior"]
+        ["Metal", "Calidad", "Rango", "Factor", "Desp. Límite Inf","Desp. Límite Sup",
+    "Desp. Incremento","Limite Inferior", "Limite Superior","Incremento"]
 
     /**
      * Permite obtener el valor del tipo Rango
@@ -181,9 +186,12 @@ class modificadorTipoRango {
 
         objects.eachWithIndex { Map<String, String> entry, int i ->
             BigDecimal factor = convertirABigDecimal(entry[FACTOR], FACTOR, entry)
-            BigDecimal desplazamiento = convertirABigDecimal(entry[DESPLAZAMIENTO], DESPLAZAMIENTO, entry)
+            BigDecimal desplazamiento_limite_inferior = convertirABigDecimal(entry[DESPLAZAMIENTO_LI], DESPLAZAMIENTO_LI, entry)
+            BigDecimal desplazamiento_limite_superior = convertirABigDecimal(entry[DESPLAZAMIENTO_LS], DESPLAZAMIENTO_LS, entry)
+            Integer desplazamiento_incremento = convertirAInteger(entry[DESPLAZAMIENTO_INCREMENTO], DESPLAZAMIENTO_INCREMENTO, entry)
             BigDecimal limiteInferior = convertirABigDecimal(entry[LIMITE_INFERIOR], LIMITE_INFERIOR, entry)
             BigDecimal limiteSuperior = convertirABigDecimal(entry[LIMITE_SUPERIOR], LIMITE_SUPERIOR, entry)
+            Integer incremento = convertirAInteger(entry[INCREMENTO], INCREMENTO, entry)
 
             if (!entry[METAL]) {
                 throw new IllegalArgumentException(
@@ -207,7 +215,7 @@ class modificadorTipoRango {
             }
 
             FactorAlhaja factorAlhaja = FactorAlhajaFactory.crear(entry[METAL], entry[CALIDAD], entry[RANGO], factor,
-                desplazamiento, limiteInferior, limiteSuperior, DateTime.now())
+                desplazamiento_limite_inferior ,desplazamiento_limite_superior,desplazamiento_incremento,  limiteInferior, limiteSuperior,incremento, DateTime.now())
             factorAlhajaSet.add(factorAlhaja)
         }
 
@@ -217,6 +225,17 @@ class modificadorTipoRango {
     private static BigDecimal convertirABigDecimal(String valor, String prop, Map<String, String> entry) {
         try {
             valor.toBigDecimal()
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "El formato del $prop [${entry[valor]}] no es valido.\nEn $entry", e)
+        } catch(NullPointerException e) {
+            throw new IllegalArgumentException("El $prop del factor de rango es una propiedad requerida.\nEn $entry", e)
+        }
+    }
+    
+    private static Integer convertirAInteger(String valor, String prop, Map<String, String> entry) {
+        try {
+            valor.toInteger()
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
                 "El formato del $prop [${entry[valor]}] no es valido.\nEn $entry", e)

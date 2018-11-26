@@ -9,9 +9,14 @@ import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Diamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.ModificadorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorValorDiamante;
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorFecha;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.FactoresRangoColorJPA;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.ParametrosQuilatesJPA;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.DiamanteItemReader;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.PrecioCorteDetalleBatch;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.TipoNuevoRegistro;
 import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.domain.util.ValorComercialDiamanteBatchProcessor;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.FactoresRangoColorJPARepository;
+import mx.com.nmp.ms.sivad.referencia.infrastructure.jpa.repository.ParametrosQuilatesRepositoryJPA;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.ReferenciaListasDiamanteService;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.*;
 import mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void;
@@ -35,6 +40,8 @@ import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -88,6 +95,12 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
     @Inject
     private TaskExecutor taskExecutor;
 
+    @Inject
+    private ParametrosQuilatesRepositoryJPA parametrosQuilatesRepositoryJPA;
+
+    @Inject
+    private FactoresRangoColorJPARepository factoresRangoColorJPARepository;
+
     /**
      * @param parameters Parametros
      * @return returns mx.com.nmp.ms.sivad.referencia.ws.diamantes.listas.datatypes.Void
@@ -99,17 +112,32 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 
         validarDatosEntrada(parameters.getListado());
 
-
         try {
-            LOGGER.debug("iniciando ejecución...");
+            LOGGER.debug("iniciando ejecucion...");
 
             // Preparar lista para el Reader
             List<PrecioCorte> listaPrecios = parameters.getListado().getPreciosCorte();
             Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<>();
+
+            List<ParametrosQuilatesJPA> parametrosQuilates = parametrosQuilatesRepositoryJPA.findByUltimaActualizacion();
+            List<FactoresRangoColorJPA> factoresRangoColor = factoresRangoColorJPARepository.findByUltimaActualizacion();
+
+
             for (PrecioCorte pc : listaPrecios) {
                 for (PrecioCorteDetalle pcd : pc.getPrecioCorte()) {
                     PrecioCorteDetalleBatch pcdb = new PrecioCorteDetalleBatch(pc.getCorte(), pcd);
+
                     preciosDiamantes.add(pcdb);
+
+                    // --> Nuevos registros
+                    List<PrecioCorteDetalleBatch> pqs = crearNuevosRegistrosQuilates(pcdb, parametrosQuilates);
+                    if (pqs != null) {
+                        preciosDiamantes.addAll(pqs);
+                    }
+
+                    Queue<PrecioCorteDetalleBatch> frc = crearNuevosRegistrosColor(pcdb, pqs, factoresRangoColor);
+                    preciosDiamantes.addAll(frc);
+
                 }
             }
 
@@ -118,27 +146,20 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
 
             // Step
             Step procesaPrecioStep = stepBuilderFactory.get("procesarPreciosDiamantes")
-                //Se guardan cada 500 registros
-                .<PrecioCorteDetalle, Diamante>chunk(500)
-                .reader(diamanteItemReader)
-                .processor(diamantesProcessor)
-                .writer(diamanteItemWriter)
-                .taskExecutor(taskExecutor)
-                .build();
+                // Se guardan cada 500 registros
+                .<PrecioCorteDetalle, Diamante>chunk(500).reader(diamanteItemReader).processor(diamantesProcessor)
+                .writer(diamanteItemWriter).taskExecutor(taskExecutor).build();
 
             // Job
             Job diamantesJob = jobBuilderFactory.get("importarPreciosDiamantes")
-                .listener(jobCompletionNotificationListener)
-                .incrementer(new RunIdIncrementer())
-                .flow(procesaPrecioStep)
-                .end()
-                .build();
+                .listener(jobCompletionNotificationListener).incrementer(new RunIdIncrementer())
+                .flow(procesaPrecioStep).end().build();
 
             // Execution
             JobParametersBuilder builder = new JobParametersBuilder();
-            //Se agrega un timer para que no se repita nunca el job.
+            // Se agrega un timer para que no se repita nunca el job.
             builder.addLong("time", System.currentTimeMillis());
-            //Se agrega la fecha de listado como parametro para que el listener la reciba.
+            // Se agrega la fecha de listado como parametro para que el listener la reciba.
             builder.addDate("fechaListado", parameters.getListado().getFecha().toGregorianCalendar().getTime());
             JobParameters jobParameters = builder.toJobParameters();
             JobExecution execution = jobLauncher.run(diamantesJob, jobParameters);
@@ -149,16 +170,16 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
                 for (Throwable excepcion : execution.getAllFailureExceptions()) {
                     mensajesError = mensajesError.concat(excepcion.getMessage());
                 }
-                throw WebServiceExceptionFactory
-                    .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
+                    WebServiceExceptionCodes.NMPR004.getCodeException(), mensajesError);
             }
-            //}
+            // }
 
         } catch (Exception e) {
             LOGGER.info("<<" + WebServiceExceptionCodes.NMPR004.getMessageException() + "." + e.getMessage());
-            throw WebServiceExceptionFactory
-                .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
-                    WebServiceExceptionCodes.NMPR004.getMessageException(), e);
+            throw WebServiceExceptionFactory.crearWebServiceExceptionCon(
+                WebServiceExceptionCodes.NMPR004.getCodeException(),
+                WebServiceExceptionCodes.NMPR004.getMessageException(), e);
         }
 
         return new Void();
@@ -230,5 +251,73 @@ public class ReferenciaListasDiamantesServiceEndpoint implements ReferenciaLista
         throw WebServiceExceptionFactory
             .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
                 WebServiceExceptionCodes.NMPR004.getMessageException());
+    }
+
+    private List<PrecioCorteDetalleBatch> crearNuevosRegistrosQuilates(PrecioCorteDetalleBatch pcdb, List<ParametrosQuilatesJPA> parametrosQuilates) {
+
+        List<PrecioCorteDetalleBatch> preciosDiamantes = new ArrayList<PrecioCorteDetalleBatch>();
+
+        for (ParametrosQuilatesJPA param : parametrosQuilates) {
+
+            if (param.getQuilatesBaseDesde().compareTo(pcdb.getTamanioInferior()) == 0
+                && param.getQuilatesBaseHasta().compareTo(pcdb.getTamanioSuperior()) == 0) {
+
+                PrecioCorteDetalleBatch precioDiamantes = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                precioDiamantes.setNuevoRegistro(TipoNuevoRegistro.QUILATES, param.getPorcentaje());
+                precioDiamantes.setTamanioInferior(param.getQuilatesDesde());
+                precioDiamantes.setTamanioSuperior(param.getQuilatesHasta());
+
+                preciosDiamantes.add(precioDiamantes);
+            }
+
+        }
+        return preciosDiamantes;
+    }
+
+
+
+    private Queue<PrecioCorteDetalleBatch> crearNuevosRegistrosColor(PrecioCorteDetalleBatch pcdb, List<PrecioCorteDetalleBatch> pqs, List<FactoresRangoColorJPA> factoresRangoColor) {
+
+        Queue<PrecioCorteDetalleBatch> preciosDiamantes = new ConcurrentLinkedQueue<PrecioCorteDetalleBatch>();
+        for (FactoresRangoColorJPA param : factoresRangoColor) {
+
+            if (param.getRangoColorBase().equalsIgnoreCase(pcdb.getColor())) {
+
+                PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
+                pcColor.setColor(param.getColorDesde());
+
+                preciosDiamantes.add(pcColor);
+
+                pcColor = new PrecioCorteDetalleBatch(pcdb.getCorte(), pcdb);
+                pcColor.setNuevoRegistro(TipoNuevoRegistro.COLOR, param.getFactor());
+                pcColor.setColor(param.getColorHasta());
+
+                preciosDiamantes.add(pcColor);
+            }
+
+            // Nuevos registros colores para nuevos rangos quilatajes
+            if (pqs != null) {
+                for (PrecioCorteDetalleBatch pq : pqs) {
+                    if (pq != null && param.getRangoColorBase().equalsIgnoreCase(pq.getColor())) {
+
+                        PrecioCorteDetalleBatch pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+                        pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+                        pcColor.setColor(param.getColorDesde());
+
+                        preciosDiamantes.add(pcColor);
+
+                        pcColor = new PrecioCorteDetalleBatch(pq.getCorte(), pq);
+                        pcColor.setNuevoRegistro(TipoNuevoRegistro.QUILATES_COLOR, param.getFactor());
+                        pcColor.setColor(param.getColorHasta());
+
+                        preciosDiamantes.add(pcColor);
+                    }
+                }
+            }
+
+        }
+
+        return preciosDiamantes;
     }
 }

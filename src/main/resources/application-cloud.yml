@@ -27,8 +27,10 @@ spring:
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
+                noAccessToProcedureBodies: true
                 # Plan gratuito para DEV = 4 conexiones; TEST en adelante = 15 conexiones
                 maximumPoolSize: 12
+        max-active: 153
     h2:
         console:
             enabled: true
@@ -50,6 +52,16 @@ spring:
             # sin ello se manifiesta como NullPointerException en cacheAdvisor al levantar el contexto
             hibernate.temp.use_jdbc_metadata_defaults: false
 
+tipocambio:
+  convertidor:
+    wsdlLocation: http://localhost:8083/soap-api/ConvertidorTipoCambio?wsdl
+  consulta:
+    wsdlLocation: http://localhost:8083/soap-api/ConsultaTipoCambio?wsdl
+  header:
+    api:
+      name: X-IBM-Client-Id
+      key: 37b343c4-4214-4101-aba5-81f6265c0868
+
 # ===================================================================
 # Propiedades especificas de la aplicacion (microservicio)
 # ===================================================================
@@ -59,3 +71,12 @@ thread:
             core: 10
             max: 50
             queue: 1000
+application:
+    # por defecto cors esta desactivado, descomentar las siguientes lineas para activarlo
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+      allowed-headers: "*"
+      exposed-headers:
+      allow-credentials: true
+      max-age: 1800

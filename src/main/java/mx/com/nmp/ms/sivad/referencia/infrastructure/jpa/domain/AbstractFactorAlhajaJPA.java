@@ -35,15 +35,24 @@ public abstract class AbstractFactorAlhajaJPA {
 
     @Column(name = "factor", precision = 8, scale = 2, nullable = false)
     private BigDecimal factor;
-
-    @Column(name = "desplazamiento", precision = 8, scale = 2, nullable = false)
-    private BigDecimal desplazamiento;
+    
+    @Column(name = "desplazamiento_limite_inferior", precision = 8, scale = 2, nullable = false)
+    private BigDecimal desplazamiento_limiteInferior;
+    
+    @Column(name = "desplazamiento_limite_superior", precision = 8, scale = 2, nullable = false)
+    private BigDecimal desplazamiento_limiteSuperior;
+    
+    @Column(name = "desplazamiento_incremento", nullable = false)
+    private Integer desplazamiento_incremento;
 
     @Column(name = "limite_inferior", precision = 8, scale = 2, nullable = false)
     private BigDecimal limiteInferior;
 
     @Column(name = "limite_superior", precision = 8, scale = 2, nullable = false)
     private BigDecimal limiteSuperior;
+    
+    @Column(name = "incremento", nullable = false)
+    private Integer incremento;
 
     @Column(name = "ultima_actualizacion", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -89,14 +98,6 @@ public abstract class AbstractFactorAlhajaJPA {
         this.factor = factor;
     }
 
-    public BigDecimal getDesplazamiento() {
-        return desplazamiento;
-    }
-
-    public void setDesplazamiento(BigDecimal desplazamiento) {
-        this.desplazamiento = desplazamiento;
-    }
-
     public BigDecimal getLimiteInferior() {
         return limiteInferior;
     }
@@ -119,6 +120,40 @@ public abstract class AbstractFactorAlhajaJPA {
 
     public void setUltimaActualizacion(DateTime ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public BigDecimal getDesplazamiento_limiteInferior() {
+        return desplazamiento_limiteInferior;
+    }
+
+    public void setDesplazamiento_limiteInferior(BigDecimal desplazamiento_limiteInferior) {
+        this.desplazamiento_limiteInferior = desplazamiento_limiteInferior;
+    }
+
+    public BigDecimal getDesplazamiento_limiteSuperior() {
+        return desplazamiento_limiteSuperior;
+    }
+
+    public void setDesplazamiento_limiteSuperior(BigDecimal desplazamiento_limiteSuperior) {
+        this.desplazamiento_limiteSuperior = desplazamiento_limiteSuperior;
+    }
+
+    public Integer getDesplazamiento_incremento() {
+        return desplazamiento_incremento;
+    }
+
+    
+    public void setDesplazamiento_incremento(Integer desplazamiento_incremento) {
+        this.desplazamiento_incremento = desplazamiento_incremento;
+    }
+
+    
+    public Integer getIncremento() {
+        return incremento;
+    }
+
+    public void setIncremento(Integer incremento) {
+        this.incremento = incremento;
     }
 
 }

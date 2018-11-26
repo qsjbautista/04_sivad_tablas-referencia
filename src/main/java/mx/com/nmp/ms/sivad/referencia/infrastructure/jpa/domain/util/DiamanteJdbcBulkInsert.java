@@ -32,6 +32,7 @@ public class DiamanteJdbcBulkInsert {
 
     private String tableName;
     private String values;
+    private String columns;
     private List<String> props;
 
     /**
@@ -89,7 +90,7 @@ public class DiamanteJdbcBulkInsert {
     public String generateQuery() {
         validate();
 
-        return QUERY_INSERT + tableName + QUERY_VALUES + values;
+        return QUERY_INSERT + tableName + (columns != null ? columns : "") + QUERY_VALUES + values;
     }
 
     private void validate() {
@@ -124,4 +125,23 @@ public class DiamanteJdbcBulkInsert {
 
         return val.toString();
     }
+
+	public DiamanteJdbcBulkInsert withColumnNames(String ... cols) {
+		
+        StringBuilder col = new StringBuilder(PAR_LEF);
+        Iterator<? extends String> it = Arrays.asList(cols).iterator();
+
+        while (it.hasNext()) {
+        	col.append(it.next());
+
+            if (it.hasNext()) {
+            	col.append(COMA);
+            }
+        }
+        
+        col.append(PAR_RIGHT);
+        this.columns = col.toString();
+		
+		return this;
+	}
 }

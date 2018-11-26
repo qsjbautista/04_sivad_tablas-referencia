@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 /**
  * Clase de prueba para el repositorio ValorComercialDiamanteRepository.
  *
- * @author ngonzalez
+ * @author ngonzalez, ecancino
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TablasReferenciaApplication.class)
@@ -61,6 +61,8 @@ public class ValorComercialDiamanteRepositoryIntTest {
 
     private static final String CORTE_EXISTE = "Oval";
     private static final String CORTE_NO_EXISTE = "Rombo";
+    private static final String SUBCORTE_EXISTE = "Acojinado";
+    private static final String SUBCORTE_NO_EXISTE = "Rombo";
     private static final String CORTE_NUEVO = "Esmeralda";
     private static final String COLOR_EXISTE = "D";
     private static final String COLOR_NO_EXISTE = "Z";
@@ -90,6 +92,11 @@ public class ValorComercialDiamanteRepositoryIntTest {
     private static final BigDecimal TAMANIO_INFERIOR_NUEVO = new BigDecimal(1.00D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_SUPERIOR_EXISTE = new BigDecimal(0.99D).setScale(2, BigDecimal.ROUND_HALF_UP);
     private static final BigDecimal TAMANIO_SUPERIOR_NUEVO = new BigDecimal(1.49D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_DESDE_EXISTE = new BigDecimal(0.90D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_DESDE_NO_EXISTE = new BigDecimal(100.00D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_HASTA_EXISTE = new BigDecimal(0.94D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal QUILATES_HASTA_NO_EXISTE = new BigDecimal(100.00D).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private static final BigDecimal PRECIO_PESOS_CASTIGO = new BigDecimal(65.70D).setScale(4, BigDecimal.ROUND_HALF_UP);
 
     /**
      * Referencia al repositorio de ValorComercialDiamanteRepository.
@@ -109,12 +116,11 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Inject
     private HistListadoValorComercialDiamanteJPARepository histJPARepository;
 
-    /**
+	/**
      * Referencia al conector con microservicio de tipo cambiario.
      */
-    @Mock
-    private Convertidor convertidor;
-
+    //@Mock
+    //private Convertidor convertidor;
     @Inject
     private CacheManager cacheManager;
 
@@ -133,7 +139,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
+        //ReflectionTestUtils.setField(valorComercialDiamanteRepository, "convertidor", convertidor);
     }
 
     /**
@@ -142,13 +148,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest01() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -158,13 +166,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest02() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -174,13 +184,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest03() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -190,13 +202,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest04() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -206,13 +220,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest05() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -222,13 +238,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest06() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -238,13 +256,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest07() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -254,13 +274,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest08() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_NO_EXISTE, SUBCORTE_NO_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -270,13 +292,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest09() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -286,13 +310,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest10() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -302,13 +328,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest11() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -318,13 +346,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - NO EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest12() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_NO_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_NO_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -334,13 +364,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest13() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -350,13 +382,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - NO EXISTE
      * QUILATES CT - SI EXISTE
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest14() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_NO_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -366,13 +400,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest15() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -382,16 +418,18 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE (se encuentra dentro del rango)
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest16() {
-        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
-            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);
+        /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);*/
 
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
         assertNotNull(result);
@@ -400,7 +438,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_EXISTE_PESOS, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**
@@ -409,16 +447,18 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE (se encuentra en el límite inferior del rango)
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest17() {
-        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
-            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);
+        /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);*/
 
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_INFERIOR_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_INFERIOR_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
         assertNotNull(result);
@@ -427,7 +467,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_EXISTE_PESOS, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**
@@ -436,16 +476,18 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE (se encuentra en el límite superior del rango)
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      */
     @Test
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest18() {
-        when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
-            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);
+        /*when(convertidor.convertir(matches(TipoCambioEnum.USD.getTipo()), matches(TipoCambioEnum.MXN.getTipo()),
+            any(BigDecimal.class))).thenReturn(PRECIO_EXISTE_PESOS);*/
 
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_SUPERIOR_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_SUPERIOR_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         Diamante result = valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
 
         assertNotNull(result);
@@ -454,7 +496,7 @@ public class ValorComercialDiamanteRepositoryIntTest {
         assertEquals(CLARIDAD_EXISTE, result.getClaridad());
         assertEquals(TAMANIO_INFERIOR_EXISTE, result.getTamanioInferior());
         assertEquals(TAMANIO_SUPERIOR_EXISTE, result.getTamanioSuperior());
-        assertEquals(PRECIO_EXISTE_PESOS, result.getPrecio());
+        assertEquals(PRECIO_PESOS_CASTIGO, result.getPrecio().setScale(4));
     }
 
     /**
@@ -463,13 +505,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE (se encuentra por debajo del límite inferior del rango)
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest19() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_INFERIOR_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_INFERIOR_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -479,13 +523,15 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - NO EXISTE (se encuentra por encima del límite superior del rango)
+     * QUILATES DESDE - NO EXISTE
+     * QUILATES HASTA - NO EXISTE
      */
     @Test(expected = ValorComercialNoEncontradoException.class)
     @Transactional
     @Sql("/bd/test-data-valor_comercial_diamante-h2.sql")
     public void obtenerValorComercialDiamanteTest20() {
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_SUPERIOR_NO_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_LIMITE_SUPERIOR_NO_EXISTE, QUILATES_DESDE_NO_EXISTE, QUILATES_HASTA_NO_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 
@@ -495,6 +541,8 @@ public class ValorComercialDiamanteRepositoryIntTest {
      * COLOR - SI EXISTE
      * CLARIDAD - SI EXISTE
      * QUILATES CT - SI EXISTE (se encuentra dentro del rango)
+     * QUILATES DESDE - SI EXISTE
+     * QUILATES HASTA - SI EXISTE
      *
      * Existe más de un registro en la BD con las mismas características.
      */
@@ -503,8 +551,8 @@ public class ValorComercialDiamanteRepositoryIntTest {
     @Sql("/bd/test-data-valor_comercial_diamante_02-h2.sql")
     public void obtenerValorComercialDiamanteTest21() {
         cacheManager.getCache("ValorComercialDiamanteJPARepository.obtenerValorComercial").clear();
-        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, COLOR_EXISTE,
-            CLARIDAD_EXISTE, QUILATES_CT_EXISTE);
+        DiamanteVO diamanteVO = new DiamanteVO(CORTE_EXISTE, SUBCORTE_EXISTE, COLOR_EXISTE,
+            CLARIDAD_EXISTE, QUILATES_CT_EXISTE, QUILATES_DESDE_EXISTE, QUILATES_HASTA_EXISTE);
         valorComercialDiamanteRepository.obtenerValorComercial(diamanteVO);
     }
 

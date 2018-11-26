@@ -51,6 +51,8 @@ server:
 tipocambio:
   convertidor:
     wsdlLocation: http://localhost:10344/soap-api/ConvertidorTipoCambioService?wsdl
+  consulta:
+    wsdlLocation: http://localhost:10344/soap-api/ConsultaTipoCambio?wsdl
 
 # mostrar o no mensajes soap entrantes y salientes
 soap:

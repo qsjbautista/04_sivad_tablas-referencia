@@ -84,26 +84,26 @@ VALUES (18, 'AU_BL', '24_Q', 780.000, 1);
 INSERT INTO cfg_diamante_listado_valor_comercial (id, fecha_carga, fecha_listado)
 VALUES (1, '2016-12-20 10:00:00.521-06:00', '2016-12-20');
 
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (1, 'Pear', 'D', 'IF', 0.90, 0.99, 135.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (2, 'Pear', 'D', 'VVS1', 0.90, 0.99, 111.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (3, 'Pear', 'D', 'VVS2', 0.90, 0.99, 97.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (4, 'Pear', 'D', 'VS1', 0.90, 0.99, 73.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (5, 'Pear', 'D', 'VS2', 0.90, 0.99, 66.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (6, 'Pear', 'E', 'IF', 0.90, 0.99, 107.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (7, 'Pear', 'E', 'VVS1', 0.90, 0.99, 99.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (8, 'Pear', 'E', 'VVS2', 0.90, 0.99, 84.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (9, 'Pear', 'E', 'VS1', 0.90, 0.99, 68.0000, 1);
-INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado)
-VALUES (10, 'Pear', 'E', 'VS2', 0.90, 0.99, 63.0000, 1);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (1, 'Pear', 'D', 'IF', 0.90, 0.99, 135.0000, 1, 19.35, 135.0000, 135.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (2, 'Pear', 'D', 'VVS1', 0.90, 0.99, 111.0000, 1, 19.35, 111.0000, 111.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (3, 'Pear', 'D', 'VVS2', 0.90, 0.99, 97.0000, 1, 19.35, 97.0000, 97.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (4, 'Pear', 'D', 'VS1', 0.90, 0.99, 73.0000, 1, 19.35, 73.0000, 73.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (5, 'Pear', 'D', 'VS2', 0.90, 0.99, 66.0000, 1, 19.35, 66.0000, 66.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (6, 'Pear', 'E', 'IF', 0.90, 0.99, 107.0000, 1, 19.35, 107.0000, 107.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (7, 'Pear', 'E', 'VVS1', 0.90, 0.99, 99.0000, 1, 19.35, 99.0000, 99.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (8, 'Pear', 'E', 'VVS2', 0.90, 0.99, 84.0000, 1, 19.35, 84.0000, 84.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (9, 'Pear', 'E', 'VS1', 0.90, 0.99, 68.0000, 1, 19.35, 68.0000, 68.0000);
+INSERT INTO cfg_diamante_valor_comercial (id, corte, color, claridad, tamanio_inferior, tamanio_superior, precio, listado, tipo_cambio, montoVbd, montofCastigoxRango)
+VALUES (10, 'Pear', 'E', 'VS2', 0.90, 0.99, 63.0000, 1, 19.35, 63.0000, 63.0000);
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: VALOR COMERCIAL 'DIAMANTE'
 ------------------------------------------------------------------------------------------------------------------------
@@ -262,3 +262,46 @@ VALUES (51, 'AG', 'CL_500', 'F1', 1.00, 0.00, 0.00, 0.00, '2016-12-20 10:00:00.5
 ------------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: MODIFICADORES DE FACTORES DE ALHAJAS.
 ------------------------------------------------------------------------------------------------------------------------
+
+-- Incio configuración de tablas de referencia  Siva Diamantes F2
+
+/*
+cfg_diamante_factores_x_rango_de_color
+*/
+INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (1,'2018-08-28','O','R','MN',0.80);
+INSERT INTO `cfg_diamante_factores_x_rango_de_color` (`ID`,`FECHA`,`COLOR_DESDE`,`COLOR_HASTA`,`RANGO_COLOR_BASE`,`FACTOR`) VALUES (2,'2018-08-28','S','Z','MN',0.65);
+
+/*
+cfg_diamante_parametros_quilates
+*/
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (1,'2018-08-28',6.00,6.99,5.00,5.99,1.100);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (6,'2018-08-28',7.00,7.99,5.00,5.99,1.150);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (7,'2018-08-28',8.00,8.99,5.00,5.99,1.200);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (8,'2018-08-28',9.00,9.99,5.00,5.99,1.250);
+INSERT INTO `cfg_diamante_parametros_quilates` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`QUILATES_BASE_DESDE`,`QUILATES_BASE_HASTA`,`PORCENTAJE`) VALUES (9,'2018-08-28',11.00,20.00,10.00,10.99,1.075);
+
+/*
+cfg_diamante_porcentaje_castigo_x_rango_de_pesos
+*/
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (1,'2018-08-28',0.01,0.49,0.70);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (2,'2018-08-28',0.50,0.89,0.60);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (3,'2018-08-28',0.90,1.49,0.50);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (4,'2018-08-28',1.50,1.99,0.45);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (`ID`,`FECHA`,`QUILATES_DESDE`,`QUILATES_HASTA`,`FACTOR`) VALUES (5,'2018-08-28',2.00,100.00,0.35);
+
+/*
+cfg_diamante_rango_pesos
+*/
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (1,'2018-09-05',0.0100,0.0300);
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (8,'2018-09-05',0.0400,0.0700);
+INSERT INTO `cfg_diamante_rango_pesos` (`id`,`fecha`,`quilates_desde`,`quilates_hasta`) VALUES (15,'2018-09-05',0.0800,0.1400);
+
+/*
+cfg_diamante_porcentaje_castigo_x_tipo_corte
+*/
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (1,'2018-09-05','brillante',1.0000);
+INSERT INTO `cfg_diamante_porcentaje_castigo_x_tipo_corte` (`id`,`fecha`,`corte`,`factor`) VALUES (8,'2018-09-05','acojinado',0.9000);
+
+
+
+-- Fin configuración de tablas de referencia

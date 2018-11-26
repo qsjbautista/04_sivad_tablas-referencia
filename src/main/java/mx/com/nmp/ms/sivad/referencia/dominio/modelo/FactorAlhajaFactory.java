@@ -41,10 +41,11 @@ public class FactorAlhajaFactory {
      * @param ultimaActualizacion fecha de la ultima actualizacion.
      * @return La entidad creada.
      */
-    public static FactorAlhaja crear(String metal, String calidad, String rango, BigDecimal factor, BigDecimal desplazamiento,
-                                      BigDecimal limiteInferior, BigDecimal limiteSuperior, DateTime ultimaActualizacion) {
-        return new FactorAlhaja(metal, calidad, rango, factor, desplazamiento,
-            limiteInferior, limiteSuperior, ultimaActualizacion);
+    public static FactorAlhaja crear(String metal, String calidad, String rango, BigDecimal factor, BigDecimal desplazamiento_limiteInferior,
+                                      BigDecimal desplazamiento_limiteSuperior,Integer desplazamiento_incremento,BigDecimal limiteInferior, 
+                                      BigDecimal limiteSuperior,Integer incremento, DateTime ultimaActualizacion) {
+        return new FactorAlhaja(metal, calidad, rango, factor, desplazamiento_limiteInferior,desplazamiento_limiteSuperior,
+            desplazamiento_incremento, limiteInferior, limiteSuperior, incremento, ultimaActualizacion);
     }
 
 }
