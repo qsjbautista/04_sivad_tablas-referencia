@@ -1,5 +1,49 @@
 
 DROP TABLE IF EXISTS journal_entity_event;
+DROP TABLE IF EXISTS journal_custom_event;
+DROP TABLE IF EXISTS journal_event_data;
+DROP TABLE IF EXISTS journal_event;
+
+DROP TABLE IF EXISTS cfg_diamante_factor;
+DROP TABLE IF EXISTS cfg_factor_alhaja;
+DROP TABLE IF EXISTS cfg_alhaja_listado_factor;
+DROP TABLE IF EXISTS hist_cfg_factor_alhaja;
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_factor;
+DROP TABLE IF EXISTS cfg_diamante_valor_certificado;
+DROP TABLE IF EXISTS cfg_diamante_listado_valor_certificado;
+DROP TABLE IF EXISTS hist_cfg_diamante_valor_certificado;
+DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_certificado;
+DROP TABLE IF EXISTS hist_cfg_diamante_valor_comercial;
+DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_comercial;
+DROP TABLE IF EXISTS cfg_diamante_valor_comercial;
+DROP TABLE IF EXISTS tmp_diamante_valor_comercial;
+DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
+DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_oro;
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_oro;
+DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_oro;
+DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_oro;
+DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_metal;
+DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_metal;
+DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_metal;
+DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_metal;
+DROP TABLE IF EXISTS `cfg_diamante_factores_x_rango_de_color`;
+DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`;
+DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_tipo_corte`;
+DROP TABLE IF EXISTS `cfg_diamante_rango_pesos`;
+DROP TABLE IF EXISTS `cfg_diamante_parametros_quilates`;
+DROP TABLE IF EXISTS `cfg_diamante_factor_rapaport`;
+
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_SEQ`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_SEQ`;
+DROP TABLE IF EXISTS `BATCH_JOB_SEQ`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_CONTEXT`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION_PARAMS`;
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION_CONTEXT`;
+DROP TABLE IF EXISTS `BATCH_STEP_EXECUTION`;
+DROP TABLE IF EXISTS `BATCH_JOB_EXECUTION`;
+DROP TABLE IF EXISTS `BATCH_JOB_INSTANCE`;
+
+
 CREATE TABLE journal_entity_event
 (
     id BIGINT NOT NULL,
@@ -7,7 +51,6 @@ CREATE TABLE journal_entity_event
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS journal_custom_event;
 CREATE TABLE journal_custom_event
 (
     id BIGINT NOT NULL,
@@ -15,7 +58,6 @@ CREATE TABLE journal_custom_event
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS journal_event_data;
 CREATE TABLE journal_event_data
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -25,7 +67,6 @@ CREATE TABLE journal_event_data
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS journal_event;
 CREATE TABLE journal_event
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -35,7 +76,6 @@ CREATE TABLE journal_event
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_diamante_factor;
 CREATE TABLE cfg_diamante_factor
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -47,7 +87,6 @@ CREATE TABLE cfg_diamante_factor
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_factor_alhaja;
 CREATE TABLE cfg_factor_alhaja
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -66,7 +105,6 @@ CREATE TABLE cfg_factor_alhaja
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_alhaja_listado_factor;
 CREATE TABLE cfg_alhaja_listado_factor
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -75,7 +113,6 @@ CREATE TABLE cfg_alhaja_listado_factor
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_factor_alhaja;
 CREATE TABLE hist_cfg_factor_alhaja
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -94,7 +131,6 @@ CREATE TABLE hist_cfg_factor_alhaja
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_alhaja_listado_factor;
 CREATE TABLE hist_cfg_alhaja_listado_factor
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -103,7 +139,6 @@ CREATE TABLE hist_cfg_alhaja_listado_factor
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_diamante_valor_certificado;
 CREATE TABLE cfg_diamante_valor_certificado
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -113,7 +148,6 @@ CREATE TABLE cfg_diamante_valor_certificado
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_diamante_listado_valor_certificado;
 CREATE TABLE cfg_diamante_listado_valor_certificado
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -122,7 +156,6 @@ CREATE TABLE cfg_diamante_listado_valor_certificado
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_diamante_valor_certificado;
 CREATE TABLE hist_cfg_diamante_valor_certificado
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -132,7 +165,6 @@ CREATE TABLE hist_cfg_diamante_valor_certificado
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_certificado;
 CREATE TABLE hist_cfg_diamante_listado_valor_certificado
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -146,10 +178,9 @@ CREATE TABLE hist_cfg_diamante_listado_valor_certificado
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- históricos
+-- histÃ³ricos
 --
 
-DROP TABLE IF EXISTS hist_cfg_diamante_valor_comercial;
 CREATE TABLE hist_cfg_diamante_valor_comercial
 (
     id BIGINT NOT NULL,
@@ -166,7 +197,6 @@ CREATE TABLE hist_cfg_diamante_valor_comercial
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_diamante_listado_valor_comercial;
 CREATE TABLE hist_cfg_diamante_listado_valor_comercial
 (
     id BIGINT NOT NULL,
@@ -179,7 +209,6 @@ CREATE TABLE hist_cfg_diamante_listado_valor_comercial
 -- vigentes
 --
 
-DROP TABLE IF EXISTS cfg_diamante_valor_comercial;
 CREATE TABLE cfg_diamante_valor_comercial
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -196,7 +225,6 @@ CREATE TABLE cfg_diamante_valor_comercial
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS tmp_diamante_valor_comercial;
 CREATE TABLE tmp_diamante_valor_comercial
 (
 	id BIGINT AUTO_INCREMENT NOT NULL,
@@ -212,7 +240,6 @@ CREATE TABLE tmp_diamante_valor_comercial
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_diamante_listado_valor_comercial;
 CREATE TABLE cfg_diamante_listado_valor_comercial
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -232,10 +259,9 @@ CREATE TABLE cfg_diamante_listado_valor_comercial
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- históricos
+-- histÃ³ricos
 --
 
-DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_oro;
 CREATE TABLE hist_cfg_alhaja_valor_comercial_oro
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -246,7 +272,6 @@ CREATE TABLE hist_cfg_alhaja_valor_comercial_oro
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_oro;
 CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_oro
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -258,7 +283,6 @@ CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_oro
 -- vigentes
 --
 
-DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_oro;
 CREATE TABLE cfg_alhaja_valor_comercial_oro
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -269,7 +293,6 @@ CREATE TABLE cfg_alhaja_valor_comercial_oro
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_oro;
 CREATE TABLE cfg_alhaja_listado_valor_comercial_oro
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -288,10 +311,9 @@ CREATE TABLE cfg_alhaja_listado_valor_comercial_oro
 -- ----------------------------------------------------------------------------------------------------------------------
 
 --
--- históricos
+-- histÃ³ricos
 --
 
-DROP TABLE IF EXISTS hist_cfg_alhaja_valor_comercial_metal;
 CREATE TABLE hist_cfg_alhaja_valor_comercial_metal
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -302,7 +324,6 @@ CREATE TABLE hist_cfg_alhaja_valor_comercial_metal
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS hist_cfg_alhaja_listado_valor_comercial_metal;
 CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_metal
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -314,7 +335,6 @@ CREATE TABLE hist_cfg_alhaja_listado_valor_comercial_metal
 -- vigentes
 --
 
-DROP TABLE IF EXISTS cfg_alhaja_valor_comercial_metal;
 CREATE TABLE cfg_alhaja_valor_comercial_metal
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -325,7 +345,6 @@ CREATE TABLE cfg_alhaja_valor_comercial_metal
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS cfg_alhaja_listado_valor_comercial_metal;
 CREATE TABLE cfg_alhaja_listado_valor_comercial_metal
 (
     id BIGINT AUTO_INCREMENT NOT NULL,
@@ -598,7 +617,6 @@ DELIMITER ;
 -- table structure for table `cfg_diamante_factores_x_rango_de_color`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_factores_x_rango_de_color`;
 CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `fecha` TIMESTAMP NOT NULL,
@@ -615,7 +633,6 @@ CREATE TABLE `cfg_diamante_factores_x_rango_de_color` (
 -- table structure for table `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_rango_de_pesos`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `fecha` TIMESTAMP NOT NULL,
@@ -631,7 +648,6 @@ CREATE TABLE `cfg_diamante_porcentaje_castigo_x_rango_de_pesos` (
 -- table structure for table `cfg_diamante_porcentaje_castigo_x_tipo_corte`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_porcentaje_castigo_x_tipo_corte`;
 CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `fecha` TIMESTAMP NOT NULL,
@@ -645,7 +661,6 @@ CREATE TABLE `cfg_diamante_porcentaje_castigo_x_tipo_corte` (
 -- table structure for table `cfg_diamante_rango_pesos`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_rango_pesos`;
 CREATE TABLE `cfg_diamante_rango_pesos` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `fecha` TIMESTAMP NOT NULL,
@@ -659,7 +674,6 @@ CREATE TABLE `cfg_diamante_rango_pesos` (
 -- table structure for table `cfg_diamante_parametros_quilates`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_parametros_quilates`;
 CREATE TABLE `cfg_diamante_parametros_quilates` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `fecha` TIMESTAMP NOT NULL,
@@ -675,7 +689,6 @@ CREATE TABLE `cfg_diamante_parametros_quilates` (
 -- table structure for table `cfg_diamante_factor_rapaport`
 --
 
-DROP TABLE IF EXISTS `cfg_diamante_factor_rapaport`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cfg_diamante_factor_rapaport` (
@@ -691,20 +704,17 @@ CREATE TABLE `cfg_diamante_factor_rapaport` (
 
 
 -- TABLAS QUE SE CREAN AUTOMATICO PARA SPRING BATCH ---------------
-
 CREATE TABLE `BATCH_STEP_EXECUTION_SEQ` (
   `ID` bigint(20) NOT NULL,
   `UNIQUE_KEY` char(1) NOT NULL,
   UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `BATCH_JOB_EXECUTION_SEQ` (
   `ID` bigint(20) NOT NULL,
   `UNIQUE_KEY` char(1) NOT NULL,
   UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `BATCH_JOB_INSTANCE` (
   `JOB_INSTANCE_ID` bigint(20) NOT NULL,
@@ -715,13 +725,11 @@ CREATE TABLE `BATCH_JOB_INSTANCE` (
   UNIQUE KEY `JOB_INST_UN` (`JOB_NAME`,`JOB_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `BATCH_JOB_SEQ` (
   `ID` bigint(20) NOT NULL,
   `UNIQUE_KEY` char(1) NOT NULL,
   UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `BATCH_JOB_EXECUTION` (
   `JOB_EXECUTION_ID` bigint(20) NOT NULL,
@@ -740,7 +748,6 @@ CREATE TABLE `BATCH_JOB_EXECUTION` (
   CONSTRAINT `JOB_INST_EXEC_FK` FOREIGN KEY (`JOB_INSTANCE_ID`) REFERENCES `BATCH_JOB_INSTANCE` (`JOB_INSTANCE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `BATCH_JOB_EXECUTION_CONTEXT` (
   `JOB_EXECUTION_ID` bigint(20) NOT NULL,
   `SHORT_CONTEXT` varchar(2500) NOT NULL,
@@ -748,7 +755,6 @@ CREATE TABLE `BATCH_JOB_EXECUTION_CONTEXT` (
   PRIMARY KEY (`JOB_EXECUTION_ID`),
   CONSTRAINT `JOB_EXEC_CTX_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `BATCH_JOB_EXECUTION_PARAMS` (
   `JOB_EXECUTION_ID` bigint(20) NOT NULL,
@@ -764,7 +770,6 @@ CREATE TABLE `BATCH_JOB_EXECUTION_PARAMS` (
   KEY `JOB_EXEC_PARAMS_FK` (`JOB_EXECUTION_ID`),
   CONSTRAINT `JOB_EXEC_PARAMS_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE `BATCH_STEP_EXECUTION` (
   `STEP_EXECUTION_ID` bigint(20) NOT NULL,
@@ -790,7 +795,6 @@ CREATE TABLE `BATCH_STEP_EXECUTION` (
   CONSTRAINT `JOB_EXEC_STEP_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `BATCH_JOB_EXECUTION` (`JOB_EXECUTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 CREATE TABLE `BATCH_STEP_EXECUTION_CONTEXT` (
   `STEP_EXECUTION_ID` bigint(20) NOT NULL,
   `SHORT_CONTEXT` varchar(2500) NOT NULL,
@@ -799,10 +803,8 @@ CREATE TABLE `BATCH_STEP_EXECUTION_CONTEXT` (
   CONSTRAINT `STEP_EXEC_CTX_FK` FOREIGN KEY (`STEP_EXECUTION_ID`) REFERENCES `BATCH_STEP_EXECUTION` (`STEP_EXECUTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO BATCH_STEP_EXECUTION_SEQ values(0,1);
+INSERT INTO BATCH_JOB_EXECUTION_SEQ values(0,1);
+INSERT INTO BATCH_JOB_SEQ values(0,1);
 
-
-
-
-
-
-
+-- GRANT SELECT ON mysql.proc TO 'tablas_referencia_usr'@'%'
