@@ -80,6 +80,146 @@ INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (17, 'AU_BL', '22_Q', 728.750, 1);
 INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
 VALUES (18, 'AU_BL', '24_Q', 795.000, 1);
+
+-- ORO COLOR ROJO
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (19, 'AU_RO', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (20, 'AU_RO', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (21, 'AU_RO', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (22, 'AU_RO', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (23, 'AU_RO', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (24, 'AU_RO', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (25, 'AU_RO', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (26, 'AU_RO', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (27, 'AU_RO', '24_Q', 795.000, 1);
+
+-- ORO COLOR ROSA
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (28, 'AU_RS', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (29, 'AU_RS', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (30, 'AU_RS', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (31, 'AU_RS', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (32, 'AU_RS', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (33, 'AU_RS', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (34, 'AU_RS', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (35, 'AU_RS', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (36, 'AU_RS', '24_Q', 795.000, 1);
+
+-- ORO COLOR VERDE
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (37, 'AU_VE', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (38, 'AU_VE', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (39, 'AU_VE', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (40, 'AU_VE', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (41, 'AU_VE', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (42, 'AU_VE', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (43, 'AU_VE', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (44, 'AU_VE', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (45, 'AU_VE', '24_Q', 795.000, 1);
+
+-- ORO COLOR AZUL
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (46, 'AU_AZ', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (47, 'AU_AZ', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (48, 'AU_AZ', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (49, 'AU_AZ', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (50, 'AU_AZ', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (51, 'AU_AZ', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (52, 'AU_AZ', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (53, 'AU_AZ', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (54, 'AU_AZ', '24_Q', 795.000, 1);
+
+-- ORO COLOR PURPURA
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (55, 'AU_PU', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (56, 'AU_PU', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (57, 'AU_PU', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (58, 'AU_PU', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (59, 'AU_PU', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (60, 'AU_PU', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (61, 'AU_PU', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (62, 'AU_PU', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (63, 'AU_PU', '24_Q', 795.000, 1);
+
+-- ORO COLOR NEGRO
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (64, 'AU_NE', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (65, 'AU_NE', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (66, 'AU_NE', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (67, 'AU_NE', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (68, 'AU_NE', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (69, 'AU_NE', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (70, 'AU_NE', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (71, 'AU_NE', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (72, 'AU_NE', '24_Q', 795.000, 1);
+
+-- ORO COLOR COMBINADO
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (73, 'AU_CO', '8_Q', 265.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (74, 'AU_CO', '10_Q', 331.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (75, 'AU_CO', '12_Q', 397.500, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (76, 'AU_CO', '14_Q', 463.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (77, 'AU_CO', '16_Q', 530.000, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (78, 'AU_CO', '18_Q', 596.250, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (79, 'AU_CO', '21_Q', 632.770, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (80, 'AU_CO', '22_Q', 728.750, 1);
+INSERT INTO cfg_alhaja_valor_comercial_oro (id, color, calidad, precio, listado)
+VALUES (81, 'AU_CO', '24_Q', 795.000, 1);
 -- ----------------------------------------------------------------------------------------------------------------------
 -- TERMINA - DATOS: VALOR COMERCIAL 'ORO'
 -- ----------------------------------------------------------------------------------------------------------------------
