@@ -1,6 +1,7 @@
 package mx.com.nmp.ms.sivad.referencia.adminapi.api.ws;
 
 import mx.com.nmp.ms.sivad.referencia.TablasReferenciaApplication;
+import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceException;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
 import org.junit.Test;
@@ -16,6 +17,8 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Clase de prueba
@@ -90,5 +93,56 @@ public class ReferenciaAlhajaServiceEndpointITest {
 
         assertEquals(response.getLimitesIncremento().getLimiteInferior(), new BigDecimal(1).setScale(2, BigDecimal.ROUND_HALF_UP));
         assertEquals(response.getLimitesIncremento().getLimiteSuperior(), new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    /**
+     * Sin todos los parametros requeridos
+     */
+    @Test(expected = WebServiceException.class)
+    public void obtenerTiposHechuraTest1(){
+        ObtenerTiposHechuraRequest parameters = new ObtenerTiposHechuraRequest();
+        referenciaAlhajaServiceEndPoint.obtenerTiposHechura(parameters);
+    }
+
+    /**
+     * Con todos los parametros requeridos, sin calidad
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-tipo_hechura-h2.sql")
+    public void obtenerTiposHechuraTest2(){
+        ObtenerTiposHechuraRequest parameters = new ObtenerTiposHechuraRequest();
+        parameters.setMetal("PD");
+        parameters.setSubramo("AL");
+        ObtenerTiposHechuraResponse response = referenciaAlhajaServiceEndPoint.obtenerTiposHechura(parameters);
+        assertNotNull(response);
+        assertEquals(1, response.getTiposHechura().size());
+    }
+
+    /**
+     * Con todos los parametros requeridos, y tambien la calidad
+     */
+    @Test
+    @Transactional
+    @Sql("/bd/test-data-tipo_hechura-h2.sql")
+    public void obtenerTiposHechuraTest3(){
+        ObtenerTiposHechuraRequest parameters = new ObtenerTiposHechuraRequest();
+        parameters.setMetal("AU");
+        parameters.setSubramo("AL");
+        parameters.setCalidad("8_Q");
+        ObtenerTiposHechuraResponse response = referenciaAlhajaServiceEndPoint.obtenerTiposHechura(parameters);
+        assertNotNull(response);
+        assertEquals(4, response.getTiposHechura().size());
+    }
+
+    /**
+     * Sin registros de tipos de hechura
+     */
+    @Test(expected = WebServiceException.class)
+    public void obtenerTiposHechuraTest4(){
+        ObtenerTiposHechuraRequest parameters = new ObtenerTiposHechuraRequest();
+        parameters.setMetal("Plata");
+        parameters.setCalidad("0.925");
+        referenciaAlhajaServiceEndPoint.obtenerTiposHechura(parameters);
     }
 }

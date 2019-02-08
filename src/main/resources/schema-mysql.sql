@@ -808,3 +808,53 @@ INSERT INTO BATCH_JOB_EXECUTION_SEQ values(0,1);
 INSERT INTO BATCH_JOB_SEQ values(0,1);
 
 -- GRANT SELECT ON mysql.proc TO 'tablas_referencia_usr'@'%'
+
+
+-- ----------------------------------------------------------------------------------------------------------------------
+-- INICIO - TABLAS SISTEMA DE OPERACION PRENDARIA EMERGENTE
+-- ----------------------------------------------------------------------------------------------------------------------
+DROP TABLE IF EXISTS cfg_metal_calidad_subramo_rango;
+DROP TABLE IF EXISTS cfg_metal_calidad_subramo;
+DROP TABLE IF EXISTS cat_tipo_hechura;
+
+CREATE TABLE cat_tipo_hechura
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    abreviatura VARCHAR(3) NOT NULL,
+    descripcion VARCHAR(80) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE cfg_metal_calidad_subramo
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    metal VARCHAR(20) NOT NULL,
+    calidad VARCHAR(20),
+    subramo VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE cfg_metal_calidad_subramo_rango
+(
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    tipo_hechura BIGINT NOT NULL,
+    metal_calidad_subramo BIGINT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_cat_tipo_hechura ON cat_tipo_hechura(id);
+CREATE INDEX idx_cfg_metal_calidad_subramo ON cfg_metal_calidad_subramo(id);
+CREATE INDEX idx_cfg_metal_calidad_subramo_rango ON cfg_metal_calidad_subramo_rango(id);
+
+ALTER TABLE cfg_metal_calidad_subramo_rango ADD CONSTRAINT fk_cfg_metal_calidad_subramo_rango_metal_calidad_subramo
+FOREIGN KEY (metal_calidad_subramo) REFERENCES cfg_metal_calidad_subramo(id);
+ALTER TABLE cfg_metal_calidad_subramo_rango ADD CONSTRAINT fk_cfg_metal_calidad_subramo_rango_tipo_hechura
+FOREIGN KEY (tipo_hechura) REFERENCES cat_tipo_hechura(id);
+
+ALTER TABLE cfg_metal_calidad_subramo ADD CONSTRAINT uk_cfg_metal_calidad_subramo
+UNIQUE (metal, calidad, subramo);
+ALTER TABLE cfg_metal_calidad_subramo_rango ADD CONSTRAINT uk_cfg_metal_calidad_subramo_rango
+UNIQUE (tipo_hechura, metal_calidad_subramo);
+-- ----------------------------------------------------------------------------------------------------------------------
+-- FIN - TABLAS SISTEMA DE OPERACION PRENDARIA EMERGENTE
+-- ----------------------------------------------------------------------------------------------------------------------

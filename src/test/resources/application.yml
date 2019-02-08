@@ -53,6 +53,10 @@ tipocambio:
     wsdlLocation: http://localhost:10344/soap-api/ConvertidorTipoCambioService?wsdl
   consulta:
     wsdlLocation: http://localhost:10344/soap-api/ConsultaTipoCambio?wsdl
+  header:
+      api:
+        name: X-IBM-Client-Id
+        key: 37b343c4-4214-4101-aba5-81f6265c0868
 
 # mostrar o no mensajes soap entrantes y salientes
 soap:

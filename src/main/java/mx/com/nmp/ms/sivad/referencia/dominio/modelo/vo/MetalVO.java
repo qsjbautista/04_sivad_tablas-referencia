@@ -21,6 +21,10 @@ public class MetalVO {
      */
     private String calidad;
 
+    /**
+     * Abreviatura del subramo.
+     */
+    private String subramo;
 
 
     // METODOS
@@ -36,6 +40,18 @@ public class MetalVO {
         this.calidad = calidad;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param metal El tipo del metal.
+     * @param calidad Valor aplicable a la calidad del metal (Ejemplo: 0.925).
+     * @param subramo Abreviatura del subramo de la prenda.
+     */
+    public MetalVO(String metal, String calidad, String subramo) {
+        this.metal = metal;
+        this.calidad = calidad;
+        this.subramo = subramo;
+    }
 
 
     // GETTERS
@@ -48,11 +64,16 @@ public class MetalVO {
         return calidad;
     }
 
+    public String getSubramo() {
+        return subramo;
+    }
+
     @Override
     public String toString() {
         return "MetalVO{" +
             "metal='" + metal + '\'' +
             ", calidad='" + calidad + '\'' +
+            ", subramo='" + subramo +
             '}';
     }
 

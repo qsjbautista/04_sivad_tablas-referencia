@@ -52,6 +52,12 @@ Tablas de Referencia Alhajas
     <wsdl:message name="ObtenerLimitesIncrementoOut">
         <wsdl:part name="parameters" element="datatypes:obtenerLimitesIncrementoResponse"/>
     </wsdl:message>
+    <wsdl:message name="ObtenerTiposHechuraIn">
+        <wsdl:part name="parameters" element="datatypes:obtenerTiposHechuraRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ObtenerTiposHechuraOut">
+        <wsdl:part name="parameters" element="datatypes:obtenerTiposHechuraResponse"/>
+    </wsdl:message>
 
     <wsdl:portType name="ReferenciaAlhajaService">
         <wsdl:operation name="obtenerValorGramoOro">
@@ -73,6 +79,10 @@ Tablas de Referencia Alhajas
         <wsdl:operation name="obtenerLimitesIncremento">
             <wsdl:input message="referencia:ObtenerLimitesIncrementoIn" />
             <wsdl:output message="referencia:ObtenerLimitesIncrementoOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerTiposHechura">
+            <wsdl:input message="referencia:ObtenerTiposHechuraIn" />
+            <wsdl:output message="referencia:ObtenerTiposHechuraOut"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -116,6 +126,15 @@ Tablas de Referencia Alhajas
         </wsdl:operation>
         <wsdl:operation name="obtenerLimitesIncremento">
             <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerLimitesIncremento" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="obtenerTiposHechura">
+            <soap:operation soapAction="http://nmp.com.mx/ms/sivad/referencia/ws/alhajas/obtenerTiposHechura" style="document"/>
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

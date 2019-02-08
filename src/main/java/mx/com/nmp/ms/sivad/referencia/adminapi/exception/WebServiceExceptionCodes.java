@@ -15,7 +15,8 @@ public enum WebServiceExceptionCodes {
     NMPR010("NMP-TR-010",
         "El quilataje seleccionado no corresponde a ese tipo de corte, " +
             "favor de verificar la información ingresada de acuerdo a la política de Valuar Partida sección Diamantes"),
-    NMPR011("NMP-TR-011", "No existe un valor gramo para las características de metal solicitadas.");
+    NMPR011("NMP-TR-011", "No existe un valor gramo para las características de metal solicitadas."),
+    NMPR012("NMP-TR-012", "No existen tipos de hechura para las características de metal solicitadas.");
 
     private String codeException;
     private String messageException;

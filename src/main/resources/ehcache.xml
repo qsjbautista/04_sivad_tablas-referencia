@@ -62,4 +62,11 @@
            timeToLiveSeconds="3600">
     </cache>
 
+    <cache name="TipoHechuraJPARepository.findByMetalAndSubramo"
+           timeToLiveSeconds="3600">
+    </cache>
+    <cache name="TipoHechuraJPARepository.findByMetalAndSubramoAndCalidad"
+           timeToLiveSeconds="3600">
+    </cache>
+
 </ehcache>

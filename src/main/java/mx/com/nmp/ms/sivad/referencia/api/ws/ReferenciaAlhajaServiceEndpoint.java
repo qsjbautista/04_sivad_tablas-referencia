@@ -4,27 +4,25 @@ import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceException;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionCodes;
 import mx.com.nmp.ms.sivad.referencia.adminapi.exception.WebServiceExceptionFactory;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.FactorAlhajaNoEncontradoException;
+import mx.com.nmp.ms.sivad.referencia.dominio.exception.TipoHechuraNoEncontradoException;
 import mx.com.nmp.ms.sivad.referencia.dominio.exception.ValorGramoNoEncontradoException;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.FactorAlhaja;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Metal;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.Oro;
-import mx.com.nmp.ms.sivad.referencia.dominio.modelo.TipoMetalEnum;
+import mx.com.nmp.ms.sivad.referencia.dominio.modelo.*;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.FactorAlhajaVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.MetalVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.modelo.vo.OroVO;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ModificadorRangoRepository;
+import mx.com.nmp.ms.sivad.referencia.dominio.repository.TipoHechuraAlhajaRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialMetalRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.repository.ValorComercialOroRepository;
 import mx.com.nmp.ms.sivad.referencia.dominio.validador.ValidadorCalidadMetal;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.ReferenciaAlhajaService;
 import mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.*;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ObjectUtils;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +43,9 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
 
     @Inject
     private ModificadorRangoRepository modificadorRangoRepository;
+
+    @Inject
+    private TipoHechuraAlhajaRepository tipoHechuraAlhajaRepository;
 
     /**
      * Obtiene el valor por gramo correspondiente a las caracteristicas del metal de una alhaja.
@@ -216,6 +217,41 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
         return response;
     }
 
+    /**
+     * Obtiene el listado de tipos de hechura o rangos dependiendo del metal y calidad seleccionados,
+     * ademas del subramo.
+     *
+     * @param parameters metal, calidad, subramo
+     * @return returns mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatypes.ObtenerTiposHechuraResponse
+     */
+    @Override
+    public ObtenerTiposHechuraResponse obtenerTiposHechura(ObtenerTiposHechuraRequest parameters) {
+        LOGGER.info(">> obtenerTiposHechura({})", parameters);
+
+        ObtenerTiposHechuraResponse response = new ObtenerTiposHechuraResponse();
+
+        if (!ObjectUtils.isEmpty(parameters) && !ObjectUtils.isEmpty(parameters.getMetal()) && !ObjectUtils.isEmpty(parameters.getSubramo())) {
+            try {
+                validarMetalCalidad(parameters.getMetal(), parameters.getCalidad());
+                MetalVO metalVO = new MetalVO(parameters.getMetal(), parameters.getCalidad(), parameters.getSubramo());
+                List<TipoHechura> tipoHechuraResult = tipoHechuraAlhajaRepository.consultarTiposHechura(metalVO);
+                response.getTiposHechura().addAll(castearListadoTiposHechura(tipoHechuraResult));
+            } catch (TipoHechuraNoEncontradoException e) {
+                LOGGER.info("<< " + WebServiceExceptionCodes.NMPR012.getMessageException()
+                    + " Para las entradas: metal({}), calidad: ({}), subramo: ({})", parameters.getMetal(), parameters.getCalidad(), parameters.getSubramo());
+                throw WebServiceExceptionFactory.crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR012.getCodeException(), WebServiceExceptionCodes.NMPR012.getMessageException());
+            }
+        } else {
+            LOGGER.info("Valores nulos o vacios, parameters: ({}), metal: ({}), calidad: ({}), subramo: ({}) ", parameters, parameters.getMetal(),
+                parameters.getCalidad(), parameters.getSubramo());
+            throwWebServiceException();
+        }
+
+        LOGGER.info("<< {}", response.getTiposHechura());
+
+        return response;
+    }
+
     private static void throwWebServiceException() {
         throw WebServiceExceptionFactory
             .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
@@ -238,5 +274,26 @@ public class ReferenciaAlhajaServiceEndpoint implements ReferenciaAlhajaService 
                 .crearWebServiceExceptionCon(WebServiceExceptionCodes.NMPR004.getCodeException(),
                     WebServiceExceptionCodes.NMPR004.getMessageException(), actor);
         }
+    }
+
+    /**
+     * Castea el listado tipo mx.com.nmp.ms.sivad.referencia.dominio.modelo.TipoHechura a un listado tipo
+     * mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatype.TiposHechura
+     * @param tiposHechura Listado de tipos de hechura tipo mx.com.nmp.ms.sivad.referencia.dominio.modelo.TipoHechura
+     * @return Listado de tipos de hechura tipo mx.com.nmp.ms.sivad.referencia.ws.alhajas.datatype.TiposHechura
+     */
+    private List<TiposHechura> castearListadoTiposHechura(List<TipoHechura> tiposHechura) {
+        List<TiposHechura> listadoTiposHechura = new ArrayList<>();
+
+        for (TipoHechura tipoHechura : tiposHechura) {
+            TiposHechura tiposHechuraResponse = new TiposHechura();
+            tiposHechuraResponse.setId(tipoHechura.getId());
+            tiposHechuraResponse.setAbreviatura(tipoHechura.getAbreviatura());
+            tiposHechuraResponse.setDescripcion(tipoHechura.getDescripcion());
+
+            listadoTiposHechura.add(tiposHechuraResponse);
+        }
+
+        return listadoTiposHechura;
     }
 }
